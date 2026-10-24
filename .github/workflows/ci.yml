@@ -1,0 +1,161 @@
+name: FloodGuard CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - "feature/**"
+
+  pull_request:
+    branches:
+      - main
+      - dev
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Frontend checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Build frontend
+        run: npm run build
+
+  backend:
+    name: Backend checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.adminCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      PORT: "5000"
+      MONGODB_URI: mongodb://127.0.0.1:27017/floodguard
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check src/server.js
+          node --check src/config/db.js
+
+      - name: Start server and check API and database
+        shell: bash
+        run: |
+          npm start > server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+
+          node <<'NODE'
+          const assert = require("node:assert/strict");
+
+          async function checkBackend() {
+            let lastError;
+
+            for (let attempt = 0; attempt < 20; attempt++) {
+              try {
+                const healthResponse = await fetch(
+                  "http://localhost:5000/api/health",
+                  { signal: AbortSignal.timeout(2000) }
+                );
+
+                assert.equal(healthResponse.status, 200);
+
+                const healthBody = await healthResponse.json();
+
+                assert.equal(healthBody.success, true);
+                assert.equal(
+                  healthBody.message,
+                  "FloodGuard API is running"
+                );
+
+                const readyResponse = await fetch(
+                  "http://localhost:5000/api/ready",
+                  { signal: AbortSignal.timeout(2000) }
+                );
+
+                assert.equal(readyResponse.status, 200);
+
+                const readyBody = await readyResponse.json();
+
+                assert.equal(readyBody.success, true);
+                assert.equal(readyBody.database, "connected");
+
+                console.log("Backend API health check passed.");
+                console.log("Database readiness check passed.");
+                return;
+              } catch (error) {
+                lastError = error;
+
+                await new Promise((resolve) => {
+                  setTimeout(resolve, 1000);
+                });
+              }
+            }
+
+            throw lastError;
+          }
+
+          checkBackend().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Show server log on failure
+        if: failure()
+        run: |
+          if [ -f server.log ]; then
+            cat server.log
+          fi
