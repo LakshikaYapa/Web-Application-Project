@@ -8,9 +8,9 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
-COPY index.html vite.config.js ./
-COPY public ./public
-COPY src ./src
+# Optional folders such as public/ may be absent in a clean Git checkout.
+# .dockerignore excludes secrets, local dependencies, and build output.
+COPY . .
 RUN npm run build
 
 # Serve only the compiled assets; Node.js and build dependencies stay behind.
