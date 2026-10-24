@@ -37,6 +37,17 @@ jobs:
       - name: Build and start healthy services
         run: docker compose up --build --wait --wait-timeout 120
 
+      - name: Check frontend and proxied API connection
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --max-time 10 http://127.0.0.1:8080/ --output /tmp/floodguard-index.html
+          grep --fixed-strings 'id="root"' /tmp/floodguard-index.html
+          curl --fail --silent --show-error --max-time 10 http://127.0.0.1:8080/api/health \
+            | jq --exit-status '.success == true and .message == "FloodGuard API is running"'
+          curl --fail --silent --show-error --max-time 10 http://127.0.0.1:8080/api/ready \
+            | jq --exit-status '.success == true and .database == "connected"'
+
       - name: Check API health and database readiness
         shell: bash
         run: |
