@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Header from "./components/Header";
 
 function App() {
   const [message, setMessage] = useState("Connecting to backend...");
@@ -32,15 +33,13 @@ function App() {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-5 bg-black px-6">
-      <h1 className="text-5xl font-bold tracking-tight text-white sm:text-7xl">
-        Flood<span className="text-teal-400">Guard</span>
-      </h1>
-
-      <p role="status" className="text-center text-sm text-slate-400">
-        {message}
-      </p>
-    </main>
+    <>
+      <a className="skip-link" href="#main">Skip to content</a>
+      <Header />
+      <main id="main" className="homepage-placeholder" tabIndex={-1}>
+        <p role="status" className="connection-status">{message}</p>
+      </main>
+    </>
   );
 }
 
