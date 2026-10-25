@@ -436,9 +436,8 @@ html[lang="si"] .hero-motto { max-width: 230px; line-height: 1.9; }
 
 /* Shared account dialogs: brand panel, compact form grid, mobile stacking. */
 .register-dialog.auth-dialog { width: min(960px, calc(100% - 32px)); padding: 0; border-radius: 20px; }
-.auth-layout { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+.auth-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
 .auth-intro { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: space-between; gap: 44px; overflow: hidden; padding: 32px; background: linear-gradient(150deg, #006775, #083646 75%); color: #f2fdff; }
-.auth-intro::after { content: ""; position: absolute; z-index: -1; width: 380px; height: 380px; right: -200px; bottom: -100px; border: 1px solid rgb(117 236 232 / 25%); border-radius: 50%; box-shadow: 0 0 0 50px rgb(117 236 232 / 5%), 0 0 0 100px rgb(117 236 232 / 4%); }
 .auth-intro-brand { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 750; }
 .auth-intro-brand img { width: 42px; height: 48px; object-fit: contain; }
 .auth-eyebrow { color: #9be9e7; font-size: 11px; font-weight: 650; line-height: 1.8; letter-spacing: 1px; }
@@ -447,7 +446,8 @@ html[lang="si"] .hero-motto { max-width: 230px; line-height: 1.9; }
 .auth-values { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
 .auth-values span { padding: 6px 10px; border: 1px solid rgb(171 235 239 / 30%); border-radius: 20px; color: #d8f5f7; font-size: 11px; }
 .auth-intro-footer { margin: 0; color: #b4d9df; font-size: 12px; line-height: 1.8; }
-.auth-panel { min-width: 0; padding: 30px; }
+.auth-panel { min-width: 0; padding: 30px; background-color: #f5fbfc; background-image: linear-gradient(rgb(248 253 255 / 91%), rgb(248 253 255 / 94%)), url('/auth-community.png'); background-size: cover; background-position: center; }
+[data-theme="dark"] .auth-panel { background-color: #102c3b; background-image: linear-gradient(rgb(10 32 45 / 90%), rgb(10 32 45 / 94%)), url('/auth-community.png'); }
 .auth-panel .register-dialog-heading { gap: 16px; }
 .auth-panel .register-dialog-heading h2 { font-size: 25px; letter-spacing: -.6px; }
 .auth-panel .register-description { margin: 10px 0 18px; font-size: 13px; }
@@ -472,7 +472,7 @@ html[lang="si"] .hero-motto { max-width: 230px; line-height: 1.9; }
 [data-theme="dark"] .auth-password-control button { background: #143c45; color: #a5f0f0; border-color: #477183; }
 @media (max-width: 700px) {
   .auth-layout { grid-template-columns: minmax(0, 1fr); }
-  .auth-intro { padding: 20px 24px; gap: 14px; }
+  .auth-intro { padding: 20px 24px; gap: 14px; min-height: 180px; background-position: center 55%; }
   .auth-intro-message h2 { margin: 10px 0 0; font-size: 22px; }
   .auth-intro-message :is(p, .auth-values), .auth-intro-footer { display: none; }
   .auth-panel { padding: 24px; }

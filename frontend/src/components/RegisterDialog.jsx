@@ -114,7 +114,6 @@ export default function RegisterDialog({ onClose, onSignIn }) {
   return (
     <dialog ref={dialogRef} className="register-dialog auth-dialog" aria-labelledby="register-title" aria-describedby="register-description" onCancel={onClose}>
       <div className="auth-layout">
-      <AuthIntro />
       <div className="auth-panel">
       <div className="register-dialog-heading">
         <h2 id="register-title">{t("Create your account")}</h2>
@@ -168,6 +167,7 @@ export default function RegisterDialog({ onClose, onSignIn }) {
       )}
       <p className="auth-switch">{t("Already have an account?")} {" "}<button type="button" onClick={onSignIn}>{t("Sign in")}</button></p>
       </div>
+      <AuthIntro />
       </div>
     </dialog>
   );
