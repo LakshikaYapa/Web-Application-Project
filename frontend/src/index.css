@@ -140,6 +140,20 @@ button:disabled { cursor: not-allowed; }
 .community-photo-card h3 { margin: 0 0 6px; color: #193b54; font-size: 14px; font-weight: 700; line-height: 1.5; }
 .community-photo-card p { margin: 0; color: #49677a; font-size: 12px; line-height: 1.7; }
 
+.shelter-needs-section { margin-top: 20px; padding: 22px; border: 1px solid #dcebf0; border-radius: 12px; background: white; }
+.shelter-needs-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.supply-card { display: flex; flex-direction: column; justify-content: space-between; gap: 18px; min-width: 0; padding: 18px; border: 1px solid #e4eef1; border-radius: 8px; background: #f8fcfd; }
+.supply-card-content { display: flex; align-items: flex-start; gap: 12px; }
+.supply-icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 14px; background: #e0f5fc; color: #008ebc; }
+.supply-food .supply-icon { background: #def7f5; color: #008e91; }
+.supply-bedding .supply-icon { background: #f0e8fc; color: #8c4dc0; }
+.supply-card h3 { margin: 0 0 6px; color: #193b54; font-size: 15px; font-weight: 700; }
+.supply-card p { margin: 0 0 10px; color: #49677a; font-size: 12px; line-height: 1.7; }
+.need-priority { display: inline-block; padding: 4px 7px; border-radius: 4px; font-size: 11px; font-weight: 650; }
+.priority-high { background: #ffe2e9; color: #a82647; }
+.priority-medium { background: #fff0c4; color: #775000; }
+.supply-card button { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 10px 12px; border: 1px solid #007987; border-radius: 5px; background: #007e8d; color: white; font-size: 12px; font-weight: 600; }
+
 @media (min-width: 1180px) {
   .homepage-overview { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 16px; }
   .community-actions { grid-column: auto; grid-template-columns: minmax(0, 1fr); }
@@ -220,6 +234,8 @@ button:disabled { cursor: not-allowed; }
 }
 
 @media (max-width: 760px) {
+  .shelter-needs-section { padding: 18px; }
+  .shelter-needs-grid { grid-template-columns: minmax(0, 1fr); }
   .community-gallery { padding: 18px; }
   .community-gallery-grid { grid-template-columns: minmax(0, 1fr); }
   .volunteer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }

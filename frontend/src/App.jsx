@@ -6,6 +6,7 @@ import NearbyShelters from "./components/NearbyShelters";
 import CommunityActions from "./components/CommunityActions";
 import Volunteers from "./components/Volunteers";
 import CommunityGallery from "./components/CommunityGallery";
+import ShelterNeeds from "./components/ShelterNeeds";
 
 function App() {
   const [message, setMessage] = useState("Connecting to backend...");
@@ -49,6 +50,7 @@ function App() {
         </div>
         <Volunteers />
         <CommunityGallery />
+        <ShelterNeeds />
         <p role="status" className="connection-status">{message}</p>
       </main>
     </>
