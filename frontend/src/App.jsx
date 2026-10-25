@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "./components/Header";
+import Hero from "./components/Hero";
 
 function App() {
   const [message, setMessage] = useState("Connecting to backend...");
@@ -18,7 +19,6 @@ function App() {
         }
 
         const data = await response.json();
-
         setMessage(data.message);
       } catch (error) {
         if (error.name !== "AbortError") {
@@ -28,7 +28,6 @@ function App() {
     }
 
     checkBackend();
-
     return () => controller.abort();
   }, []);
 
@@ -36,7 +35,8 @@ function App() {
     <>
       <a className="skip-link" href="#main">Skip to content</a>
       <Header />
-      <main id="main" className="homepage-placeholder" tabIndex={-1}>
+      <main id="main" className="homepage" tabIndex={-1}>
+        <Hero />
         <p role="status" className="connection-status">{message}</p>
       </main>
     </>

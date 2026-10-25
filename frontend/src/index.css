@@ -86,8 +86,38 @@ button:disabled { cursor: not-allowed; }
   white-space: nowrap;
 }
 .menu-toggle { display: none; }
-.homepage-placeholder { max-width: 1240px; margin: 0 auto; padding: 32px; }
-.connection-status { margin: 0; color: #607586; font-size: 13px; }
+.homepage { max-width: 1240px; margin: 0 auto; padding: 24px 32px; }
+.connection-status { margin: 20px 0 0; color: #607586; font-size: 13px; }
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 430px;
+  border: 1px solid #dfedf0;
+  border-radius: 14px;
+  background: #deedf0 url('/floodguard-hero.png') center right / cover no-repeat;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, #f5fcff 0%, rgb(245 252 255 / 97%) 27%, rgb(245 252 255 / 80%) 48%, rgb(245 252 255 / 8%) 78%);
+}
+.hero-content { max-width: 650px; padding: 52px 36px 42px; }
+.hero-eyebrow { margin: 0 0 16px; color: #007c8a; font-size: 12px; font-weight: 750; letter-spacing: 2px; text-transform: uppercase; }
+.hero h1 { margin: 0; color: #0b2443; font-size: clamp(32px, 4vw, 48px); font-weight: 800; line-height: 1.12; letter-spacing: -1.7px; }
+.hero-description { max-width: 370px; margin: 18px 0 24px; color: #304e69; font-size: 16px; line-height: 1.6; }
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero-action { display: inline-flex; align-items: center; gap: 12px; min-height: 66px; padding: 12px 22px; border: 1px solid #008e9b; border-radius: 7px; text-align: left; }
+.hero-action-primary { background: #008592; color: white; box-shadow: 0 4px 12px rgb(0 118 132 / 14%); }
+.hero-action-secondary { background: #f1fcff; color: #006f80; }
+.hero-action strong { display: block; font-size: 15px; }
+.hero-action span span { display: block; margin-top: 4px; font-size: 12px; }
+.hero-preview-note { margin: 13px 0 0; color: #49677a; font-size: 12px; line-height: 1.5; }
+.hero-motto { position: absolute; right: 32px; bottom: 58px; margin: 0; padding: 14px 18px; border-left: 3px solid #00adba; background: rgb(5 35 48 / 78%); border-radius: 0 8px 8px 0; color: white; font-size: 17px; font-weight: 600; line-height: 1.5; }
+.hero-image-credit { position: absolute; right: 12px; bottom: 12px; padding: 4px 7px; border-radius: 4px; background: rgb(255 255 255 / 90%); color: #385364; font-size: 10px; }
 
 @media (max-width: 900px) {
   .header-inner { gap: 24px; padding-inline: 20px; }
@@ -124,5 +154,16 @@ button:disabled { cursor: not-allowed; }
   }
   .primary-navigation a, .primary-navigation button { text-align: left; padding: 12px 6px; }
   .primary-navigation a[aria-current]::after { right: auto; width: 28px; left: 6px; }
-  .homepage-placeholder { padding: 24px 20px; }
+  .homepage { padding: 20px; }
+  .hero { min-height: auto; background-position: 65% center; }
+  .hero::before { background: linear-gradient(90deg, rgb(245 252 255 / 98%), rgb(245 252 255 / 88%)); }
+  .hero-content { padding: 36px 24px 48px; }
+  .hero h1 { letter-spacing: -1px; }
+  .hero-motto { display: none; }
+  .hero-description { font-size: 15px; }
+}
+
+@media (max-width: 420px) {
+  .hero-content { padding-inline: 18px; }
+  .hero-action { width: 100%; }
 }
