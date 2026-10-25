@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
+import FloodMapPreview from "./components/FloodMapPreview";
 
 function App() {
   const [message, setMessage] = useState("Connecting to backend...");
@@ -37,6 +38,9 @@ function App() {
       <Header />
       <main id="main" className="homepage" tabIndex={-1}>
         <Hero />
+        <div className="homepage-overview">
+          <FloodMapPreview />
+        </div>
         <p role="status" className="connection-status">{message}</p>
       </main>
     </>
