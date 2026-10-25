@@ -32,10 +32,10 @@ button { font: inherit; }
   box-shadow: 0 3px 16px rgb(15 64 82 / 4%);
 }
 .header-inner {
-  max-width: 1240px;
+  width: 100%;
   min-height: 88px;
   margin: 0 auto;
-  padding: 12px 32px;
+  padding: 12px 20px;
   display: flex;
   align-items: center;
   gap: 40px;
@@ -86,7 +86,7 @@ button:disabled { cursor: not-allowed; }
   white-space: nowrap;
 }
 .menu-toggle { display: none; }
-.homepage { max-width: 1240px; margin: 0 auto; padding: 24px 32px; }
+.homepage { width: 100%; margin: 0 auto; padding: 20px; }
 .connection-status { margin: 20px 0 0; color: #607586; font-size: 13px; }
 
 .homepage-overview { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 20px; margin-top: 20px; }
@@ -168,7 +168,7 @@ button:disabled { cursor: not-allowed; }
 .safety-card-text > span { color: #49677a; font-size: 11px; line-height: 1.5; }
 
 .site-footer { margin-top: 24px; background: linear-gradient(115deg, #006777, #083649); color: #e5f5f8; }
-.footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; max-width: 1240px; margin: 0 auto; padding: 30px 32px; }
+.footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; width: 100%; margin: 0 auto; padding: 30px 20px; }
 .footer-brand { display: inline-flex; align-items: center; gap: 12px; color: white; }
 .footer-brand img { width: 42px; height: 48px; object-fit: contain; }
 .footer-brand strong { display: block; font-size: 21px; font-weight: 750; letter-spacing: -.6px; }
@@ -177,12 +177,9 @@ button:disabled { cursor: not-allowed; }
 .back-to-top { display: inline-flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid #6ba8b5; border-radius: 6px; color: white; font-size: 12px; font-weight: 600; }
 .back-to-top:hover { background: rgb(255 255 255 / 10%); }
 .site-footer a:focus-visible { outline-color: #9ff3f5; }
-.footer-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; max-width: 1176px; margin: 0 auto; padding: 18px 0; border-top: 1px solid rgb(209 234 240 / 20%); }
+.footer-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin: 0 20px; padding: 18px 0; border-top: 1px solid rgb(209 234 240 / 20%); }
 .footer-bottom p { margin: 0; color: #d1eaf0; font-size: 11px; line-height: 1.6; }
 
-@media (max-width: 1240px) {
-  .footer-bottom { margin-inline: 32px; }
-}
 
 @media (max-width: 1000px) {
   .safety-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
