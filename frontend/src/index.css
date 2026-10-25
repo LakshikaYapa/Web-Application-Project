@@ -426,3 +426,10 @@ html[lang="si"] .hero-motto { max-width: 230px; line-height: 1.9; }
   .register-dialog { padding: 20px; }
   .register-open-button { padding: 9px 12px; font-size: 13px; }
 }
+
+.sign-in-button:not(:disabled) { cursor: pointer; }
+.sign-in-button:not(:disabled):hover { background: #006776; }
+.auth-switch { margin: 22px 0 0; padding-top: 18px; border-top: 1px solid #dcebf0; color: #49677a; font-size: 13px; line-height: 1.9; text-align: center; }
+.auth-switch button { padding: 3px 5px; border: 0; background: transparent; color: #007e8d; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+[data-theme="dark"] .auth-switch { color: #b8cfdd; border-color: #367180; }
+[data-theme="dark"] .auth-switch button { color: #8ce8ec; }

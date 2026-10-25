@@ -180,5 +180,9 @@
   "An account already uses this email address.": "මෙම ඊමේල් ලිපිනයෙන් ගිණුමක් දැනටමත් තිබේ.",
   "Too many registration attempts. Try again later.": "ලියාපදිංචි වීමේ උත්සාහ ගණන වැඩියි. ටික වේලාවකට පසු නැවත උත්සාහ කරන්න.",
   "Unable to create your account. Please try again.": "ගිණුම සෑදීමට නොහැකි විය. නැවත උත්සාහ කරන්න.",
-  "Cannot connect to the server. Please try again.": "සේවාදායකයට සම්බන්ධ විය නොහැක. නැවත උත්සාහ කරන්න."
+  "Cannot connect to the server. Please try again.": "සේවාදායකයට සම්බන්ධ විය නොහැක. නැවත උත්සාහ කරන්න.",
+  "Close sign in": "පිවිසුම් කවුළුව වසන්න",
+  "Sign-in is coming soon. You can create an account now.": "පිවිසීමේ පහසුකම ළඟදීම. දැනට ඔබට ගිණුමක් සෑදිය හැකියි.",
+  "Don't have an account?": "තවම ගිණුමක් නැද්ද?",
+  "Already have an account?": "දැනටමත් ගිණුමක් තිබේද?"
 }

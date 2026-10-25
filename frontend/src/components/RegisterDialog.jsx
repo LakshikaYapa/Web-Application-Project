@@ -12,7 +12,7 @@ const apiMessages = {
   RATE_LIMITED: "Too many registration attempts. Try again later.",
 };
 
-export default function RegisterDialog({ onClose }) {
+export default function RegisterDialog({ onClose, onSignIn }) {
   const { t, language } = useLanguage();
   const dialogRef = useRef(null);
   const requestRef = useRef(null);
@@ -132,6 +132,7 @@ export default function RegisterDialog({ onClose }) {
           </fieldset>
         </form>
       )}
+      <p className="auth-switch">{t("Already have an account?")} {" "}<button type="button" onClick={onSignIn}>{t("Sign in")}</button></p>
     </dialog>
   );
 }
