@@ -1,9 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const upcomingPages = ["Flood map", "Shelters", "Volunteer", "Donate"];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem("floodguard-theme");
+      if (saved === "light" || saved === "dark") return saved;
+    } catch { /* Use the system preference when storage is unavailable. */ }
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try {
+      localStorage.setItem("floodguard-theme", theme);
+    } catch { /* Theme switching still works without persistent storage. */ }
+  }, [theme]);
 
   return (
     <header className="site-header">
@@ -40,6 +54,15 @@ export default function Header() {
           ))}
         </nav>
 
+        <button
+          className="theme-toggle"
+          type="button"
+          aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          aria-pressed={theme === "dark"}
+          onClick={() => setTheme((current) => current === "dark" ? "light" : "dark")}
+        >
+          <span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
+        </button>
         <button className="sign-in-button" type="button" disabled title="Coming soon">
           Sign in<span className="sr-only"> — coming soon</span>
         </button>

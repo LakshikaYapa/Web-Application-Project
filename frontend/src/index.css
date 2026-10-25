@@ -320,3 +320,45 @@ button:disabled { cursor: not-allowed; }
   .hero-content { padding-inline: 18px; }
   .hero-action { width: 100%; }
 }
+
+/* Theme controls and dark palette. Map tiles retain their original map colors. */
+:root { color-scheme: light; }
+.theme-toggle { display: inline-grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; margin-left: auto; border: 1px solid #dcebf0; border-radius: 8px; background: #f4f9fc; color: #006c7c; cursor: pointer; font-size: 25px; line-height: 1; }
+.theme-toggle:hover { background: #e0f5f7; }
+.header-inner .sign-in-button { margin-left: 0; }
+:root[data-theme="dark"] { color-scheme: dark; }
+[data-theme="dark"] body { background: #071b25; color: #e6f1f7; }
+[data-theme="dark"] :focus-visible { outline-color: #41dce2; }
+[data-theme="dark"] :is(.site-header, .flood-map-card, .shelters-card, .volunteers-section, .community-gallery, .shelter-needs-section, .safety-section) { background: #0c2633; border-color: #244653; }
+[data-theme="dark"] :is(.shelter-row, .supply-card, .safety-card) { background: #112f3d; border-color: #294a58; }
+[data-theme="dark"] :is(.volunteer-card, .community-photo-card) { border-color: #294a58; }
+[data-theme="dark"] :is(.flood-map-heading h2, .shelters-card h2, .volunteers-title-row h2, .community-gallery h2, .safety-section h2, .shelter-info h3, .volunteer-details h3, .community-photo-card h3, .supply-card h3, .community-action-content h2, .relief-total strong) { color: #f0f8fc; }
+[data-theme="dark"] :is(.connection-status, .map-instructions, .map-demo-note, .map-coming-soon, .map-legend li, .shelters-intro, .shelters-note, .shelter-info p, .shelter-capacity, .volunteers-heading p, .volunteers-note, .volunteer-details p, .volunteer-role, .community-photo-card p, .supply-card p, .safety-card-text > span, .safety-tips, .community-action-content p, .action-coming-soon, .relief-total) { color: #b8cfdd; }
+[data-theme="dark"] :is(.brand, .primary-navigation a[aria-current], .community-action-icon) { color: #38dce0; }
+[data-theme="dark"] .primary-navigation button:disabled { color: #a6c0d0; }
+[data-theme="dark"] :is(.menu-toggle, .theme-toggle, .map-preview-button, .volunteers-actions .volunteers-join, .community-action-content button) { background: #123a49; border-color: #367180; color: #a5f0f0; }
+[data-theme="dark"] .primary-navigation.is-open { border-color: #294a58; }
+[data-theme="dark"] :is(.theme-toggle:hover, .map-preview-button:not(:disabled):hover, .safety-card:hover) { background: #1b4555; }
+[data-theme="dark"] .volunteers-actions button { color: #8ce8ec; }
+[data-theme="dark"] .volunteer-action { background: #103744; border-color: #245667; }
+[data-theme="dark"] .relief-action { background: #392b3b; border-color: #594051; }
+[data-theme="dark"] .relief-action .community-action-icon { color: #ff7396; }
+[data-theme="dark"] .relief-progress { background: #634452; }
+[data-theme="dark"] .demo-badge { background: #4b2638; border-color: #714054; color: #ffc0d1; }
+[data-theme="dark"] .hero { border-color: #244653; background-color: #12303b; }
+[data-theme="dark"] .hero::before { background: linear-gradient(90deg, #09232f 0%, rgb(9 35 47 / 97%) 27%, rgb(9 35 47 / 80%) 48%, rgb(9 35 47 / 25%) 78%); }
+[data-theme="dark"] .hero h1 { color: #f0f8fc; }
+[data-theme="dark"] .hero-eyebrow { color: #3ee3e5; }
+[data-theme="dark"] :is(.hero-description, .hero-preview-note) { color: #c0d8e5; }
+[data-theme="dark"] .hero-action-secondary { background: #133e4c; color: #b6f2f3; }
+[data-theme="dark"] .hero-image-credit { background: #12313e; color: #d5e7ef; }
+[data-theme="dark"] .shelter-status.is-open { background: #164d42; color: #b6f2da; }
+[data-theme="dark"] :is(.shelter-status.is-full, .priority-high) { background: #592c40; color: #ffd0dc; }
+[data-theme="dark"] .priority-medium { background: #514225; color: #ffe2a3; }
+[data-theme="dark"] .safety-card { color: #f0f8fc; }
+
+@media (max-width: 760px) {
+  .header-inner { column-gap: 8px; }
+  .theme-toggle { margin-left: 0; width: 34px; height: 36px; }
+  [data-theme="dark"] .hero::before { background: linear-gradient(90deg, rgb(9 35 47 / 98%), rgb(9 35 47 / 88%)); }
+}
