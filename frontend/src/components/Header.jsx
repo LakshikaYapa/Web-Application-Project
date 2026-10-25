@@ -1,5 +1,6 @@
 import { useLanguage } from "../i18n/useLanguage";
 import { useEffect, useState } from "react";
+import RegisterDialog from "./RegisterDialog";
 
 const navigation = [
   { label: "Flood map", target: "flood-map-title" },
@@ -11,6 +12,7 @@ const navigation = [
 export default function Header() {
   const { t, language, setLanguage } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [registerOpen, setRegisterOpen] = useState(false);
   const [theme, setTheme] = useState(() => {
     try {
       const saved = localStorage.getItem("floodguard-theme");
@@ -71,9 +73,11 @@ export default function Header() {
         >
           <span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
         </button>
+        <button className="register-open-button" type="button" onClick={() => { setMenuOpen(false); setRegisterOpen(true); }}>{t("Register")}</button>
         <button className="sign-in-button" type="button" disabled title={t("Coming soon")}>{t("Sign in")}<span className="sr-only">{t("— coming soon")}</span>
         </button>
       </div>
+      {registerOpen && <RegisterDialog onClose={() => setRegisterOpen(false)} />}
     </header>
   );
 }

@@ -395,3 +395,34 @@ html[lang="si"] .hero-motto { max-width: 230px; line-height: 1.9; }
   html[lang="si"] .header-inner { gap: 8px; }
   html[lang="si"] .primary-navigation { gap: 0; }
 }
+
+.register-open-button { padding: 10px 16px; border: 1px solid #007e8d; border-radius: 7px; background: #eaf9fb; color: #006c7c; font-size: 14px; font-weight: 600; cursor: pointer; }
+.register-open-button:hover { background: #d7f3f6; }
+.register-dialog { width: min(480px, calc(100% - 32px)); max-height: calc(100dvh - 40px); margin: auto; padding: 26px; overflow-y: auto; border: 1px solid #c6dde5; border-radius: 14px; background: white; color: #193b54; box-shadow: 0 20px 80px rgb(0 20 30 / 25%); }
+.register-dialog::backdrop { background: rgb(3 19 29 / 65%); }
+.register-dialog-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.register-dialog-heading h2 { margin: 0; font-size: 23px; font-weight: 750; }
+.register-close { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border: 1px solid #dcebf0; border-radius: 6px; background: transparent; color: inherit; font-size: 25px; cursor: pointer; }
+.register-description { margin: 12px 0 20px; color: #49677a; font-size: 14px; line-height: 1.7; }
+.register-fields { display: grid; gap: 9px; margin: 0; padding: 0; border: 0; min-width: 0; }
+.register-fields label { margin-top: 8px; font-size: 14px; font-weight: 650; }
+.register-fields :is(input, select) { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #a9c6d2; border-radius: 6px; background: #f8fcfd; color: #193b54; font: inherit; font-size: 15px; }
+.register-fields [aria-invalid="true"] { border-color: #bd3558; }
+.register-fields:disabled { opacity: .7; }
+.register-fields :disabled { cursor: wait; }
+.register-hint { margin: 0; color: #607586; font-size: 12px; line-height: 1.7; }
+.register-submit { width: 100%; margin-top: 16px; padding: 12px 16px; border: 1px solid #007987; border-radius: 6px; background: #007e8d; color: white; font: inherit; font-weight: 650; cursor: pointer; }
+.register-submit:hover { background: #006776; }
+.register-field-error { margin: 0; color: #ac264c; font-size: 12px; line-height: 1.7; }
+.register-error-summary { margin: 0 0 12px; padding: 12px; border: 1px solid #efb7c6; border-radius: 6px; background: #fff0f4; color: #93213f; font-size: 13px; line-height: 1.7; }
+.register-success h3 { margin: 0 0 10px; font-size: 20px; font-weight: 700; }
+.register-success p { margin: 0; font-size: 14px; line-height: 1.8; }
+[data-theme="dark"] :is(.register-dialog, .register-fields input, .register-fields select) { background: #102c3b; border-color: #477183; color: #e6f1f7; }
+[data-theme="dark"] :is(.register-description, .register-hint) { color: #b8cfdd; }
+[data-theme="dark"] .register-open-button { background: #123a49; color: #a5f0f0; border-color: #367180; }
+[data-theme="dark"] .register-field-error { color: #ffb8cd; }
+[data-theme="dark"] .register-error-summary { background: #472a39; color: #ffd0dc; border-color: #9e5269; }
+@media (max-width: 760px) {
+  .register-dialog { padding: 20px; }
+  .register-open-button { padding: 9px 12px; font-size: 13px; }
+}
