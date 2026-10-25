@@ -1,3 +1,4 @@
+import { useLanguage } from "./i18n/useLanguage";
 import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
@@ -11,6 +12,7 @@ import SafetyGuidance from "./components/SafetyGuidance";
 import Footer from "./components/Footer";
 
 function App() {
+  const { t } = useLanguage();
   const [message, setMessage] = useState("Connecting to backend...");
 
   useEffect(() => {
@@ -41,7 +43,7 @@ function App() {
 
   return (
     <>
-      <a id="page-top" className="skip-link" href="#main">Skip to content</a>
+      <a id="page-top" className="skip-link" href="#main">{t("Skip to content")}</a>
       <Header />
       <main id="main" className="homepage" tabIndex={-1}>
         <Hero />
@@ -54,7 +56,7 @@ function App() {
         <CommunityGallery />
         <ShelterNeeds />
         <SafetyGuidance />
-        <p role="status" className="connection-status">{message}</p>
+        <p role="status" className="connection-status">{t(message)}</p>
       </main>
       <Footer />
     </>

@@ -1,3 +1,4 @@
+import { useLanguage } from "../i18n/useLanguage";
 const shelters = [
   { name: "Demo Community Hall", district: "Kandy", occupied: 120, capacity: 200 },
   { name: "Demo School Shelter", district: "Gampaha", occupied: 80, capacity: 100 },
@@ -13,13 +14,14 @@ function ShelterIcon() {
 }
 
 export default function NearbyShelters() {
+  const { t } = useLanguage();
   return (
     <section className="shelters-card" aria-labelledby="shelters-title">
       <div className="flood-map-heading">
-        <h2 id="shelters-title"><ShelterIcon />Nearby shelters</h2>
-        <span className="demo-badge">Demo data</span>
+        <h2 id="shelters-title"><ShelterIcon />{t("Nearby shelters")}</h2>
+        <span className="demo-badge">{t("Demo data")}</span>
       </div>
-      <p className="shelters-intro">Sample shelter locations and available spaces.</p>
+      <p className="shelters-intro">{t("Sample shelter locations and available spaces.")}</p>
       <ul className="shelter-list">
         {shelters.map(({ name, district, occupied, capacity }) => {
           const full = occupied >= capacity;
@@ -27,20 +29,20 @@ export default function NearbyShelters() {
             <li className="shelter-row" key={name}>
               <span className="shelter-icon"><ShelterIcon /></span>
               <div className="shelter-info">
-                <h3>{name}</h3>
-                <p>{district}</p>
+                <h3>{t(name)}</h3>
+                <p>{t(district)}</p>
               </div>
               <div className="shelter-capacity">
-                <span aria-label={`${occupied} of ${capacity} spaces occupied`}>{occupied} / {capacity}</span>
-                <span className={`shelter-status ${full ? "is-full" : "is-open"}`}>{full ? "Full" : "Open"}</span>
+                <span aria-label={`${t("Spaces occupied")}: ${occupied} / ${capacity}`}>{occupied} / {capacity}</span>
+                <span className={`shelter-status ${full ? "is-full" : "is-open"}`}>{full ? t("Full") : t("Open")}</span>
               </div>
             </li>
           );
         })}
       </ul>
-      <p className="shelters-note" id="shelters-note">Demo only. These are not verified shelters or current occupancy figures. Your location has not been used.</p>
-      <button className="map-preview-button" type="button" disabled aria-describedby="shelters-note shelters-coming-soon">View all shelters <span aria-hidden="true">→</span></button>
-      <span className="map-coming-soon" id="shelters-coming-soon">Shelter directory coming soon</span>
+      <p className="shelters-note" id="shelters-note">{t("Demo only. These are not verified shelters or current occupancy figures. Your location has not been used.")}</p>
+      <button className="map-preview-button" type="button" disabled aria-describedby="shelters-note shelters-coming-soon">{t("View all shelters")}<span aria-hidden="true">→</span></button>
+      <span className="map-coming-soon" id="shelters-coming-soon">{t("Shelter directory coming soon")}</span>
     </section>
   );
 }

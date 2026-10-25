@@ -1,8 +1,10 @@
+import { useLanguage } from "../i18n/useLanguage";
 import { useEffect, useState } from "react";
 
 const upcomingPages = ["Flood map", "Shelters", "Volunteer", "Donate"];
 
 export default function Header() {
+  const { t, language, setLanguage } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState(() => {
     try {
@@ -22,7 +24,7 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="header-inner">
-        <a className="brand" href="#main" aria-label="FloodGuard home">
+        <a className="brand" href="#main" aria-label={t("FloodGuard home")}>
           <img src="/floodguard-logo.png" alt="" width="48" height="56" />
           <span>FloodGuard</span>
         </a>
@@ -34,37 +36,38 @@ export default function Header() {
           aria-controls="primary-navigation"
           onClick={() => setMenuOpen((open) => !open)}
         >
-          {menuOpen ? "Close menu" : "Menu"}
+          {menuOpen ? t("Close menu") : t("Menu")}
           <span aria-hidden="true">{menuOpen ? "×" : "☰"}</span>
         </button>
 
         <nav
           id="primary-navigation"
           className={`primary-navigation${menuOpen ? " is-open" : ""}`}
-          aria-label="Main navigation"
+          aria-label={t("Main navigation")}
         >
-          <a href="#main" aria-current="page" onClick={() => setMenuOpen(false)}>
-            Home
-          </a>
+          <a href="#main" aria-current="page" onClick={() => setMenuOpen(false)}>{t("Home")}</a>
           {upcomingPages.map((page) => (
-            <button type="button" key={page} disabled title="Coming soon">
-              {page}
-              <span className="sr-only"> — coming soon</span>
+            <button type="button" key={page} disabled title={t("Coming soon")}>
+              {t(page)}
+              <span className="sr-only">{t("— coming soon")}</span>
             </button>
           ))}
         </nav>
 
+        <div className="language-switch" role="group" aria-label="Language / භාෂාව">
+          <button type="button" lang="en" aria-pressed={language === "en"} onClick={() => setLanguage("en")}>EN</button>
+          <button type="button" lang="si" aria-pressed={language === "si"} onClick={() => setLanguage("si")}>සිංහල</button>
+        </div>
         <button
           className="theme-toggle"
           type="button"
-          aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          aria-label={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")}
           aria-pressed={theme === "dark"}
           onClick={() => setTheme((current) => current === "dark" ? "light" : "dark")}
         >
           <span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
         </button>
-        <button className="sign-in-button" type="button" disabled title="Coming soon">
-          Sign in<span className="sr-only"> — coming soon</span>
+        <button className="sign-in-button" type="button" disabled title={t("Coming soon")}>{t("Sign in")}<span className="sr-only">{t("— coming soon")}</span>
         </button>
       </div>
     </header>

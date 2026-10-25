@@ -1,3 +1,4 @@
+import { useLanguage } from "../i18n/useLanguage";
 function ActionIcon({ help = false }) {
   return (
     <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -17,28 +18,26 @@ function ActionIcon({ help = false }) {
 }
 
 export default function Hero() {
+  const { t } = useLanguage();
   return (
     <section className="hero" aria-labelledby="hero-title">
       <div className="hero-content">
-        <p className="hero-eyebrow">A safer Sri Lanka, together</p>
-        <h1 id="hero-title">Stay informed.<br />Find help. Help others.</h1>
-        <p className="hero-description">
-          Real-time flood reports, shelter information and ways to support
-          affected communities.
-        </p>
+        <p className="hero-eyebrow">{t("A safer Sri Lanka, together")}</p>
+        <h1 id="hero-title">{t("Stay informed.")}<br />{t("Find help. Help others.")}</h1>
+        <p className="hero-description">{t("Real-time flood reports, shelter information and ways to support affected communities.")}</p>
         <div className="hero-actions">
           <button className="hero-action hero-action-primary" type="button" disabled aria-describedby="hero-preview-note">
             <ActionIcon />
-            <span><strong>Report a flood</strong><span>Share what you see</span></span>
+            <span><strong>{t("Report a flood")}</strong><span>{t("Share what you see")}</span></span>
           </button>
           <button className="hero-action hero-action-secondary" type="button" disabled aria-describedby="hero-preview-note">
             <ActionIcon help />
-            <span><strong>Request help</strong><span>Get support</span></span>
+            <span><strong>{t("Request help")}</strong><span>{t("Get support")}</span></span>
           </button>
         </div>
-        <p id="hero-preview-note" className="hero-preview-note">Reporting and help requests are coming soon.</p>
+        <p id="hero-preview-note" className="hero-preview-note">{t("Reporting and help requests are coming soon.")}</p>
       </div>
-      <p className="hero-motto">Stronger communities.<br />Safer tomorrows.</p>
+      <p className="hero-motto">{t("Stronger communities.")}<br />{t("Safer tomorrows.")}</p>
       
     </section>
   );

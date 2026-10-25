@@ -362,3 +362,31 @@ button:disabled { cursor: not-allowed; }
   .theme-toggle { margin-left: 0; width: 34px; height: 36px; }
   [data-theme="dark"] .hero::before { background: linear-gradient(90deg, rgb(9 35 47 / 98%), rgb(9 35 47 / 88%)); }
 }
+
+/* Keep Sinhala text readable without Latin-style letter spacing or clipping. */
+.language-switch { display: inline-flex; align-items: center; flex-shrink: 0; margin-left: auto; padding: 3px; border: 1px solid #c6dde5; border-radius: 7px; background: #f4f9fc; }
+.language-switch button { min-height: 32px; padding: 5px 9px; border: 0; border-radius: 4px; background: transparent; color: #36566b; font-size: 12px; cursor: pointer; }
+.language-switch button[aria-pressed="true"] { background: #007e8d; color: white; }
+.header-inner .theme-toggle { margin-left: 0; }
+[data-theme="dark"] .language-switch { border-color: #367180; background: #123a49; }
+[data-theme="dark"] .language-switch button { color: #b8e9ee; }
+[data-theme="dark"] .language-switch button[aria-pressed="true"] { background: #007e8d; color: white; }
+html[lang="si"] body { font-family: "Nirmala UI", "Iskoola Pota", "Noto Sans Sinhala", Arial, sans-serif; }
+html[lang="si"] :is(h1, h2, h3, .hero-eyebrow) { letter-spacing: normal; line-height: 1.65; }
+html[lang="si"] :is(.hero-description, .hero-preview-note, .map-instructions, .volunteers-heading p, .safety-tips, .shelters-note, .volunteers-note) { line-height: 1.9; }
+html[lang="si"] .hero-content { max-width: 740px; }
+html[lang="si"] .hero h1 { font-size: clamp(28px, 3.3vw, 44px); }
+html[lang="si"] .header-inner { gap: 18px; flex-wrap: wrap; }
+html[lang="si"] .primary-navigation { flex-wrap: wrap; gap: 18px; }
+html[lang="si"] .primary-navigation button { white-space: normal; }
+html[lang="si"] .demo-badge { white-space: normal; line-height: 1.7; }
+html[lang="si"] .hero-motto { max-width: 230px; line-height: 1.9; }
+@media (max-width: 1100px) {
+  .header-inner { flex-wrap: wrap; gap: 14px; }
+  .primary-navigation { gap: 14px; }
+}
+@media (max-width: 760px) {
+  .language-switch { margin-left: 0; }
+  html[lang="si"] .header-inner { gap: 8px; }
+  html[lang="si"] .primary-navigation { gap: 0; }
+}

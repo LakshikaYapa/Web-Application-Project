@@ -1,4 +1,5 @@
-﻿const guides = [
+import { useLanguage } from "../i18n/useLanguage";
+const guides = [
   {
     id: "before", title: "Before a flood", description: "Get ready early",
     icon: "M8 4h8v4H8zM8 6H5v15h14V6h-3M8 12h8M8 16h6",
@@ -42,12 +43,13 @@
 ];
 
 export default function SafetyGuidance() {
+  const { t } = useLanguage();
   return (
     <section className="safety-section" aria-labelledby="safety-title">
       <div className="volunteers-heading">
         <div>
-          <h2 id="safety-title">Safety guidance</h2>
-          <p>Simple steps to help you and your family stay safe.</p>
+          <h2 id="safety-title">{t("Safety guidance")}</h2>
+          <p>{t("Simple steps to help you and your family stay safe.")}</p>
         </div>
       </div>
       <ul className="safety-grid">
@@ -55,15 +57,15 @@ export default function SafetyGuidance() {
           <li className={`safety-card safety-${id}`} key={id}>
             <div className="safety-card-heading">
               <span className="safety-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={icon} /></svg></span>
-              <div className="safety-card-text"><h3>{title}</h3><span>{description}</span></div>
+              <div className="safety-card-text"><h3>{t(title)}</h3><span>{t(description)}</span></div>
             </div>
             <ul className="safety-tips">
-              {tips.map((tip) => <li key={tip}>{tip}</li>)}
+              {tips.map((tip) => <li key={tip}>{t(tip)}</li>)}
             </ul>
           </li>
         ))}
       </ul>
-      <p className="volunteers-note">Always follow current instructions from local authorities. Flood conditions can change quickly.</p>
+      <p className="volunteers-note">{t("Always follow current instructions from local authorities. Flood conditions can change quickly.")}</p>
     </section>
   );
 }

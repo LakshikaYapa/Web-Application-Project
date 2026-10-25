@@ -1,4 +1,5 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "../i18n/useLanguage";
+import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -11,16 +12,20 @@ const demoLocations = [
 ];
 
 export default function FloodMapPreview() {
+  const { t } = useLanguage();
   const containerRef = useRef(null);
   const mapRef = useRef(null);
+  const viewRef = useRef(null);
   const [tileError, setTileError] = useState(false);
 
   useEffect(() => {
     const map = L.map(containerRef.current, {
-      scrollWheelZoom: false, doubleClickZoom: false, minZoom: 6, maxZoom: 18,
+      scrollWheelZoom: false, doubleClickZoom: false, minZoom: 6, maxZoom: 18, zoomControl: false,
     });
     mapRef.current = map;
-    map.fitBounds(islandBounds, { padding: [10, 10] });
+    if (viewRef.current) map.setView(viewRef.current.center, viewRef.current.zoom);
+    else map.fitBounds(islandBounds, { padding: [10, 10] });
+    L.control.zoom({ zoomInTitle: t("Zoom in"), zoomOutTitle: t("Zoom out") }).addTo(map);
     const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -30,8 +35,8 @@ export default function FloodMapPreview() {
     map.on("click", (event) => zoomToArea(event.latlng));
     demoLocations.forEach(({ name, position, type, color }) => {
       const marker = L.marker(position, {
-        title: `${name}: ${type} (demo). Select to zoom in.`,
-        alt: `${name} demo marker`,
+        title: `${t(name)}: ${t(type)} ${t("(demo)")}. ${t("Select to zoom in.")}`,
+        alt: `${t(name)} ${t("demo marker")}`,
         icon: L.divIcon({
           className: "demo-map-marker",
           html: `<span style="background:${color}"></span>`,
@@ -39,7 +44,7 @@ export default function FloodMapPreview() {
         }),
       }).addTo(map);
       const content = document.createElement("p");
-      content.textContent = `${name}: ${type} - demo only, not a current report.`;
+      content.textContent = `${t(name)}: ${t(type)} - ${t("demo only, not a current report.")}`;
       marker.bindPopup(content);
       marker.on("click", () => zoomToArea(position));
     });
@@ -47,27 +52,28 @@ export default function FloodMapPreview() {
     observer.observe(containerRef.current);
     return () => {
       observer.disconnect();
+      viewRef.current = { center: map.getCenter(), zoom: map.getZoom() };
       map.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [t]);
 
   return (
     <section className="flood-map-card" aria-labelledby="flood-map-title">
       <div className="flood-map-heading">
-        <h2 id="flood-map-title">Flood situation map</h2>
-        <span className="demo-badge">Demo data</span>
+        <h2 id="flood-map-title">{t("Flood situation map")}</h2>
+        <span className="demo-badge">{t("Demo data")}</span>
       </div>
-      <p className="map-instructions" id="map-instructions">Click an area to zoom in. Drag to explore or use the + / - controls.</p>
-      <div ref={containerRef} className="sri-lanka-map" role="region" aria-label="Interactive Sri Lanka map" aria-describedby="map-instructions map-demo-note" />
-      {tileError && <p role="status" className="map-demo-note">Some map tiles could not load. Check your internet connection and reload the page.</p>}
-      <ul className="map-legend" aria-label="Demo marker legend">
+      <p className="map-instructions" id="map-instructions">{t("Click an area to zoom in. Drag to explore or use the + / - controls.")}</p>
+      <div ref={containerRef} className="sri-lanka-map" role="region" aria-label={t("Interactive Sri Lanka map")} aria-describedby="map-instructions map-demo-note" />
+      {tileError && <p role="status" className="map-demo-note">{t("Some map tiles could not load. Check your internet connection and reload the page.")}</p>}
+      <ul className="map-legend" aria-label={t("Demo marker legend")}>
         {demoLocations.map(({ type, color }) => (
-          <li key={type}><span className="legend-dot" style={{ background: color }} aria-hidden="true" />{type}</li>
+          <li key={type}><span className="legend-dot" style={{ background: color }} aria-hidden="true" />{t(type)}</li>
         ))}
       </ul>
-      <p className="map-demo-note" id="map-demo-note">Sample markers only. Not live flood or shelter information. Map tiles require an internet connection.</p>
-      <button className="map-preview-button" type="button" onClick={() => mapRef.current?.fitBounds(islandBounds, { padding: [10, 10] })}>Show all Sri Lanka</button>
+      <p className="map-demo-note" id="map-demo-note">{t("Sample markers only. Not live flood or shelter information. Map tiles require an internet connection.")}</p>
+      <button className="map-preview-button" type="button" onClick={() => mapRef.current?.fitBounds(islandBounds, { padding: [10, 10] })}>{t("Show all Sri Lanka")}</button>
     </section>
   );
 }

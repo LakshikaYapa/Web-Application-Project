@@ -1,3 +1,4 @@
+import { useLanguage } from "../i18n/useLanguage";
 const needs = [
   { id: "water", title: "Drinking water", description: "Bottled water for families staying in shelters.", priority: "High need", high: true },
   { id: "food", title: "Dry food", description: "Rice, canned food, milk powder and biscuits.", priority: "High need", high: true },
@@ -19,18 +20,19 @@ function SupplyIcon({ type }) {
 }
 
 export default function ShelterNeeds() {
+  const { t } = useLanguage();
   return (
     <section className="shelter-needs-section" aria-labelledby="shelter-needs-title">
       <div className="volunteers-heading">
         <div>
           <div className="volunteers-title-row">
-            <h2 id="shelter-needs-title">What shelters need</h2>
-            <span className="demo-badge">Demo data</span>
+            <h2 id="shelter-needs-title">{t("What shelters need")}</h2>
+            <span className="demo-badge">{t("Demo data")}</span>
           </div>
-          <p>Help us provide essential items to support affected communities.</p>
+          <p>{t("Help us provide essential items to support affected communities.")}</p>
         </div>
         <div className="volunteers-actions">
-          <button type="button" disabled aria-describedby="shelter-needs-note">View all needs <span aria-hidden="true">→</span></button>
+          <button type="button" disabled aria-describedby="shelter-needs-note">{t("View all needs")}<span aria-hidden="true">→</span></button>
         </div>
       </div>
       <ul className="shelter-needs-grid">
@@ -39,16 +41,16 @@ export default function ShelterNeeds() {
             <div className="supply-card-content">
               <span className="supply-icon"><SupplyIcon type={id} /></span>
               <div>
-                <h3>{title}</h3>
-                <p>{description}</p>
-                <span className={`need-priority ${high ? "priority-high" : "priority-medium"}`}>{priority} <span className="sr-only">(demo)</span></span>
+                <h3>{t(title)}</h3>
+                <p>{t(description)}</p>
+                <span className={`need-priority ${high ? "priority-high" : "priority-medium"}`}>{t(priority)} <span className="sr-only">{t("(demo)")}</span></span>
               </div>
             </div>
-            <button type="button" disabled aria-describedby="shelter-needs-note">Donate supplies <span aria-hidden="true">→</span></button>
+            <button type="button" disabled aria-describedby="shelter-needs-note">{t("Donate supplies")}<span aria-hidden="true">→</span></button>
           </li>
         ))}
       </ul>
-      <p className="volunteers-note" id="shelter-needs-note">Sample items and priorities, not verified shelter requests. Supply donations coming soon.</p>
+      <p className="volunteers-note" id="shelter-needs-note">{t("Sample items and priorities, not verified shelter requests. Supply donations coming soon.")}</p>
     </section>
   );
 }
