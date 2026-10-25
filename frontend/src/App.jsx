@@ -8,6 +8,7 @@ import Volunteers from "./components/Volunteers";
 import CommunityGallery from "./components/CommunityGallery";
 import ShelterNeeds from "./components/ShelterNeeds";
 import SafetyGuidance from "./components/SafetyGuidance";
+import Footer from "./components/Footer";
 
 function App() {
   const [message, setMessage] = useState("Connecting to backend...");
@@ -40,7 +41,7 @@ function App() {
 
   return (
     <>
-      <a className="skip-link" href="#main">Skip to content</a>
+      <a id="page-top" className="skip-link" href="#main">Skip to content</a>
       <Header />
       <main id="main" className="homepage" tabIndex={-1}>
         <Hero />
@@ -55,6 +56,7 @@ function App() {
         <SafetyGuidance />
         <p role="status" className="connection-status">{message}</p>
       </main>
+      <Footer />
     </>
   );
 }

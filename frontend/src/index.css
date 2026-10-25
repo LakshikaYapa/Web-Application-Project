@@ -167,6 +167,23 @@ button:disabled { cursor: not-allowed; }
 .safety-card-text h3 { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.5; }
 .safety-card-text > span { color: #49677a; font-size: 11px; line-height: 1.5; }
 
+.site-footer { margin-top: 24px; background: linear-gradient(115deg, #006777, #083649); color: #e5f5f8; }
+.footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; max-width: 1240px; margin: 0 auto; padding: 30px 32px; }
+.footer-brand { display: inline-flex; align-items: center; gap: 12px; color: white; }
+.footer-brand img { width: 42px; height: 48px; object-fit: contain; }
+.footer-brand strong { display: block; font-size: 21px; font-weight: 750; letter-spacing: -.6px; }
+.footer-brand span span { display: block; margin-top: 5px; color: #d1eaf0; font-size: 11px; }
+.footer-message { margin: 0; color: #d1eaf0; font-size: 13px; line-height: 1.7; }
+.back-to-top { display: inline-flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid #6ba8b5; border-radius: 6px; color: white; font-size: 12px; font-weight: 600; }
+.back-to-top:hover { background: rgb(255 255 255 / 10%); }
+.site-footer a:focus-visible { outline-color: #9ff3f5; }
+.footer-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; max-width: 1176px; margin: 0 auto; padding: 18px 0; border-top: 1px solid rgb(209 234 240 / 20%); }
+.footer-bottom p { margin: 0; color: #d1eaf0; font-size: 11px; line-height: 1.6; }
+
+@media (max-width: 1240px) {
+  .footer-bottom { margin-inline: 32px; }
+}
+
 @media (max-width: 1000px) {
   .safety-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -251,6 +268,9 @@ button:disabled { cursor: not-allowed; }
 }
 
 @media (max-width: 760px) {
+  .footer-inner { padding: 26px 20px; gap: 20px; }
+  .footer-message { flex-basis: 100%; order: 3; }
+  .footer-bottom { margin-inline: 20px; }
   .safety-section { padding: 18px; }
   .shelter-needs-section { padding: 18px; }
   .shelter-needs-grid { grid-template-columns: minmax(0, 1fr); }
