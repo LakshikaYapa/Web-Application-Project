@@ -4,6 +4,7 @@ import Hero from "./components/Hero";
 import FloodMapPreview from "./components/FloodMapPreview";
 import NearbyShelters from "./components/NearbyShelters";
 import CommunityActions from "./components/CommunityActions";
+import Volunteers from "./components/Volunteers";
 
 function App() {
   const [message, setMessage] = useState("Connecting to backend...");
@@ -45,6 +46,7 @@ function App() {
           <NearbyShelters />
           <CommunityActions />
         </div>
+        <Volunteers />
         <p role="status" className="connection-status">{message}</p>
       </main>
     </>
