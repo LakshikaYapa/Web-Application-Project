@@ -154,6 +154,23 @@ button:disabled { cursor: not-allowed; }
 .priority-medium { background: #fff0c4; color: #775000; }
 .supply-card button { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 10px 12px; border: 1px solid #007987; border-radius: 5px; background: #007e8d; color: white; font-size: 12px; font-weight: 600; }
 
+.safety-section { margin-top: 20px; padding: 22px; border: 1px solid #dcebf0; border-radius: 12px; background: white; }
+.safety-section h2 { margin: 0; color: #102a43; font-size: 24px; font-weight: 750; letter-spacing: -.6px; }
+.safety-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.safety-grid li { min-width: 0; }
+.safety-card { height: 100%; padding: 18px 14px; border: 1px solid #e4eef1; border-radius: 8px; background: #f8fcfd; color: #193b54; }
+.safety-card-heading { display: flex; align-items: center; gap: 10px; }
+.safety-tips { display: grid; gap: 12px; margin: 18px 0 0; padding-left: 18px; list-style: disc; color: #304e69; font-size: 13px; line-height: 1.7; }
+.safety-icon { display: grid; place-items: center; width: 42px; height: 46px; flex-shrink: 0; border-radius: 10px; background: #e0f7f7; color: #008895; }
+.safety-emergency .safety-icon { background: #ffe8ef; color: #d43663; }
+.safety-card-text { display: grid; gap: 5px; }
+.safety-card-text h3 { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.5; }
+.safety-card-text > span { color: #49677a; font-size: 11px; line-height: 1.5; }
+
+@media (max-width: 1000px) {
+  .safety-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 @media (min-width: 1180px) {
   .homepage-overview { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 16px; }
   .community-actions { grid-column: auto; grid-template-columns: minmax(0, 1fr); }
@@ -234,6 +251,7 @@ button:disabled { cursor: not-allowed; }
 }
 
 @media (max-width: 760px) {
+  .safety-section { padding: 18px; }
   .shelter-needs-section { padding: 18px; }
   .shelter-needs-grid { grid-template-columns: minmax(0, 1fr); }
   .community-gallery { padding: 18px; }
@@ -280,6 +298,7 @@ button:disabled { cursor: not-allowed; }
 }
 
 @media (max-width: 420px) {
+  .safety-grid { grid-template-columns: minmax(0, 1fr); }
   .volunteer-grid { grid-template-columns: minmax(0, 1fr); }
   .hero-content { padding-inline: 18px; }
   .hero-action { width: 100%; }
