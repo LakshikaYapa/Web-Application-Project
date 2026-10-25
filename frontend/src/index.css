@@ -62,6 +62,8 @@ button { font: inherit; }
   white-space: nowrap;
 }
 .primary-navigation a[aria-current] { color: #007e8d; font-weight: 700; }
+.primary-navigation a:hover { color: #007e8d; text-decoration: underline; text-underline-offset: 6px; }
+[id$="-title"] { scroll-margin-top: 24px; }
 .primary-navigation a[aria-current]::after {
   content: "";
   position: absolute;
@@ -336,6 +338,9 @@ button:disabled { cursor: not-allowed; }
 [data-theme="dark"] :is(.connection-status, .map-instructions, .map-demo-note, .map-coming-soon, .map-legend li, .shelters-intro, .shelters-note, .shelter-info p, .shelter-capacity, .volunteers-heading p, .volunteers-note, .volunteer-details p, .volunteer-role, .community-photo-card p, .supply-card p, .safety-card-text > span, .safety-tips, .community-action-content p, .action-coming-soon, .relief-total) { color: #b8cfdd; }
 [data-theme="dark"] :is(.brand, .primary-navigation a[aria-current], .community-action-icon) { color: #38dce0; }
 [data-theme="dark"] .primary-navigation button:disabled { color: #a6c0d0; }
+[data-theme="dark"] .primary-navigation a { color: #b8cfdd; }
+[data-theme="dark"] .primary-navigation a:hover,
+[data-theme="dark"] .primary-navigation a[aria-current] { color: #38dce0; }
 [data-theme="dark"] :is(.menu-toggle, .theme-toggle, .map-preview-button, .volunteers-actions .volunteers-join, .community-action-content button) { background: #123a49; border-color: #367180; color: #a5f0f0; }
 [data-theme="dark"] .primary-navigation.is-open { border-color: #294a58; }
 [data-theme="dark"] :is(.theme-toggle:hover, .map-preview-button:not(:disabled):hover, .safety-card:hover) { background: #1b4555; }
@@ -378,7 +383,7 @@ html[lang="si"] .hero-content { max-width: 740px; }
 html[lang="si"] .hero h1 { font-size: clamp(28px, 3.3vw, 44px); }
 html[lang="si"] .header-inner { gap: 18px; flex-wrap: wrap; }
 html[lang="si"] .primary-navigation { flex-wrap: wrap; gap: 18px; }
-html[lang="si"] .primary-navigation button { white-space: normal; }
+html[lang="si"] :is(.primary-navigation button, .primary-navigation a) { white-space: normal; }
 html[lang="si"] .demo-badge { white-space: normal; line-height: 1.7; }
 html[lang="si"] .hero-motto { max-width: 230px; line-height: 1.9; }
 @media (max-width: 1100px) {

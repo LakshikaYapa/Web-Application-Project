@@ -1,7 +1,12 @@
 import { useLanguage } from "../i18n/useLanguage";
 import { useEffect, useState } from "react";
 
-const upcomingPages = ["Flood map", "Shelters", "Volunteer", "Donate"];
+const navigation = [
+  { label: "Flood map", target: "flood-map-title" },
+  { label: "Shelters", target: "shelters-title" },
+  { label: "Volunteer", target: "volunteers-title" },
+  { label: "Donate", target: "relief-action-title" },
+];
 
 export default function Header() {
   const { t, language, setLanguage } = useLanguage();
@@ -46,11 +51,10 @@ export default function Header() {
           aria-label={t("Main navigation")}
         >
           <a href="#main" aria-current="page" onClick={() => setMenuOpen(false)}>{t("Home")}</a>
-          {upcomingPages.map((page) => (
-            <button type="button" key={page} disabled title={t("Coming soon")}>
-              {t(page)}
-              <span className="sr-only">{t("— coming soon")}</span>
-            </button>
+          {navigation.map(({ label, target }) => (
+            <a key={target} href={`#${target}`} onClick={() => setMenuOpen(false)}>
+              {t(label)}
+            </a>
           ))}
         </nav>
 
