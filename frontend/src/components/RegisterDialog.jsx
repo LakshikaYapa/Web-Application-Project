@@ -1,5 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
+import AuthIntro from "./AuthIntro";
+
+const emptyValues = { name: "", email: "", password: "", role: "", address: "", nearestTown: "", phone: "" };
+const profileFields = [
+  { name: "name", label: "Full name", autoComplete: "name", maxLength: 100 },
+  { name: "email", label: "Email address", type: "email", autoComplete: "email", maxLength: 254 },
+  { name: "phone", label: "Phone number", type: "tel", autoComplete: "tel", maxLength: 30, hint: "Use 077 123 4567 or +94 77 123 4567." },
+  { name: "nearestTown", label: "Nearest town", autoComplete: "address-level2", maxLength: 100 },
+  { name: "address", label: "Address", autoComplete: "street-address", maxLength: 300 },
+];
 
 const roleOptions = [
   { value: "volunteer", label: "Volunteer" },
@@ -18,7 +28,8 @@ export default function RegisterDialog({ onClose, onSignIn }) {
   const requestRef = useRef(null);
   const pendingRef = useRef(false);
   const summaryRef = useRef(null);
-  const [values, setValues] = useState({ name: "", email: "", password: "", role: "" });
+  const [values, setValues] = useState(emptyValues);
+  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [pending, setPending] = useState(false);
@@ -52,6 +63,9 @@ export default function RegisterDialog({ onClose, onSignIn }) {
     if (values.email.trim().length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) nextErrors.email = "Enter a valid email address.";
     if ([...values.password].length < 15 || [...values.password].length > 128) nextErrors.password = "Password must contain 15 to 128 characters.";
     if (!roleOptions.some(({ value }) => value === values.role)) nextErrors.role = "Choose how you want to participate.";
+    if (values.address.trim().length < 5 || values.address.trim().length > 300) nextErrors.address = "Address must contain 5 to 300 characters.";
+    if (values.nearestTown.trim().length < 2 || values.nearestTown.trim().length > 100) nextErrors.nearestTown = "Nearest town must contain 2 to 100 characters.";
+    if (!/^(?:0[1-9]\d{8}|\+94[1-9]\d{8})$/.test(values.phone.replace(/[\s()-]/g, ""))) nextErrors.phone = "Enter a valid Sri Lankan phone number.";
     setMessage("");
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) return;
@@ -69,13 +83,16 @@ export default function RegisterDialog({ onClose, onSignIn }) {
       });
       const body = await response.json().catch(() => ({}));
       if (response.status === 201 && body.success) {
-        setValues({ name: "", email: "", password: "", role: "" });
+        setValues(emptyValues);
+        setShowPassword(false);
         setCreated(true);
       } else if (response.status === 400 && body.code === "VALIDATION_ERROR") {
         // Translate known server messages, rather than rendering arbitrary errors.
         const allowed = new Set([
           "Name must contain 2 to 100 characters.", "Enter a valid email address.",
           "Password must contain 15 to 128 characters.", "Choose volunteer, help_seeker or funder.",
+          "Address must contain 5 to 300 characters.", "Nearest town must contain 2 to 100 characters.",
+          "Enter a valid Sri Lankan phone number.",
         ]);
         const fieldErrors = Object.fromEntries(Object.entries(body.errors ?? {})
           .filter(([field, text]) => Object.hasOwn(values, field) && allowed.has(text)));
@@ -95,7 +112,10 @@ export default function RegisterDialog({ onClose, onSignIn }) {
   const fieldError = (field) => errors[field] ? <p className="register-field-error" id={`register-${field}-error`}>{t(errors[field])}</p> : null;
 
   return (
-    <dialog ref={dialogRef} className="register-dialog" aria-labelledby="register-title" aria-describedby="register-description" onCancel={onClose}>
+    <dialog ref={dialogRef} className="register-dialog auth-dialog" aria-labelledby="register-title" aria-describedby="register-description" onCancel={onClose}>
+      <div className="auth-layout">
+      <AuthIntro />
+      <div className="auth-panel">
       <div className="register-dialog-heading">
         <h2 id="register-title">{t("Create your account")}</h2>
         <button className="register-close" type="button" onClick={onClose} aria-label={t("Close registration")}>×</button>
@@ -110,29 +130,45 @@ export default function RegisterDialog({ onClose, onSignIn }) {
       ) : (
         <form onSubmit={submit} noValidate aria-busy={pending}>
           {(message || Object.keys(errors).length > 0) && <p className="register-error-summary" role="alert" ref={summaryRef} tabIndex={-1}>{t(message || "Please check the form and try again.")}</p>}
-          <fieldset disabled={pending} className="register-fields">
+          <fieldset disabled={pending} className="register-fields register-form-grid">
             <legend className="sr-only">{t("Account details")}</legend>
-            <label htmlFor="register-name">{t("Full name")}</label>
-            <input id="register-name" name="name" autoComplete="name" value={values.name} onChange={update} required maxLength={100} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "register-name-error" : undefined} />
-            {fieldError("name")}
-            <label htmlFor="register-email">{t("Email address")}</label>
-            <input id="register-email" name="email" type="email" autoComplete="email" value={values.email} onChange={update} required maxLength={254} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "register-email-error" : undefined} />
-            {fieldError("email")}
+            {profileFields.map(({ name, label, type = "text", autoComplete, maxLength, hint }) => (
+              <div className={`auth-field ${name === "address" ? "auth-field-wide" : ""}`} key={name}>
+                <label htmlFor={`register-${name}`}>{t(label)}</label>
+                {name === "address" ? (
+                  <textarea id={`register-${name}`} name={name} autoComplete={autoComplete} value={values[name]} onChange={update} required maxLength={maxLength} rows={2} aria-invalid={Boolean(errors[name])} aria-describedby={errors[name] ? `register-${name}-error` : undefined} />
+                ) : (
+                  <input id={`register-${name}`} name={name} type={type} autoComplete={autoComplete} value={values[name]} onChange={update} required maxLength={maxLength} aria-invalid={Boolean(errors[name])} aria-describedby={[hint ? `register-${name}-hint` : "", errors[name] ? `register-${name}-error` : ""].filter(Boolean).join(" ") || undefined} />
+                )}
+                {hint && <p className="register-hint" id={`register-${name}-hint`}>{t(hint)}</p>}
+                {fieldError(name)}
+              </div>
+            ))}
+            <div className="auth-field auth-field-wide">
             <label htmlFor="register-password">{t("Password")}</label>
-            <input id="register-password" name="password" type="password" autoComplete="new-password" value={values.password} onChange={update} required aria-invalid={Boolean(errors.password)} aria-describedby={`register-password-hint${errors.password ? " register-password-error" : ""}`} />
+            <div className="auth-password-control">
+              <input id="register-password" name="password" type={showPassword ? "text" : "password"} autoComplete="new-password" value={values.password} onChange={update} required aria-invalid={Boolean(errors.password)} aria-describedby={`register-password-hint${errors.password ? " register-password-error" : ""}`} />
+              <button type="button" aria-pressed={showPassword} aria-controls="register-password" onClick={() => setShowPassword((visible) => !visible)}>{t(showPassword ? "Hide" : "Show")}</button>
+            </div>
             <p className="register-hint" id="register-password-hint">{t("Use a unique passphrase of 15 to 128 characters.")}</p>
             {fieldError("password")}
+            </div>
+            <div className="auth-field auth-field-wide">
             <label htmlFor="register-role">{t("I want to join as")}</label>
             <select id="register-role" name="role" value={values.role} onChange={update} required aria-invalid={Boolean(errors.role)} aria-describedby={errors.role ? "register-role-error" : undefined}>
               <option value="">{t("Choose a role")}</option>
               {roleOptions.map(({ value, label }) => <option value={value} key={value}>{t(label)}</option>)}
             </select>
             {fieldError("role")}
+            </div>
+            <p className="auth-contact-note auth-field-wide">{t("Your phone number and address are not shown on the public homepage.")}</p>
             <button className="register-submit" type="submit">{t(pending ? "Creating account…" : "Create account")}</button>
           </fieldset>
         </form>
       )}
       <p className="auth-switch">{t("Already have an account?")} {" "}<button type="button" onClick={onSignIn}>{t("Sign in")}</button></p>
+      </div>
+      </div>
     </dialog>
   );
 }

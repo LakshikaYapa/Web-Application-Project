@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useLanguage } from "../i18n/useLanguage";
+import AuthIntro from "./AuthIntro";
 
 export default function SignInDialog({ onClose, onRegister }) {
   const { t } = useLanguage();
@@ -17,7 +18,10 @@ export default function SignInDialog({ onClose, onRegister }) {
   }, []);
 
   return (
-    <dialog ref={dialogRef} className="register-dialog" aria-labelledby="signin-title" aria-describedby="signin-description" onCancel={onClose}>
+    <dialog ref={dialogRef} className="register-dialog auth-dialog signin-dialog" aria-labelledby="signin-title" aria-describedby="signin-description" onCancel={onClose}>
+      <div className="auth-layout">
+      <AuthIntro />
+      <div className="auth-panel">
       <div className="register-dialog-heading">
         <h2 id="signin-title">{t("Sign in")}</h2>
         <button className="register-close" type="button" onClick={onClose} aria-label={t("Close sign in")}>×</button>
@@ -32,6 +36,8 @@ export default function SignInDialog({ onClose, onRegister }) {
         <button className="register-submit" type="button">{t("Sign in")}</button>
       </fieldset>
       <p className="auth-switch">{t("Don't have an account?")} {" "}<button type="button" onClick={onRegister}>{t("Register")}</button></p>
+      </div>
+      </div>
     </dialog>
   );
 }

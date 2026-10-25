@@ -4,6 +4,9 @@ const { ACCOUNT_ROLES } = require("../constants/roles");
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true, maxlength: 100 },
+    address: { type: String, required: true, trim: true, minlength: 5, maxlength: 300, select: false },
+    nearestTown: { type: String, required: true, trim: true, minlength: 2, maxlength: 100 },
+    phone: { type: String, required: true, match: /^\+94[1-9]\d{8}$/, select: false },
     email: {
       type: String,
       required: true,
@@ -26,6 +29,8 @@ const userSchema = new mongoose.Schema(
       transform(_document, result) {
         // Also protect responses after login explicitly selects passwordHash.
         delete result.passwordHash;
+        delete result.address;
+        delete result.phone;
         delete result.__v;
         return result;
       },

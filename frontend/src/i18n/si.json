@@ -184,5 +184,21 @@
   "Close sign in": "පිවිසුම් කවුළුව වසන්න",
   "Sign-in is coming soon. You can create an account now.": "පිවිසීමේ පහසුකම ළඟදීම. දැනට ඔබට ගිණුමක් සෑදිය හැකියි.",
   "Don't have an account?": "තවම ගිණුමක් නැද්ද?",
-  "Already have an account?": "දැනටමත් ගිණුමක් තිබේද?"
+  "Already have an account?": "දැනටමත් ගිණුමක් තිබේද?",
+  "Address": "ලිපිනය",
+  "Nearest town": "ආසන්නතම නගරය",
+  "Phone number": "දුරකථන අංකය",
+  "Use 077 123 4567 or +94 77 123 4567.": "077 123 4567 හෝ +94 77 123 4567 ආකෘතිය භාවිතා කරන්න.",
+  "Address must contain 5 to 300 characters.": "ලිපිනය අක්ෂර 5 සිට 300 දක්වා විය යුතුයි.",
+  "Nearest town must contain 2 to 100 characters.": "ආසන්නතම නගරයේ නම අක්ෂර 2 සිට 100 දක්වා විය යුතුයි.",
+  "Enter a valid Sri Lankan phone number.": "වලංගු ශ්‍රී ලාංකික දුරකථන අංකයක් ඇතුළත් කරන්න.",
+  "Your phone number and address are not shown on the public homepage.": "ඔබේ දුරකථන අංකය සහ ලිපිනය පොදු මුල් පිටුවේ පෙන්වන්නේ නැත.",
+  "Together, we make a difference": "එක්ව වෙනසක් කරමු",
+  "A helping hand. A stronger community.": "උදව් කරන දෑතක්. ශක්තිමත් ප්‍රජාවක්.",
+  "Connect with people who care. Find support, volunteer your time or help fund relief efforts.": "උපකාර කිරීමට කැමති අය සමඟ එක්වන්න. සහාය ලබාගන්න, ස්වේච්ඡාවෙන් සේවය කරන්න හෝ සහන කටයුතුවලට මූල්‍ය ආධාර ලබාදෙන්න.",
+  "Support": "සහාය",
+  "Connect": "එක්වන්න",
+  "Rebuild": "යළි ගොඩනගමු",
+  "Show": "පෙන්වන්න",
+  "Hide": "සඟවන්න"
 }

@@ -1,6 +1,6 @@
 const { isPublicRole } = require("../constants/roles");
 
-const allowedFields = new Set(["name", "email", "password", "role", "preferredLanguage"]);
+const allowedFields = new Set(["name", "email", "password", "role", "preferredLanguage", "address", "nearestTown", "phone"]);
 
 function validateRegistration(body) {
   if (!body || typeof body !== "object" || Array.isArray(body)) {
@@ -22,6 +22,16 @@ function validateRegistration(body) {
   if (!isPublicRole(body.role)) {
     errors.role = "Choose volunteer, help_seeker or funder.";
   }
+  if (typeof body.address !== "string" || body.address.trim().length < 5 || body.address.trim().length > 300) {
+    errors.address = "Address must contain 5 to 300 characters.";
+  }
+  if (typeof body.nearestTown !== "string" || body.nearestTown.trim().length < 2 || body.nearestTown.trim().length > 100) {
+    errors.nearestTown = "Nearest town must contain 2 to 100 characters.";
+  }
+  const phone = typeof body.phone === "string" ? body.phone.replace(/[\s()-]/g, "") : "";
+  if (!/^(?:0[1-9]\d{8}|\+94[1-9]\d{8})$/.test(phone)) {
+    errors.phone = "Enter a valid Sri Lankan phone number.";
+  }
   if (body.preferredLanguage !== undefined && !["en", "si"].includes(body.preferredLanguage)) {
     errors.preferredLanguage = "Choose en or si.";
   }
@@ -34,6 +44,9 @@ function validateRegistration(body) {
       password: body.password,
       role: body.role,
       preferredLanguage: body.preferredLanguage ?? "en",
+      address: body.address.trim(),
+      nearestTown: body.nearestTown.trim(),
+      phone: phone.startsWith("0") ? `+94${phone.slice(1)}` : phone,
     },
   };
 }

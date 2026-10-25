@@ -8,7 +8,7 @@ const { hashPassword } = require("../src/utils/password");
 
 let server;
 let baseUrl;
-const valid = { name: "Test Volunteer", email: " Volunteer@Example.COM ", password: "a long test passphrase", role: "volunteer" };
+const valid = { name: "Test Volunteer", email: " Volunteer@Example.COM ", password: "a long test passphrase", role: "volunteer", address: "123 Test Road", nearestTown: "Kandy", phone: "077 123 4567" };
 
 before(async () => {
   server = app.listen(0, "127.0.0.1");
@@ -46,11 +46,16 @@ test("registration permits each public role and never exposes password data", as
       assert.equal(body.user.preferredLanguage, "si");
       assert.equal(Object.hasOwn(body.user, "passwordHash"), false);
       assert.equal(Object.hasOwn(body.user, "password"), false);
+      assert.equal(Object.hasOwn(body.user, "phone"), false);
+      assert.equal(Object.hasOwn(body.user, "address"), false);
     }
     const saved = create.mock.calls[0].arguments[0];
     assert.match(saved.passwordHash, /^scrypt\$32768\$8\$3\$/);
     assert.equal(Object.hasOwn(saved, "password"), false);
     assert.equal(Object.hasOwn(saved, "status"), false);
+    assert.equal(saved.phone, "+94771234567");
+    assert.equal(saved.address, valid.address);
+    assert.equal(saved.nearestTown, valid.nearestTown);
   } finally { create.mock.restore(); }
 });
 

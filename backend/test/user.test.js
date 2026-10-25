@@ -16,12 +16,17 @@ test("account JSON never exposes an explicitly loaded password hash", async () =
     email: " Volunteer@Example.COM ",
     passwordHash: "test-hash-not-a-real-password",
     role: "volunteer",
+    address: "123 Test Road",
+    nearestTown: "Kandy",
+    phone: "+94771234567",
   });
   await user.validate();
   assert.equal(user.email, "volunteer@example.com");
   const response = JSON.parse(JSON.stringify(user));
   assert.equal(Object.hasOwn(response, "passwordHash"), false);
   assert.equal(Object.hasOwn(response, "__v"), false);
+  assert.equal(Object.hasOwn(response, "address"), false);
+  assert.equal(Object.hasOwn(response, "phone"), false);
   assert.equal(response.role, "volunteer");
   assert.equal(User.schema.path("passwordHash").options.select, false);
 });

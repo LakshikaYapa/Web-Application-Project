@@ -16,6 +16,9 @@ async function register(req, res, next) {
       passwordHash,
       role: value.role,
       preferredLanguage: value.preferredLanguage,
+      address: value.address,
+      nearestTown: value.nearestTown,
+      phone: value.phone,
     });
     return res.status(201).json({
       success: true,
