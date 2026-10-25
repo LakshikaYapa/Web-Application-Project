@@ -1,6 +1,18 @@
+import { useLanguage } from "./i18n/useLanguage";
 import { useEffect, useState } from "react";
+import Header from "./components/Header";
+import Hero from "./components/Hero";
+import FloodMapPreview from "./components/FloodMapPreview";
+import NearbyShelters from "./components/NearbyShelters";
+import CommunityActions from "./components/CommunityActions";
+import Volunteers from "./components/Volunteers";
+import CommunityGallery from "./components/CommunityGallery";
+import ShelterNeeds from "./components/ShelterNeeds";
+import SafetyGuidance from "./components/SafetyGuidance";
+import Footer from "./components/Footer";
 
 function App() {
+  const { t } = useLanguage();
   const [message, setMessage] = useState("Connecting to backend...");
 
   useEffect(() => {
@@ -17,7 +29,6 @@ function App() {
         }
 
         const data = await response.json();
-
         setMessage(data.message);
       } catch (error) {
         if (error.name !== "AbortError") {
@@ -27,20 +38,28 @@ function App() {
     }
 
     checkBackend();
-
     return () => controller.abort();
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-5 bg-black px-6">
-      <h1 className="text-5xl font-bold tracking-tight text-white sm:text-7xl">
-        Flood<span className="text-teal-400">Guard</span>
-      </h1>
-
-      <p role="status" className="text-center text-sm text-slate-400">
-        {message}
-      </p>
-    </main>
+    <>
+      <a id="page-top" className="skip-link" href="#main">{t("Skip to content")}</a>
+      <Header />
+      <main id="main" className="homepage" tabIndex={-1}>
+        <Hero />
+        <div className="homepage-overview">
+          <FloodMapPreview />
+          <NearbyShelters />
+          <CommunityActions />
+        </div>
+        <Volunteers />
+        <CommunityGallery />
+        <ShelterNeeds />
+        <SafetyGuidance />
+        <p role="status" className="connection-status">{t(message)}</p>
+      </main>
+      <Footer />
+    </>
   );
 }
 
