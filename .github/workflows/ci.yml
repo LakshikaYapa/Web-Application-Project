@@ -139,6 +139,9 @@ jobs:
           node --check src/server.js
           node --check src/config/db.js
 
+      - name: Run backend unit tests
+        run: npm test
+
       - name: Start server and check API and database
         shell: bash
         run: |
