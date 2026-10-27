@@ -6,4 +6,9 @@ function isPublicRole(role) {
   return typeof role === "string" && PUBLIC_ROLES.includes(role);
 }
 
-module.exports = { PUBLIC_ROLES, ACCOUNT_ROLES, isPublicRole };
+function isPublicRoles(roles) {
+  return Array.isArray(roles) && roles.length >= 1 && roles.length <= PUBLIC_ROLES.length
+    && roles.every(isPublicRole) && new Set(roles).size === roles.length;
+}
+
+module.exports = { PUBLIC_ROLES, ACCOUNT_ROLES, isPublicRole, isPublicRoles };

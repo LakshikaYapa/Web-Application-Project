@@ -15,7 +15,7 @@ test("account JSON never exposes an explicitly loaded password hash", async () =
     name: "Test Volunteer",
     email: " Volunteer@Example.COM ",
     passwordHash: "test-hash-not-a-real-password",
-    role: "volunteer",
+    roles: ["volunteer"],
     address: "123 Test Road",
     nearestTown: "Kandy",
     phone: "+94771234567",
@@ -27,12 +27,12 @@ test("account JSON never exposes an explicitly loaded password hash", async () =
   assert.equal(Object.hasOwn(response, "__v"), false);
   assert.equal(Object.hasOwn(response, "address"), false);
   assert.equal(Object.hasOwn(response, "phone"), false);
-  assert.equal(response.role, "volunteer");
+  assert.deepEqual(response.roles, ["volunteer"]);
   assert.equal(User.schema.path("passwordHash").options.select, false);
 });
 
 test("account cannot silently accept an unknown role or extra privileges", async () => {
-  const user = new User({ name: "Test", email: "test@example.com", passwordHash: "test-hash", role: "superadmin" });
-  await assert.rejects(user.validate(), (error) => Boolean(error.errors.role));
+  const user = new User({ name: "Test", email: "test@example.com", passwordHash: "test-hash", roles: ["superadmin"] });
+  await assert.rejects(user.validate(), (error) => Object.keys(error.errors).some((key) => key.startsWith("roles")));
   assert.throws(() => new User({ isAdmin: true }), /not in schema/);
 });

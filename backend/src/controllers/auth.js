@@ -14,7 +14,7 @@ async function register(req, res, next) {
       name: value.name,
       email: value.email,
       passwordHash,
-      role: value.role,
+      roles: value.roles,
       preferredLanguage: value.preferredLanguage,
       address: value.address,
       nearestTown: value.nearestTown,
@@ -26,7 +26,7 @@ async function register(req, res, next) {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role,
+        roles: user.roles,
         preferredLanguage: user.preferredLanguage,
       },
     });

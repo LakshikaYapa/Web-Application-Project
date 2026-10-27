@@ -4,7 +4,7 @@ const { validateRegistration } = require("../src/validation/registration");
 
 const account = {
   name: "Example User", email: "test@example.com", password: "a long unique passphrase",
-  role: "help_seeker", address: "  123 Test Road  ", nearestTown: "  Kandy  ", phone: "077 123 4567",
+  roles: ["help_seeker"], address: "  123 Test Road  ", nearestTown: "  Kandy  ", phone: "077 123 4567",
 };
 
 test("Sri Lankan phone formats normalize to international format", () => {
@@ -25,4 +25,15 @@ test("missing or invalid contact fields cannot bypass registration validation", 
   ]) {
     assert.ok(validateRegistration({ ...account, [field]: invalid }).errors[field], field);
   }
+});
+
+test("role selection requires a nonempty, distinct array of public roles", () => {
+  for (const roles of [undefined, [], "volunteer", ["admin"], ["volunteer", "admin"], ["volunteer", "volunteer"], [null], [{ $ne: null }]]) {
+    assert.ok(validateRegistration({ ...account, roles }).errors.roles);
+  }
+  const legacyRequest = { ...account, role: "volunteer" };
+  delete legacyRequest.roles;
+  assert.ok(validateRegistration(legacyRequest).errors.body);
+  const result = validateRegistration({ ...account, roles: ["volunteer", "help_seeker", "funder"] });
+  assert.deepEqual(result.value.roles, ["volunteer", "help_seeker", "funder"]);
 });

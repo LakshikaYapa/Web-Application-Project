@@ -1,6 +1,6 @@
-const { isPublicRole } = require("../constants/roles");
+const { isPublicRoles } = require("../constants/roles");
 
-const allowedFields = new Set(["name", "email", "password", "role", "preferredLanguage", "address", "nearestTown", "phone"]);
+const allowedFields = new Set(["name", "email", "password", "roles", "preferredLanguage", "address", "nearestTown", "phone"]);
 
 function validateRegistration(body) {
   if (!body || typeof body !== "object" || Array.isArray(body)) {
@@ -19,8 +19,8 @@ function validateRegistration(body) {
   if (typeof body.password !== "string" || [...body.password].length < 15 || [...body.password].length > 128) {
     errors.password = "Password must contain 15 to 128 characters.";
   }
-  if (!isPublicRole(body.role)) {
-    errors.role = "Choose volunteer, help_seeker or funder.";
+  if (!isPublicRoles(body.roles)) {
+    errors.roles = "Choose one or more distinct roles: volunteer, help_seeker or funder.";
   }
   if (typeof body.address !== "string" || body.address.trim().length < 5 || body.address.trim().length > 300) {
     errors.address = "Address must contain 5 to 300 characters.";
@@ -42,7 +42,7 @@ function validateRegistration(body) {
       name: body.name.trim(),
       email: body.email.trim().toLowerCase(),
       password: body.password,
-      role: body.role,
+      roles: [...body.roles],
       preferredLanguage: body.preferredLanguage ?? "en",
       address: body.address.trim(),
       nearestTown: body.nearestTown.trim(),

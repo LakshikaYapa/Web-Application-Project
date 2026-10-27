@@ -9,7 +9,7 @@
   "name": "Example Volunteer",
   "email": "volunteer@example.com",
   "password": "use a long unique passphrase",
-  "role": "volunteer",
+  "roles": ["volunteer", "funder"],
   "address": "123 Example Road",
   "nearestTown": "Kandy",
   "phone": "077 123 4567",
@@ -17,7 +17,9 @@
 }
 ```
 
-- Public roles: `volunteer`, `help_seeker`, `funder`. Admin is not a public role.
+- Select one or more distinct public roles: `volunteer`, `help_seeker`, `funder`.
+  Send them as a `roles` array, not a `role` string. Empty arrays, duplicates,
+  unknown roles and admin selections are rejected.
 - Passwords: 15–128 characters; spaces and Unicode are allowed. Passwords are
   hashed with salted scrypt and are never returned or logged.
 - Language: optional `en` (default) or `si`.
@@ -41,3 +43,16 @@ Use HTTPS when deploying. Do not publish private user details in the homepage fe
 Run `npm test` from `backend/`. The API tests exercise HTTP with mocked database
 writes; they do not persist users. The unique-index guarantee requires MongoDB;
 the server waits for the user index to initialize before listening.
+
+## Existing single-role accounts
+
+Before using existing accounts with the new role format, run `npm run migrate:roles`
+from `backend/` for the configured database, or in Docker:
+
+```powershell
+docker compose exec backend node src/migrate-user-roles.js
+```
+
+The migration copies each recognized legacy `role` into a `roles` array only
+when that array is absent. Existing multi-role accounts and legacy role fields
+are preserved; rerunning it does not overwrite role selections.

@@ -200,5 +200,8 @@
   "Connect": "එක්වන්න",
   "Rebuild": "යළි ගොඩනගමු",
   "Show": "පෙන්වන්න",
-  "Hide": "සඟවන්න"
+  "Hide": "සඟවන්න",
+  "Select at least one role.": "අවම වශයෙන් එක් භූමිකාවක් තෝරන්න.",
+  "Select one or more roles.": "භූමිකාවක් හෝ කිහිපයක් තෝරන්න.",
+  "Choose one or more distinct roles: volunteer, help_seeker or funder.": "ස්වේච්ඡා සේවක, උදව් අවශ්‍ය අය හෝ මූල්‍ය ආධාරකරු යන භූමිකාවලින් එකක් හෝ කිහිපයක් තෝරන්න."
 }

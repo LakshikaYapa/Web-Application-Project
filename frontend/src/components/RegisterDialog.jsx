@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
 import AuthIntro from "./AuthIntro";
 
-const emptyValues = { name: "", email: "", password: "", role: "", address: "", nearestTown: "", phone: "" };
+const emptyValues = { name: "", email: "", password: "", roles: [], address: "", nearestTown: "", phone: "" };
 const profileFields = [
   { name: "name", label: "Full name", autoComplete: "name", maxLength: 100 },
   { name: "email", label: "Email address", type: "email", autoComplete: "email", maxLength: 254 },
@@ -55,6 +55,13 @@ export default function RegisterDialog({ onClose, onSignIn }) {
     setValues((current) => ({ ...current, [event.target.name]: event.target.value }));
   }
 
+  function toggleRole(role) {
+    setValues((current) => ({
+      ...current,
+      roles: current.roles.includes(role) ? current.roles.filter((value) => value !== role) : [...current.roles, role],
+    }));
+  }
+
   async function submit(event) {
     event.preventDefault();
     if (pendingRef.current) return;
@@ -62,7 +69,7 @@ export default function RegisterDialog({ onClose, onSignIn }) {
     if (values.name.trim().length < 2 || values.name.trim().length > 100) nextErrors.name = "Name must contain 2 to 100 characters.";
     if (values.email.trim().length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) nextErrors.email = "Enter a valid email address.";
     if ([...values.password].length < 15 || [...values.password].length > 128) nextErrors.password = "Password must contain 15 to 128 characters.";
-    if (!roleOptions.some(({ value }) => value === values.role)) nextErrors.role = "Choose how you want to participate.";
+    if (!values.roles.length) nextErrors.roles = "Select at least one role.";
     if (values.address.trim().length < 5 || values.address.trim().length > 300) nextErrors.address = "Address must contain 5 to 300 characters.";
     if (values.nearestTown.trim().length < 2 || values.nearestTown.trim().length > 100) nextErrors.nearestTown = "Nearest town must contain 2 to 100 characters.";
     if (!/^(?:0[1-9]\d{8}|\+94[1-9]\d{8})$/.test(values.phone.replace(/[\s()-]/g, ""))) nextErrors.phone = "Enter a valid Sri Lankan phone number.";
@@ -90,7 +97,7 @@ export default function RegisterDialog({ onClose, onSignIn }) {
         // Translate known server messages, rather than rendering arbitrary errors.
         const allowed = new Set([
           "Name must contain 2 to 100 characters.", "Enter a valid email address.",
-          "Password must contain 15 to 128 characters.", "Choose volunteer, help_seeker or funder.",
+          "Password must contain 15 to 128 characters.", "Choose one or more distinct roles: volunteer, help_seeker or funder.",
           "Address must contain 5 to 300 characters.", "Nearest town must contain 2 to 100 characters.",
           "Enter a valid Sri Lankan phone number.",
         ]);
@@ -153,14 +160,19 @@ export default function RegisterDialog({ onClose, onSignIn }) {
             <p className="register-hint" id="register-password-hint">{t("Use a unique passphrase of 15 to 128 characters.")}</p>
             {fieldError("password")}
             </div>
-            <div className="auth-field">
-            <label htmlFor="register-role">{t("I want to join as")}</label>
-            <select id="register-role" name="role" value={values.role} onChange={update} required aria-invalid={Boolean(errors.role)} aria-describedby={errors.role ? "register-role-error" : undefined}>
-              <option value="">{t("Choose a role")}</option>
-              {roleOptions.map(({ value, label }) => <option value={value} key={value}>{t(label)}</option>)}
-            </select>
-            {fieldError("role")}
-            </div>
+            <fieldset className="auth-role-group" aria-describedby={`register-roles-hint${errors.roles ? " register-roles-error" : ""}`} aria-invalid={Boolean(errors.roles)}>
+              <legend>{t("I want to join as")}</legend>
+              <p id="register-roles-hint" className="register-hint">{t("Select one or more roles.")}</p>
+              <div className="auth-role-options">
+                {roleOptions.map(({ value, label }) => (
+                  <label className={`auth-role-option${values.roles.includes(value) ? " is-selected" : ""}`} key={value}>
+                    <input type="checkbox" name="roles" value={value} checked={values.roles.includes(value)} onChange={() => toggleRole(value)} />
+                    <span>{t(label)}</span>
+                  </label>
+                ))}
+              </div>
+              {fieldError("roles")}
+            </fieldset>
             <p className="auth-contact-note auth-field-wide">{t("Your phone number and address are not shown on the public homepage.")}</p>
             <button className="register-submit" type="submit">{t(pending ? "Creating account…" : "Create account")}</button>
           </fieldset>

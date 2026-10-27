@@ -510,3 +510,13 @@ html[lang="si"] .hero-motto { max-width: 230px; line-height: 1.9; }
   .registration-dialog .auth-intro { padding: 16px 20px; min-height: auto; }
   .registration-dialog .auth-intro-message h2 { font-size: 20px; }
 }
+
+.auth-role-group { min-width: 0; margin: 0; padding: 0; border: 0; }
+.auth-role-group legend { padding: 0; margin-bottom: 5px; color: inherit; font-size: 12px; font-weight: 650; }
+.auth-role-options { display: grid; gap: 6px; margin-top: 8px; }
+.auth-role-option { display: flex; align-items: center; gap: 9px; padding: 7px 10px; border: 1px solid #b8d2db; border-radius: 7px; background: rgb(248 253 255 / 90%); color: #193b54; font-size: 12px; cursor: pointer; }
+.auth-role-option.is-selected { border-color: #008c99; background: #e5f8f6; }
+.register-fields .auth-role-option input { width: 16px; height: 16px; min-height: 0; padding: 0; flex: 0 0 16px; accent-color: #007e8d; }
+.auth-role-option span { line-height: 1.6; }
+[data-theme="dark"] .auth-role-option { background: #123442; border-color: #477183; color: #d8f0f2; }
+[data-theme="dark"] .auth-role-option.is-selected { background: #16444d; border-color: #43c9ce; }

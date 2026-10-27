@@ -8,7 +8,7 @@ const { hashPassword } = require("../src/utils/password");
 
 let server;
 let baseUrl;
-const valid = { name: "Test Volunteer", email: " Volunteer@Example.COM ", password: "a long test passphrase", role: "volunteer", address: "123 Test Road", nearestTown: "Kandy", phone: "077 123 4567" };
+const valid = { name: "Test Volunteer", email: " Volunteer@Example.COM ", password: "a long test passphrase", roles: ["volunteer"], address: "123 Test Road", nearestTown: "Kandy", phone: "077 123 4567" };
 
 before(async () => {
   server = app.listen(0, "127.0.0.1");
@@ -37,11 +37,11 @@ test("scrypt uses random salts and derives the expected password key", async () 
 test("registration permits each public role and never exposes password data", async () => {
   const create = mock.method(User, "create", async (data) => new User(data));
   try {
-    for (const role of ["volunteer", "help_seeker", "funder"]) {
-      const response = await post({ ...valid, role, preferredLanguage: "si" });
+    for (const roles of [["volunteer"], ["help_seeker"], ["funder"], ["volunteer", "funder"], ["volunteer", "help_seeker", "funder"]]) {
+      const response = await post({ ...valid, roles, preferredLanguage: "si" });
       assert.equal(response.status, 201);
       const body = await response.json();
-      assert.equal(body.user.role, role);
+      assert.deepEqual(body.user.roles, roles);
       assert.equal(body.user.email, "volunteer@example.com");
       assert.equal(body.user.preferredLanguage, "si");
       assert.equal(Object.hasOwn(body.user, "passwordHash"), false);
@@ -63,7 +63,7 @@ test("invalid bodies and privilege escalation are rejected before persistence", 
   const create = mock.method(User, "create", () => { throw new Error("Must not persist invalid input"); });
   try {
     for (const body of [
-      { ...valid, role: "admin" },
+      { ...valid, roles: ["volunteer", "admin"] },
       { ...valid, status: "active", isAdmin: true },
       { ...valid, email: { $ne: null } },
       { ...valid, password: "short" },

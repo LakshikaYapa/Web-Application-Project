@@ -18,7 +18,15 @@ const userSchema = new mongoose.Schema(
     },
     // The authentication service will hash passwords before creating users.
     passwordHash: { type: String, required: true, select: false },
-    role: { type: String, required: true, enum: ACCOUNT_ROLES },
+    roles: {
+      type: [{ type: String, enum: ACCOUNT_ROLES }],
+      required: true,
+      default: undefined,
+      validate: {
+        validator: (roles) => Array.isArray(roles) && roles.length > 0 && roles.length <= ACCOUNT_ROLES.length && new Set(roles).size === roles.length,
+        message: "Choose at least one distinct account role.",
+      },
+    },
     status: { type: String, enum: ["active", "suspended"], default: "active" },
     preferredLanguage: { type: String, enum: ["en", "si"], default: "en" },
   },
@@ -32,6 +40,7 @@ const userSchema = new mongoose.Schema(
         delete result.address;
         delete result.phone;
         delete result.__v;
+        delete result.role; // Legacy single-role records are migrated separately.
         return result;
       },
     },
