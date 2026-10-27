@@ -131,7 +131,7 @@ export default function RegisterDialog({ onClose, onSignIn }) {
       {created ? (
         <div className="register-success" ref={summaryRef} tabIndex={-1} role="status">
           <h3>{t("Account created")}</h3>
-          <p>{t("Your account has been saved. You are not signed in yet. Sign-in is coming next.")}</p>
+          <p>{t("Your account has been saved. You can now sign in.")}</p>
           <button className="register-submit" type="button" onClick={onClose}>{t("Done")}</button>
         </div>
       ) : (

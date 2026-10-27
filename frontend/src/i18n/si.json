@@ -203,5 +203,14 @@
   "Hide": "සඟවන්න",
   "Select at least one role.": "අවම වශයෙන් එක් භූමිකාවක් තෝරන්න.",
   "Select one or more roles.": "භූමිකාවක් හෝ කිහිපයක් තෝරන්න.",
-  "Choose one or more distinct roles: volunteer, help_seeker or funder.": "ස්වේච්ඡා සේවක, උදව් අවශ්‍ය අය හෝ මූල්‍ය ආධාරකරු යන භූමිකාවලින් එකක් හෝ කිහිපයක් තෝරන්න."
+  "Choose one or more distinct roles: volunteer, help_seeker or funder.": "ස්වේච්ඡා සේවක, උදව් අවශ්‍ය අය හෝ මූල්‍ය ආධාරකරු යන භූමිකාවලින් එකක් හෝ කිහිපයක් තෝරන්න.",
+  "Welcome back. Sign in to your FloodGuard account.": "නැවතත් සාදරයෙන් පිළිගනිමු. ඔබේ FloodGuard ගිණුමට පිවිසෙන්න.",
+  "Enter a valid email address and password.": "වලංගු ඊමේල් ලිපිනයක් සහ මුරපදයක් ඇතුළත් කරන්න.",
+  "Email or password is incorrect.": "ඊමේල් ලිපිනය හෝ මුරපදය වැරදියි.",
+  "Too many sign-in attempts. Try again later.": "පිවිසීමේ උත්සාහ ගණන වැඩියි. ටික වේලාවකට පසු නැවත උත්සාහ කරන්න.",
+  "Unable to sign in. Please try again.": "පිවිසීමට නොහැකි විය. නැවත උත්සාහ කරන්න.",
+  "Signing in…": "පිවිසෙමින්…",
+  "You are signed in": "ඔබ ගිණුමට පිවිසුණා",
+  "Your sign-in was successful.": "ඔබ සාර්ථකව ගිණුමට පිවිසුණා.",
+  "Your account has been saved. You can now sign in.": "ඔබේ ගිණුම සුරැකුණා. දැන් ඔබට පිවිසිය හැකියි."
 }
