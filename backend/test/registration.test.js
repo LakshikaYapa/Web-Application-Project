@@ -2,7 +2,9 @@ const { test, before, after, mock } = require("node:test");
 const assert = require("node:assert/strict");
 const { scrypt } = require("node:crypto");
 const { promisify } = require("node:util");
-const app = require("../src/app");
+const { createApp } = require("../src/app");
+const session = require("express-session");
+const app = createApp({ sessionStore: new session.MemoryStore(), sessionSecret: "test-only-registration-session-secret", secureCookies: false });
 const User = require("../src/models/User");
 const { hashPassword } = require("../src/utils/password");
 

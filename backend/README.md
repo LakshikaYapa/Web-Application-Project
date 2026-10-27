@@ -37,7 +37,8 @@
   are required before scaling to multiple backend instances.
 
 Successful registration returns an allowlisted user object. It does not sign the
-user in. Login, email verification, and the registration form are subsequent steps.
+user in. The registration form is available; connecting the sign-in form and
+email verification are subsequent steps.
 Use HTTPS when deploying. Do not publish private user details in the homepage feed.
 
 Run `npm test` from `backend/`. The API tests exercise HTTP with mocked database
@@ -56,3 +57,37 @@ docker compose exec backend node src/migrate-user-roles.js
 The migration copies each recognized legacy `role` into a `roles` array only
 when that array is absent. Existing multi-role accounts and legacy role fields
 are preserved; rerunning it does not overwrite role selections.
+
+## Login sessions
+
+- `POST /api/auth/login`: JSON `{ "email": "...", "password": "..." }`.
+- `GET /api/auth/me`: returns the current user or `401` when not signed in.
+- `POST /api/auth/logout`: destroys the session and clears its cookie.
+
+Login and logout requests must include `X-CSRF-Protection: 1`. Browser requests
+use the same-origin frontend proxy (no cross-origin CORS access is granted).
+Use `credentials: "same-origin"` with fetch and preserve the session cookie.
+Login rejects client-supplied roles; permissions come from the stored account.
+Passwords, unknown emails, and suspended users share a generic `401` response.
+The login limit is 10 attempts per IP per 15 minutes.
+
+Sessions are stored in MongoDB's `sessions` collection, expire after eight hours,
+and are regenerated on login. Cookies use `HttpOnly`, `SameSite=Strict`, and
+`Path=/api`. User responses are not cached and contain no password or contact data.
+`/me` loads current roles/status from the database, so suspensions invalidate
+existing sessions. Future protected endpoints must check the account similarly.
+
+Configure a random `SESSION_SECRET` of at least 32 characters and keep it stable
+across backend restarts and instances. Generate one locally with:
+
+```powershell
+node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+```
+
+Put it in ignored `backend/.env` for native development. For Compose, set
+`SESSION_SECRET` in the root `.env` or shell environment. The Compose fallback
+is a known development-only key and must never be used in a deployment.
+`SESSION_COOKIE_SECURE=false` permits local HTTP; HTTPS deployments must use
+secure cookies (the server default), with the exact trusted reverse proxy
+configured before enabling forwarded HTTPS headers. Session configuration is
+required by the server; tests inject an isolated in-memory store only.

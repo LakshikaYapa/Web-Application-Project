@@ -25,6 +25,9 @@ services:
       NODE_ENV: production
       PORT: "5000"
       MONGODB_URI: mongodb://mongodb:27017/floodguard
+      # This Compose stack is local-only. Override the signing key via .env.
+      SESSION_SECRET: ${SESSION_SECRET:-local-development-only-session-secret-change-before-deployment}
+      SESSION_COOKIE_SECURE: "false"
     ports:
       - "127.0.0.1:5000:5000"
     depends_on:
