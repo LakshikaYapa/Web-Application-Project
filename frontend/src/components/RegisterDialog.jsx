@@ -112,8 +112,9 @@ export default function RegisterDialog({ onClose, onSignIn }) {
   const fieldError = (field) => errors[field] ? <p className="register-field-error" id={`register-${field}-error`}>{t(errors[field])}</p> : null;
 
   return (
-    <dialog ref={dialogRef} className="register-dialog auth-dialog" aria-labelledby="register-title" aria-describedby="register-description" onCancel={onClose}>
+    <dialog ref={dialogRef} className="register-dialog auth-dialog registration-dialog" aria-labelledby="register-title" aria-describedby="register-description" onCancel={onClose}>
       <div className="auth-layout">
+      <AuthIntro />
       <div className="auth-panel">
       <div className="register-dialog-heading">
         <h2 id="register-title">{t("Create your account")}</h2>
@@ -143,7 +144,7 @@ export default function RegisterDialog({ onClose, onSignIn }) {
                 {fieldError(name)}
               </div>
             ))}
-            <div className="auth-field auth-field-wide">
+            <div className="auth-field">
             <label htmlFor="register-password">{t("Password")}</label>
             <div className="auth-password-control">
               <input id="register-password" name="password" type={showPassword ? "text" : "password"} autoComplete="new-password" value={values.password} onChange={update} required aria-invalid={Boolean(errors.password)} aria-describedby={`register-password-hint${errors.password ? " register-password-error" : ""}`} />
@@ -152,7 +153,7 @@ export default function RegisterDialog({ onClose, onSignIn }) {
             <p className="register-hint" id="register-password-hint">{t("Use a unique passphrase of 15 to 128 characters.")}</p>
             {fieldError("password")}
             </div>
-            <div className="auth-field auth-field-wide">
+            <div className="auth-field">
             <label htmlFor="register-role">{t("I want to join as")}</label>
             <select id="register-role" name="role" value={values.role} onChange={update} required aria-invalid={Boolean(errors.role)} aria-describedby={errors.role ? "register-role-error" : undefined}>
               <option value="">{t("Choose a role")}</option>
@@ -167,7 +168,6 @@ export default function RegisterDialog({ onClose, onSignIn }) {
       )}
       <p className="auth-switch">{t("Already have an account?")} {" "}<button type="button" onClick={onSignIn}>{t("Sign in")}</button></p>
       </div>
-      <AuthIntro />
       </div>
     </dialog>
   );

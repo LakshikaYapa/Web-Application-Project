@@ -20,6 +20,7 @@ export default function SignInDialog({ onClose, onRegister }) {
   return (
     <dialog ref={dialogRef} className="register-dialog auth-dialog signin-dialog" aria-labelledby="signin-title" aria-describedby="signin-description" onCancel={onClose}>
       <div className="auth-layout">
+      <AuthIntro />
       <div className="auth-panel">
       <div className="register-dialog-heading">
         <h2 id="signin-title">{t("Sign in")}</h2>
@@ -36,7 +37,6 @@ export default function SignInDialog({ onClose, onRegister }) {
       </fieldset>
       <p className="auth-switch">{t("Don't have an account?")} {" "}<button type="button" onClick={onRegister}>{t("Register")}</button></p>
       </div>
-      <AuthIntro />
       </div>
     </dialog>
   );
