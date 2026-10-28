@@ -395,3 +395,137 @@ html[lang="si"] .hero-motto { max-width: 230px; line-height: 1.9; }
   html[lang="si"] .header-inner { gap: 8px; }
   html[lang="si"] .primary-navigation { gap: 0; }
 }
+
+.register-open-button { padding: 10px 16px; border: 1px solid #007e8d; border-radius: 7px; background: #eaf9fb; color: #006c7c; font-size: 14px; font-weight: 600; cursor: pointer; }
+.register-open-button:hover { background: #d7f3f6; }
+.register-dialog { width: min(480px, calc(100% - 32px)); max-height: calc(100dvh - 40px); margin: auto; padding: 26px; overflow-y: auto; border: 1px solid #c6dde5; border-radius: 14px; background: white; color: #193b54; box-shadow: 0 20px 80px rgb(0 20 30 / 25%); }
+.register-dialog::backdrop { background: rgb(2 10 18 / 82%); backdrop-filter: blur(7px); }
+.register-dialog-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.register-dialog-heading h2 { margin: 0; font-size: 23px; font-weight: 750; }
+.register-close { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border: 1px solid #dcebf0; border-radius: 6px; background: transparent; color: inherit; font-size: 25px; cursor: pointer; }
+.register-description { margin: 12px 0 20px; color: #49677a; font-size: 14px; line-height: 1.7; }
+.register-fields { display: grid; gap: 9px; margin: 0; padding: 0; border: 0; min-width: 0; }
+.register-fields label { margin-top: 8px; font-size: 14px; font-weight: 650; }
+.register-fields :is(input, select) { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #a9c6d2; border-radius: 6px; background: #f8fcfd; color: #193b54; font: inherit; font-size: 15px; }
+.register-fields [aria-invalid="true"] { border-color: #bd3558; }
+.register-fields:disabled { opacity: .7; }
+.register-fields :disabled { cursor: wait; }
+.register-hint { margin: 0; color: #607586; font-size: 12px; line-height: 1.7; }
+.register-submit { width: 100%; margin-top: 16px; padding: 12px 16px; border: 1px solid #007987; border-radius: 6px; background: #007e8d; color: white; font: inherit; font-weight: 650; cursor: pointer; }
+.register-submit:hover { background: #006776; }
+.register-field-error { margin: 0; color: #ac264c; font-size: 12px; line-height: 1.7; }
+.register-error-summary { margin: 0 0 12px; padding: 12px; border: 1px solid #efb7c6; border-radius: 6px; background: #fff0f4; color: #93213f; font-size: 13px; line-height: 1.7; }
+.register-success h3 { margin: 0 0 10px; font-size: 20px; font-weight: 700; }
+.register-success p { margin: 0; font-size: 14px; line-height: 1.8; }
+[data-theme="dark"] :is(.register-dialog, .register-fields input, .register-fields select) { background: #102c3b; border-color: #477183; color: #e6f1f7; }
+[data-theme="dark"] :is(.register-description, .register-hint) { color: #b8cfdd; }
+[data-theme="dark"] .register-open-button { background: #123a49; color: #a5f0f0; border-color: #367180; }
+[data-theme="dark"] .register-field-error { color: #ffb8cd; }
+[data-theme="dark"] .register-error-summary { background: #472a39; color: #ffd0dc; border-color: #9e5269; }
+@media (max-width: 760px) {
+  .register-dialog { padding: 20px; }
+  .register-open-button { padding: 9px 12px; font-size: 13px; }
+}
+
+.sign-in-button:not(:disabled) { cursor: pointer; }
+.sign-in-button:not(:disabled):hover { background: #006776; }
+.auth-switch { margin: 22px 0 0; padding-top: 18px; border-top: 1px solid #dcebf0; color: #49677a; font-size: 13px; line-height: 1.9; text-align: center; }
+.auth-switch button { padding: 3px 5px; border: 0; background: transparent; color: #007e8d; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+[data-theme="dark"] .auth-switch { color: #b8cfdd; border-color: #367180; }
+[data-theme="dark"] .auth-switch button { color: #8ce8ec; }
+
+/* Shared account dialogs: brand panel, compact form grid, mobile stacking. */
+.register-dialog.auth-dialog { width: min(1100px, calc(100% - 32px)); max-height: calc(100dvh - 24px); padding: 0; border: 1px solid #a7cbd4; border-radius: 20px; box-shadow: 0 30px 100px rgb(0 0 0 / 65%), 0 0 0 1px rgb(255 255 255 / 12%); }
+.auth-layout { display: grid; grid-template-columns: minmax(0, .72fr) minmax(0, 1.28fr); }
+.auth-intro { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: space-between; gap: 44px; overflow: hidden; padding: 32px; background: linear-gradient(150deg, #006775, #083646 75%); color: #f2fdff; }
+.auth-intro::after { content: ""; position: absolute; z-index: -1; width: 380px; height: 380px; right: -200px; bottom: -100px; border: 1px solid rgb(117 236 232 / 25%); border-radius: 50%; box-shadow: 0 0 0 50px rgb(117 236 232 / 5%), 0 0 0 100px rgb(117 236 232 / 4%); }
+.auth-intro-brand { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 750; }
+.auth-intro-brand img { width: 42px; height: 48px; object-fit: contain; }
+.auth-eyebrow { color: #9be9e7; font-size: 11px; font-weight: 650; line-height: 1.8; letter-spacing: 1px; }
+.auth-intro-message h2 { margin: 16px 0; font-size: clamp(25px, 3vw, 34px); font-weight: 750; line-height: 1.35; letter-spacing: -.8px; }
+.auth-intro-message p { margin: 0; color: #c6e6ec; font-size: 14px; line-height: 1.9; }
+.auth-values { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+.auth-values span { padding: 6px 10px; border: 1px solid rgb(171 235 239 / 30%); border-radius: 20px; color: #d8f5f7; font-size: 11px; }
+.auth-intro-footer { margin: 0; color: #b4d9df; font-size: 12px; line-height: 1.8; }
+.auth-panel { min-width: 0; padding: 30px; border-left: 1px solid #a7cbd4; background-color: #f5fbfc; background-image: linear-gradient(rgb(248 253 255 / 96%), rgb(248 253 255 / 97%)), url('/auth-community.png'); background-size: cover; background-position: center; }
+[data-theme="dark"] .auth-panel { background-color: #102c3b; background-image: linear-gradient(rgb(15 40 56 / 96%), rgb(15 40 56 / 97%)), url('/auth-community.png'); border-left-color: #497b8d; }
+[data-theme="dark"] .register-dialog.auth-dialog { border-color: #5c98a9; }
+.auth-panel .register-dialog-heading h2 { color: #102a43; }
+[data-theme="dark"] .auth-panel .register-dialog-heading h2 { color: #f4fbff; }
+.auth-panel .register-close { background: #e5f1f5; border-color: #88afbe; color: #193b54; }
+[data-theme="dark"] .auth-panel .register-close { background: #244a5c; border-color: #79a7b9; color: white; }
+.signin-dialog .register-fields:disabled { opacity: 1; }
+.signin-dialog .register-fields:disabled label { color: #49677a; }
+[data-theme="dark"] .signin-dialog .register-fields:disabled label { color: #d0e2ec; }
+.signin-dialog .register-fields:disabled .register-submit { opacity: .65; }
+.auth-panel .register-dialog-heading { gap: 16px; }
+.auth-panel .register-dialog-heading h2 { font-size: 25px; letter-spacing: -.6px; }
+.auth-panel .register-description { margin: 10px 0 18px; font-size: 13px; }
+.register-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.auth-field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.auth-field-wide, .register-form-grid > .register-submit { grid-column: 1 / -1; }
+.auth-field label { margin: 0; font-size: 12px; }
+.register-fields textarea { width: 100%; min-height: 74px; padding: 11px 12px; resize: vertical; border: 1px solid #a9c6d2; border-radius: 8px; background: #f8fcfd; color: #193b54; font: inherit; font-size: 14px; }
+.auth-field :is(input, select) { border-radius: 8px; font-size: 14px; }
+.auth-password-control { display: flex; align-items: center; gap: 8px; }
+.auth-password-control input { min-width: 0; flex: 1; }
+.auth-password-control button { padding: 10px 8px; min-height: 44px; border: 1px solid #b8d2db; border-radius: 7px; background: #f1f9fb; color: #006f80; font-size: 12px; cursor: pointer; }
+.auth-contact-note { margin: 0; padding: 10px 12px; border-radius: 7px; background: #edf8f8; color: #42636e; font-size: 11px; line-height: 1.8; }
+.auth-panel .register-submit { margin-top: 0; border-radius: 8px; min-height: 46px; }
+.auth-panel .register-success .register-submit { margin-top: 20px; }
+.auth-panel .auth-switch { margin-top: 20px; }
+.signin-dialog .auth-panel { display: flex; flex-direction: column; justify-content: center; min-height: 480px; }
+.signin-dialog .register-fields { gap: 12px; }
+.signin-dialog .register-submit { margin-top: 16px; }
+[data-theme="dark"] .register-fields textarea { background: #102c3b; color: #e6f1f7; border-color: #477183; }
+[data-theme="dark"] .auth-contact-note { background: #143c45; color: #c1e1e5; }
+[data-theme="dark"] .auth-password-control button { background: #143c45; color: #a5f0f0; border-color: #477183; }
+@media (max-width: 700px) {
+  .auth-layout { grid-template-columns: minmax(0, 1fr); }
+  .auth-intro { padding: 20px 24px; gap: 14px; min-height: 180px; background-position: center 55%; }
+  .auth-intro-message h2 { margin: 10px 0 0; font-size: 22px; }
+  .auth-intro-message :is(p, .auth-values), .auth-intro-footer { display: none; }
+  .auth-panel { padding: 24px; border-left: 0; border-top: 1px solid #a7cbd4; }
+  .signin-dialog .auth-panel { min-height: auto; }
+}
+@media (max-width: 420px) {
+  .register-form-grid { grid-template-columns: minmax(0, 1fr); }
+  .auth-panel { padding: 20px; }
+}
+
+/* Compact registration fits typical desktop windows; overflow remains accessible
+   for small windows, browser zoom, or expanded validation messages. */
+.registration-dialog .auth-panel { padding: 20px 26px; }
+.registration-dialog .register-form-grid { gap: 10px 16px; }
+.registration-dialog .auth-field { gap: 5px; }
+.registration-dialog .register-description { margin: 6px 0 12px; }
+.registration-dialog .register-dialog-heading h2 { font-size: 23px; }
+.registration-dialog .register-fields textarea { min-height: 56px; padding: 8px 10px; }
+.registration-dialog .auth-contact-note { padding: 7px 10px; }
+.registration-dialog .auth-switch { margin-top: 12px; padding-top: 10px; }
+.registration-dialog .register-hint { font-size: 11px; line-height: 1.6; }
+.registration-dialog .auth-intro { padding: 26px; gap: 24px; }
+.registration-dialog .auth-intro-message h2 { font-size: 28px; }
+@media (min-width: 701px) and (max-height: 760px) {
+  .registration-dialog .auth-panel { padding: 14px 22px; }
+  .registration-dialog .register-form-grid { gap: 8px 14px; }
+  .registration-dialog .auth-field :is(input, select) { min-height: 38px; padding: 7px 10px; }
+  .registration-dialog .auth-password-control button { min-height: 38px; padding-block: 7px; }
+  .registration-dialog .register-submit { min-height: 40px; padding-block: 9px; }
+  .registration-dialog .auth-intro-message p { font-size: 13px; }
+}
+@media (max-width: 700px) {
+  .registration-dialog .auth-panel { padding: 20px; }
+  .registration-dialog .auth-intro { padding: 16px 20px; min-height: auto; }
+  .registration-dialog .auth-intro-message h2 { font-size: 20px; }
+}
+
+.auth-role-group { min-width: 0; margin: 0; padding: 0; border: 0; }
+.auth-role-group legend { padding: 0; margin-bottom: 5px; color: inherit; font-size: 12px; font-weight: 650; }
+.auth-role-options { display: grid; gap: 6px; margin-top: 8px; }
+.auth-role-option { display: flex; align-items: center; gap: 9px; padding: 7px 10px; border: 1px solid #b8d2db; border-radius: 7px; background: rgb(248 253 255 / 90%); color: #193b54; font-size: 12px; cursor: pointer; }
+.auth-role-option.is-selected { border-color: #008c99; background: #e5f8f6; }
+.register-fields .auth-role-option input { width: 16px; height: 16px; min-height: 0; padding: 0; flex: 0 0 16px; accent-color: #007e8d; }
+.auth-role-option span { line-height: 1.6; }
+[data-theme="dark"] .auth-role-option { background: #123442; border-color: #477183; color: #d8f0f2; }
+[data-theme="dark"] .auth-role-option.is-selected { background: #16444d; border-color: #43c9ce; }
