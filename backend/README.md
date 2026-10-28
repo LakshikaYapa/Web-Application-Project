@@ -1,5 +1,23 @@
 # Backend API
 
+## Help requests — backend step
+
+`POST /api/help-requests` requires an active login session and the header
+`X-CSRF-Protection: 1`. Send JSON with `helpType`, `nearestTown` (1–100
+characters), `location` (1–300) and `description` (1–2000). Text is trimmed.
+Supported help types: `Food and drinking water`, `Shelter`, `Rescue or transport`,
+`Medical assistance`, `Other help`.
+
+The server derives the requester from the session and saves a `pending` request
+in MongoDB's `helprequests` collection. Client-supplied owners, statuses, images
+and other extra fields are rejected. Success returns 201 with the request ID,
+status and creation time. Other responses include 400 (invalid fields), 401
+(missing, expired or inactive account), 403 (missing CSRF header), 429 (more
+than 10 requests per IP per 15 minutes) and 500 (save failure).
+
+The frontend remains a preview in this step; submission wiring and image uploads
+will follow. HTTP tests mock database writes and do not create real help requests.
+
 ## Registration
 
 `POST /api/auth/register` accepts JSON:

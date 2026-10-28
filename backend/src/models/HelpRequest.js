@@ -1,0 +1,13 @@
+const mongoose = require("mongoose");
+
+const HELP_TYPES = Object.freeze(["Food and drinking water", "Shelter", "Rescue or transport", "Medical assistance", "Other help"]);
+const schema = new mongoose.Schema({
+  requester: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  helpType: { type: String, enum: HELP_TYPES, required: true },
+  nearestTown: { type: String, required: true, trim: true, maxlength: 100 },
+  location: { type: String, required: true, trim: true, maxlength: 300 },
+  description: { type: String, required: true, trim: true, maxlength: 2000 },
+  status: { type: String, enum: ["pending"], default: "pending" },
+}, { timestamps: true, strict: "throw" });
+
+module.exports = { HelpRequest: mongoose.model("HelpRequest", schema), HELP_TYPES };

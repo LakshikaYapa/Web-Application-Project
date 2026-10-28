@@ -33,7 +33,7 @@ async function login(req, res, next) {
   } catch (error) { return next(error); }
 }
 
-async function currentUser(req, res, next) {
+async function requireUser(req, res, next) {
   try {
     if (!req.session.userId) return res.status(401).json({ success: false, code: "UNAUTHENTICATED" });
     if (!Number.isFinite(req.session.authenticatedAt) || Date.now() - req.session.authenticatedAt >= SESSION_DURATION_MS) {
@@ -48,8 +48,16 @@ async function currentUser(req, res, next) {
       res.clearCookie(SESSION_COOKIE_NAME, req.app.locals.sessionCookieOptions);
       return res.status(401).json({ success: false, code: "UNAUTHENTICATED" });
     }
-    return res.status(200).json({ success: true, user: publicUser(user) });
+    req.user = user;
+    return next();
   } catch (error) { return next(error); }
+}
+
+function currentUser(req, res, next) {
+  return requireUser(req, res, (error) => {
+    if (error) return next(error);
+    return res.status(200).json({ success: true, user: publicUser(req.user) });
+  });
 }
 
 async function logout(req, res, next) {
@@ -60,4 +68,4 @@ async function logout(req, res, next) {
   } catch (error) { return next(error); }
 }
 
-module.exports = { login, currentUser, logout };
+module.exports = { login, currentUser, logout, requireUser };
