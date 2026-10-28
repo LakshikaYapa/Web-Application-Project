@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
+import FinancialSupportFields from "./FinancialSupportFields";
 
 const supportOptions = [
   { id: "financial", label: "Financial support" },
@@ -35,6 +36,7 @@ export default function FunderForm() {
           </label>)}
         </div>
       </fieldset>
+      {selected.includes("financial") && <FinancialSupportFields />}
       {selected.includes("other") && <div className="col-span-full grid min-w-0 gap-2">
         <label className="text-sm font-bold" htmlFor="funder-other">{t("Describe the support you can offer")}</label>
         <textarea className={`${inputClass} resize-y`} id="funder-other" name="otherSupport" value={otherSupport} onChange={(event) => setOtherSupport(event.target.value)} required maxLength={500} rows={3} />
