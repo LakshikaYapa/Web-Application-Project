@@ -7,7 +7,15 @@ newest first, 20 per page. The response contains `requests`, `page` and `hasMore
 Owner IDs, account details and photo buffers are excluded. Missing/invalid sessions
 return 401; invalid page numbers return 400. The `/my-requests` frontend includes
 loading, empty and error states, pagination and a refresh button. After signing
-in through the header, refresh the list. Photo viewing is a future step.
+in through the header, refresh the list. The list includes photo counts without
+loading image buffers. Attached photos appear as lazy-loaded thumbnails; click
+one to open it in a new tab.
+
+`GET /api/help-requests/:id/photos/:index` returns an image only to the active,
+authenticated owner. Indexes are 0–2. Invalid IDs, absent photos and another
+user's request all return 404; missing/expired sessions return 401. Images use
+their stored MIME type, `Cache-Control: no-store` and `X-Content-Type-Options:
+nosniff`. No public image endpoint is provided.
 
 `POST /api/help-requests` requires an active login session and the header
 `X-CSRF-Protection: 1`. Send JSON with `helpType`, `nearestTown` (1–100
@@ -36,7 +44,7 @@ WebP files, maximum 5 MiB each. The server checks MIME types and file signatures
 this is not full image decoding. Invalid uploads return 400 and oversized files
 return 413 before any request is saved. JSON text-only requests remain supported.
 Photos are stored as binary data in the same MongoDB document, excluded from
-default queries. There is no public image endpoint in this step. The 15 MiB
+default queries. Photos can be viewed only through the owner-protected endpoint. The 15 MiB
 combined photo cap leaves room under MongoDB's 16 MiB document limit. Nginx accepts
 bodies up to 16 MiB; rebuild the frontend Docker image to apply this setting.
 HTTP tests mock database writes and do not create real help requests.

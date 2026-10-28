@@ -13,14 +13,31 @@ module.exports = function createHelpRequestRoutes() {
     }
     try {
       const requests = await HelpRequest.find({ requester: req.user.id })
-        .select("helpType otherHelp nearestTown location description status createdAt +phone")
+        .select("helpType otherHelp nearestTown location description status createdAt +phone photos.contentType")
         .sort({ createdAt: -1, _id: -1 }).skip((page - 1) * 20).limit(21).lean();
       return res.json({ success: true, page, hasMore: requests.length > 20, requests: requests.slice(0, 20).map((request) => ({
         id: String(request._id), helpType: request.helpType, nearestTown: request.nearestTown,
         otherHelp: request.otherHelp,
         phone: request.phone,
+        photoCount: request.photos?.length ?? 0,
         location: request.location, description: request.description, status: request.status, createdAt: request.createdAt,
       })) });
+    } catch (error) { return next(error); }
+  });
+  router.get("/:id/photos/:index", requireUser, async (req, res, next) => {
+    const { id, index } = req.params;
+    if (!/^[a-f\d]{24}$/i.test(id) || !/^[0-2]$/.test(index)) {
+      return res.status(404).json({ success: false, code: "PHOTO_NOT_FOUND" });
+    }
+    try {
+      const request = await HelpRequest.findOne({ _id: id, requester: req.user.id }).select("+photos");
+      const photo = request?.photos?.[Number(index)];
+      if (!photo?.data?.length || !["image/jpeg", "image/png", "image/webp"].includes(photo.contentType)) {
+        return res.status(404).json({ success: false, code: "PHOTO_NOT_FOUND" });
+      }
+      res.set("X-Content-Type-Options", "nosniff");
+      res.set("Content-Disposition", "inline");
+      return res.type(photo.contentType).send(photo.data);
     } catch (error) { return next(error); }
   });
   router.post("/", (req, res, next) => {

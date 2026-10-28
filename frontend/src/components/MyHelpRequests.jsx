@@ -1,6 +1,17 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
 
+function RequestPhoto({ requestId, index }) {
+  const { t } = useLanguage();
+  const [failed, setFailed] = useState(false);
+  const source = `/api/help-requests/${encodeURIComponent(requestId)}/photos/${index}`;
+  return <li>
+    {failed ? <p role="status">{t("Unable to load this photo. Refresh the list to try again.")}</p> : <a href={source} target="_blank" rel="noopener noreferrer" aria-label={`${t("Open photo")} ${index + 1}`}>
+      <img src={source} alt={`${t("Request photo")} ${index + 1}`} loading="lazy" onError={() => setFailed(true)} />
+    </a>}
+  </li>;
+}
+
 export default function MyHelpRequests() {
   const { t, language } = useLanguage();
   const requestedPage = Number(new URLSearchParams(window.location.search).get("page") || 1);
@@ -40,6 +51,10 @@ export default function MyHelpRequests() {
         <p className="my-request-description">{request.description}</p>
         <p>{t("Sent on")}: <time dateTime={request.createdAt}>{new Date(request.createdAt).toLocaleString(language === "si" ? "si-LK" : "en-LK")}</time></p>
         <p className="my-request-reference">{t("Request reference")}: {request.id}</p>
+        {request.photoCount > 0 && <div>
+          <h3>{t("Attached photos")}</h3>
+          <ul className="my-request-photos">{Array.from({ length: Math.min(request.photoCount, 3) }, (_, index) => <RequestPhoto key={index} requestId={request.id} index={index} />)}</ul>
+        </div>}
       </li>)}</ul>
       <nav className="my-requests-heading" aria-label={t("Request list pages")}>
         {page > 1 && <a className="help-back" href={`/my-requests?page=${page - 1}`}>{t("Previous page")}</a>}

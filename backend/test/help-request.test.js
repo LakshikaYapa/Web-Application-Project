@@ -20,7 +20,7 @@ test("my requests use only the session owner, paginate and omit photos and priva
   const find = t.mock.method(HelpRequest, "find", (filter) => {
     assert.deepEqual(filter, { requester: account.id });
     const query = {
-      select(fields) { assert.equal(fields.includes("photos"), false); return query; },
+      select(fields) { assert.ok(fields.includes("photos.contentType")); assert.equal(fields.includes("photos.data"), false); return query; },
       sort(order) { assert.deepEqual(order, { createdAt: -1, _id: -1 }); return query; },
       skip(value) { skip = value; return query; },
       limit(value) { assert.equal(value, 21); return query; },
@@ -41,6 +41,7 @@ test("my requests use only the session owner, paginate and omit photos and priva
     assert.equal(skip, 20);
     assert.equal(body.hasMore, true);
     assert.equal(body.requests.length, 20);
+    assert.equal(body.requests[0].photoCount, 1);
     for (const field of ["photos", "requester", "email"]) assert.equal(Object.hasOwn(body.requests[0], field), false);
     for (const page of ["0", "-1", "1.5", "abc", "100001", "1&page=2"]) assert.equal((await get(`/api/help-requests/mine?page=${page}`, cookie)).status, 400);
     rows = [];
