@@ -1,4 +1,5 @@
 import { useLanguage } from "../i18n/useLanguage";
+import FunderForm from "./FunderForm";
 
 const supportWays = [
   { number: "01", title: "Food and drinking water", description: "Help provide meals, dry food and clean drinking water for affected families." },
@@ -32,5 +33,6 @@ export default function FunderPage() {
       </li>)}</ul>
     </section>
     <p className="mt-7 text-sm leading-[1.7]">{t("Donation options are coming soon. This page does not accept payments yet.")}</p>
+    <FunderForm />
   </main>;
 }
