@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
 
 const supportOptions = [
@@ -11,6 +11,58 @@ const supportOptions = [
 export default function VolunteerForm() {
   const { t } = useLanguage();
   const [areas, setAreas] = useState({});
+  const [pending, setPending] = useState(false);
+  const [feedback, setFeedback] = useState(null);
+  const pendingRef = useRef(false);
+  const requestRef = useRef(null);
+  const feedbackRef = useRef(null);
+
+  useEffect(() => () => requestRef.current?.abort(), []);
+  useEffect(() => { if (feedback) feedbackRef.current?.focus(); }, [feedback]);
+
+  async function submit(event) {
+    event.preventDefault();
+    if (pendingRef.current) return;
+    const nearestTown = String(new FormData(event.currentTarget).get("nearestTown") || "").trim();
+    const entries = Object.entries(areas);
+    if (!nearestTown || !entries.length || entries.some(([id, details]) => !details.skills.length
+      || (id === "other" && !details.otherSupport.trim())
+      || (details.skills.includes("Other skills") && !details.otherSkills.trim()))) {
+      setFeedback({ text: "Select support areas and skills, and complete all required details.", success: false });
+      return;
+    }
+    pendingRef.current = true;
+    setPending(true);
+    setFeedback(null);
+    const controller = new AbortController();
+    requestRef.current = controller;
+    try {
+      const response = await fetch("/api/volunteers/me", {
+        method: "PUT", credentials: "same-origin",
+        headers: { "Content-Type": "application/json", "X-CSRF-Protection": "1" },
+        body: JSON.stringify({ nearestTown, areas }),
+        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]),
+      });
+      const body = await response.json().catch(() => ({}));
+      if (response.ok && body.success && body.profile?.id) {
+        setFeedback({ text: "Your volunteer details have been saved.", success: true });
+      } else {
+        const messages = {
+          400: "Please check your support areas, skills and town, then try again.",
+          401: "Please sign in using the page header, then save your volunteer details again.",
+          403: "Unable to save. Reload this page and try again.",
+          409: "Another save is in progress. Please try again.",
+          429: "Too many attempts. Please try again later.",
+        };
+        setFeedback({ text: messages[response.status] || "Unable to save your volunteer details. Please try again.", success: false });
+      }
+    } catch {
+      if (!controller.signal.aborted) setFeedback({ text: "Connection interrupted. Please try saving again.", success: false });
+    } finally {
+      pendingRef.current = false;
+      if (!controller.signal.aborted) setPending(false);
+    }
+  }
 
   function toggleArea(id) {
     setAreas((current) => {
@@ -35,8 +87,11 @@ export default function VolunteerForm() {
 
   return <section id="volunteer-form" className="volunteer-form-section" aria-labelledby="volunteer-form-title">
     <h2 id="volunteer-form-title">{t("Offer your support")}</h2>
-    <p id="volunteer-form-note">{t("Form preview. Your details are not sent or saved yet.")}</p>
-    <form className="volunteer-form" onSubmit={(event) => event.preventDefault()} aria-describedby="volunteer-form-note">
+    <p id="volunteer-form-note">{t("Sign in to save. Saving replaces your previous support areas and skills with the selections below.")}</p>
+    {feedback && <p className={`volunteer-feedback${feedback.success ? " is-success" : ""}`} ref={feedbackRef} tabIndex={-1} role={feedback.success ? "status" : "alert"}>{t(feedback.text)}</p>}
+    <form onSubmit={submit} onChange={() => setFeedback(null)} aria-describedby="volunteer-form-note" aria-busy={pending}>
+    <fieldset className="volunteer-form" disabled={pending}>
+      <legend className="sr-only">{t("Offer your support")}</legend>
       <fieldset className="volunteer-choice-group volunteer-form-wide" aria-describedby="volunteer-support-hint">
         <legend>{t("How would you like to help?")}</legend>
         <p id="volunteer-support-hint" className="volunteer-form-hint">{t("Select one or more support areas.")}</p>
@@ -66,7 +121,8 @@ export default function VolunteerForm() {
         <label htmlFor="volunteer-town">{t("Nearest town")}</label>
         <input id="volunteer-town" name="nearestTown" autoComplete="address-level2" required maxLength={100} />
       </div>
-      <button className="volunteer-form-submit volunteer-form-wide" type="submit" disabled>{t("Submit volunteer details (coming soon)")}</button>
+      <button className="volunteer-form-submit volunteer-form-wide" type="submit" disabled={pending}>{t(pending ? "Saving volunteer details…" : "Save volunteer details")}</button>
+    </fieldset>
     </form>
   </section>;
 }

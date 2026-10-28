@@ -19,7 +19,7 @@
 .volunteer-form-section { margin-top: 36px; padding: 28px; border: 1px solid #73aeb9; border-radius: 16px; background: #d9ecef; }
 .volunteer-form-section h2 { margin: 0 0 12px; font-size: 28px; }
 .volunteer-form-section > p { line-height: 1.6; }
-.volunteer-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 24px; }
+.volunteer-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin: 24px 0 0; padding: 0; border: 0; min-width: 0; }
 .volunteer-form-field { display: grid; align-content: start; gap: 9px; min-width: 0; }
 .volunteer-form-field label { font-size: 14px; font-weight: 700; }
 .volunteer-form-field :is(input, select, textarea) { width: 100%; min-width: 0; padding: 12px; border: 1px solid #6d9da8; border-radius: 8px; color: inherit; background: #f5fbfc; font: inherit; }
@@ -29,6 +29,10 @@
 .volunteer-form-hint { margin: 0; font-size: 13px; line-height: 1.6; }
 .volunteer-form-submit { justify-self: start; padding: 13px 20px; border: 0; border-radius: 8px; background: #007e8d; color: white; font-weight: 700; }
 .volunteer-form-submit:disabled { opacity: .6; cursor: not-allowed; }
+.volunteer-form-submit:not(:disabled) { cursor: pointer; }
+.volunteer-form-submit:not(:disabled):hover { background: #006776; }
+.volunteer-feedback { padding: 14px 18px; border: 1px solid #a04040; border-radius: 8px; background: #fff0f0; color: #812323; }
+.volunteer-feedback.is-success { border-color: #237750; background: #e5f7ed; color: #155135; }
 .volunteer-choice-group { min-width: 0; margin: 0; padding: 0; border: 0; }
 .volunteer-choice-group legend { margin-bottom: 10px; padding: 0; font-weight: 700; }
 .volunteer-choice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 10px; margin-top: 14px; }

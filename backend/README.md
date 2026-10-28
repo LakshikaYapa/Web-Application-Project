@@ -30,8 +30,11 @@ index. Success returns 200 with profile ID and update time. Errors include 400
 (validation), 401 (authentication), 403 (CSRF), 409 (concurrent save conflict),
 429 (10 attempts per IP per 15 minutes) and 500 (save failure).
 
-The frontend is still a preview in this step. Database writes are mocked in HTTP
-tests; live persistence and unique indexes require MongoDB.
+The volunteer form sends these selections to the API and displays success or
+error feedback. Fields are disabled while saving; failures preserve the entered
+details so users can sign in from the header and retry. Saving again replaces
+the prior selections. The form does not load existing profiles yet. Database
+writes are mocked in HTTP tests; live persistence and unique indexes require MongoDB.
 
 ## Help requests — backend step
 
