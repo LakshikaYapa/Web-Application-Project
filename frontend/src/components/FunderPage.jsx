@@ -32,7 +32,7 @@ export default function FunderPage() {
         <h3>{t(way.title)}</h3><p>{t(way.description)}</p>
       </li>)}</ul>
     </section>
-    <p className="mt-7 text-sm leading-[1.7]">{t("Donation options are coming soon. This page does not accept payments yet.")}</p>
+    <p className="mt-7 text-sm leading-[1.7]">{t("Use the form below to submit your contribution details.")}</p>
     <FunderForm />
   </main>;
 }

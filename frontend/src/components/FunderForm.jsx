@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
 import FinancialSupportFields from "./FinancialSupportFields";
 
@@ -16,6 +16,74 @@ export default function FunderForm() {
   const { t } = useLanguage();
   const [selected, setSelected] = useState([]);
   const [otherSupport, setOtherSupport] = useState("");
+  const [pending, setPending] = useState(false);
+  const [message, setMessage] = useState("");
+  const [saved, setSaved] = useState(null);
+  const pendingRef = useRef(false);
+  const requestRef = useRef(null);
+  const feedbackRef = useRef(null);
+
+  useEffect(() => () => requestRef.current?.abort(), []);
+  useEffect(() => { if (message || saved) feedbackRef.current?.focus(); }, [message, saved]);
+
+  async function submit(event) {
+    event.preventDefault();
+    if (pendingRef.current) return;
+    setMessage("");
+    const data = new FormData(event.currentTarget);
+    for (const field of ["nearestTown", "phone", "notes", "otherSupport", "amount"]) {
+      if (data.has(field)) data.set(field, String(data.get(field)).trim());
+    }
+    if (!selected.length || !data.get("nearestTown") || (selected.includes("other") && !data.get("otherSupport"))) {
+      setMessage("Select support types and complete all required details.");
+      return;
+    }
+    if (!/^(?:0[1-9]\d{8}|\+94[1-9]\d{8})$/.test(String(data.get("phone") || "").replace(/[\s()-]/g, ""))) {
+      setMessage("Enter a valid Sri Lankan phone number.");
+      return;
+    }
+    if (selected.includes("financial")) {
+      const amount = String(data.get("amount") || "");
+      if (!/^(?:0|[1-9]\d{0,9})(?:\.\d{1,2})?$/.test(amount) || Number(amount) <= 0) {
+        setMessage("Enter a positive LKR amount with up to two decimal places.");
+        return;
+      }
+      const receipt = data.get("receipt");
+      if (!(receipt instanceof File) || !receipt.size || receipt.size > 5 * 1024 * 1024 || !["image/jpeg", "image/png", "image/webp", "application/pdf"].includes(receipt.type)) {
+        setMessage("Choose a JPG, PNG, WebP or PDF receipt, up to 5 MB.");
+        return;
+      }
+    }
+    pendingRef.current = true;
+    setPending(true);
+    const controller = new AbortController();
+    requestRef.current = controller;
+    try {
+      const response = await fetch("/api/contributions", {
+        method: "POST", credentials: "same-origin", headers: { "X-CSRF-Protection": "1" },
+        body: data, signal: AbortSignal.any([controller.signal, AbortSignal.timeout(60000)]),
+      });
+      const body = await response.json().catch(() => ({}));
+      if (controller.signal.aborted) return;
+      if (response.status === 201 && body.success && body.contribution?.id) {
+        setSaved(body.contribution);
+      } else {
+        const messages = {
+          400: "Please check your contribution details and try again.",
+          401: "Please sign in using the page header, then submit your contribution again.",
+          403: "Unable to submit. Reload this page and try again.",
+          413: "Your receipt is too large. Choose a file up to 5 MB.",
+          429: "Too many attempts. Please try again later.",
+        };
+        setMessage(body.code === "INVALID_RECEIPT" ? "Choose a JPG, PNG, WebP or PDF receipt, up to 5 MB." : (messages[response.status] || "Unable to save your contribution. Please try again."));
+      }
+    } catch {
+      if (!controller.signal.aborted) setMessage("Connection interrupted. Your contribution may have been saved. Please check before submitting again.");
+    } finally {
+      pendingRef.current = false;
+      if (!controller.signal.aborted) setPending(false);
+    }
+  }
 
   function toggleSupport(id) {
     setSelected((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
@@ -24,8 +92,16 @@ export default function FunderForm() {
 
   return <section id="funder-form" className="mt-9 rounded-2xl border border-[#73aaa3] bg-[#d4eae3] p-5 min-[761px]:p-7 dark:border-[#578e83] dark:bg-[#1c443e]" aria-labelledby="funder-form-title">
     <h2 id="funder-form-title" className="mb-3 text-[28px]">{t("Tell us how you can support")}</h2>
-    <p id="funder-form-note" className="text-sm leading-[1.7]">{t("Form preview only. Details are not saved and no payment is taken.")}</p>
-    <form className="mt-6 grid gap-6 min-[761px]:grid-cols-2" onSubmit={(event) => event.preventDefault()} aria-describedby="funder-form-note">
+    <p id="funder-form-note" className="text-sm leading-[1.7]">{t("Sign in to submit your contribution details for review.")}</p>
+    {saved ? <div className="mt-5 rounded-xl border border-[#73aaa3] bg-white/70 p-5 dark:bg-[#12382f]" role="status" ref={feedbackRef} tabIndex={-1}>
+      <h3 className="text-xl font-bold">{t("Contribution submitted")}</h3>
+      <p className="mt-3 leading-[1.7]">{t("Your contribution is pending review. This does not confirm a bank payment.")}</p>
+      <p className="mt-3 break-all text-sm">{t("Contribution reference")}: {saved.id}</p>
+      <a className="mt-4 inline-block font-bold text-[#007667] dark:text-[#99e4c9]" href="/">{t("Back to homepage")}</a>
+    </div> : <form onSubmit={submit} onChange={() => setMessage("")} aria-describedby="funder-form-note" aria-busy={pending}>
+    {message && <p className="mt-5 rounded-lg border border-red-400 bg-red-50 p-4 text-red-900" role="alert" ref={feedbackRef} tabIndex={-1}>{t(message)}</p>}
+    <fieldset className="mt-6 grid min-w-0 gap-6 border-0 p-0 min-[761px]:grid-cols-2" disabled={pending}>
+      <legend className="sr-only">{t("Tell us how you can support")}</legend>
       <fieldset className="col-span-full min-w-0 border-0 p-0" aria-describedby="funder-support-hint">
         <legend className="mb-2 font-bold">{t("What would you like to contribute?")}</legend>
         <p id="funder-support-hint" className="text-[13px] leading-[1.6]">{t("Select one or more types of support.")}</p>
@@ -55,7 +131,8 @@ export default function FunderForm() {
         <textarea className={`${inputClass} resize-y`} id="funder-notes" name="notes" maxLength={1000} rows={4} aria-describedby="funder-notes-hint" />
         <p id="funder-notes-hint" className="text-[13px] leading-[1.6]">{t("Describe items, quantities or other details about the support you can offer.")}</p>
       </div>
-      <button type="submit" disabled className="col-span-full cursor-not-allowed justify-self-start rounded-lg bg-[#007667] px-5 py-[13px] font-bold text-white opacity-60">{t("Save support details (coming soon)")}</button>
-    </form>
+      <button type="submit" disabled={pending} className="col-span-full cursor-pointer justify-self-start rounded-lg bg-[#007667] px-5 py-[13px] font-bold text-white enabled:hover:bg-[#005e53] disabled:cursor-not-allowed disabled:opacity-60">{t(pending ? "Submitting contribution…" : "Submit contribution")}</button>
+    </fieldset>
+    </form>}
   </section>;
 }

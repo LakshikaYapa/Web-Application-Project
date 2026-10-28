@@ -25,8 +25,13 @@ ID, status and creation time only. There is no receipt download endpoint yet.
 Other responses: 400 validation, 401 unauthenticated/inactive account, 403 missing
 CSRF header, 429 (10 attempts per IP per 15 minutes), 500 save failure.
 
-The funder form remains a UI preview in this step. API tests use mocked database
-writes and do not make real payments or persist contributions.
+The funder form posts multipart data to this endpoint, including a receipt only
+when Financial support is selected. While sending, fields are disabled to avoid
+duplicate clicks. Failed requests preserve entered details and the selected file;
+sign in through the page header and retry after a 401. Success shows the saved
+reference and pending-review status. An interrupted connection may follow a
+successful save; check before resubmitting. API tests use mocked database writes
+and do not make real payments or persist contributions.
 
 ## Volunteer profile — backend step
 
