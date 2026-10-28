@@ -13,8 +13,7 @@ export default function CommunityActions() {
         <div className="community-action-content">
           <h2 id="volunteer-action-title">{t("Volunteer")}</h2>
           <p>{t("Join local relief efforts and make a difference in your community.")}</p>
-          <button type="button" disabled aria-describedby="volunteer-coming-soon">{t("Join the team")}<span aria-hidden="true">→</span></button>
-          <span className="action-coming-soon" id="volunteer-coming-soon">{t("Volunteer registration coming soon")}</span>
+          <a className="community-action-link" href="/volunteer#volunteer-form">{t("Join the team")}<span aria-hidden="true">→</span></a>
         </div>
       </section>
 

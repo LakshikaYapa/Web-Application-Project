@@ -131,7 +131,8 @@ button:disabled { cursor: not-allowed; }
 .community-action-content { min-width: 0; flex: 1; }
 .community-action-content h2 { margin: 0; color: #193b54; font-size: 16px; font-weight: 750; }
 .community-action-content p { margin: 8px 0 16px; color: #49677a; font-size: 13px; line-height: 1.7; }
-.community-action-content button { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; padding: 10px 12px; border: 1px solid #9bcfd7; border-radius: 6px; background: rgb(255 255 255 / 65%); color: #006f80; font-size: 12px; font-weight: 650; text-align: left; }
+.community-action-content :is(button, .community-action-link) { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; padding: 10px 12px; border: 1px solid #9bcfd7; border-radius: 6px; background: rgb(255 255 255 / 65%); color: #006f80; font-size: 12px; font-weight: 650; text-align: left; }
+.community-action-link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .action-coming-soon { display: block; margin-top: 8px; color: #607586; font-size: 11px; line-height: 1.5; }
 .relief-title-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .relief-progress { height: 8px; overflow: hidden; border-radius: 8px; background: #eadbe1; }
@@ -371,7 +372,7 @@ button:disabled { cursor: not-allowed; }
 [data-theme="dark"] .primary-navigation a { color: #b8cfdd; }
 [data-theme="dark"] .primary-navigation a:hover,
 [data-theme="dark"] .primary-navigation a[aria-current] { color: #38dce0; }
-[data-theme="dark"] :is(.menu-toggle, .theme-toggle, .map-preview-button, .volunteers-actions .volunteers-join, .community-action-content button) { background: #123a49; border-color: #367180; color: #a5f0f0; }
+[data-theme="dark"] :is(.menu-toggle, .theme-toggle, .map-preview-button, .volunteers-actions .volunteers-join, .community-action-content button, .community-action-link) { background: #123a49; border-color: #367180; color: #a5f0f0; }
 [data-theme="dark"] .primary-navigation.is-open { border-color: #294a58; }
 [data-theme="dark"] :is(.theme-toggle:hover, .map-preview-button:not(:disabled):hover, .safety-card:hover) { background: #1b4555; }
 [data-theme="dark"] .volunteers-actions button { color: #8ce8ec; }
