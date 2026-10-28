@@ -529,3 +529,9 @@ html[lang="si"] .hero-motto { max-width: 230px; line-height: 1.9; }
 .auth-role-option span { line-height: 1.6; }
 [data-theme="dark"] .auth-role-option { background: #123442; border-color: #477183; color: #d8f0f2; }
 [data-theme="dark"] .auth-role-option.is-selected { background: #16444d; border-color: #43c9ce; }
+.admin-page { max-width: 1100px; margin: 0 auto; padding: 48px 24px; min-height: 65vh; }
+.admin-heading { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-bottom: 28px; flex-wrap: wrap; }
+.admin-heading .register-submit { width: auto; padding-inline: 24px; }
+.admin-eyebrow { color: #008c99; font-size: 12px; font-weight: 700; letter-spacing: .12em; }
+.admin-panel { border: 1px solid #91adb466; border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+.admin-panel h2 { margin-top: 0; }

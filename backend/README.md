@@ -1,5 +1,21 @@
 # Backend API
 
+## Administrator setup (step 1)
+
+Public registration never accepts the admin role. To create an administrator,
+set `ADMIN_EMAIL` and `ADMIN_PASSWORD` in your ignored `backend/.env` file.
+Use any nonempty password up to 128 characters, then run `npm run admin:create`
+from `backend/` with MongoDB available. The command refuses to overwrite or
+promote existing accounts. Admin accounts do not need public contact details.
+Remove `ADMIN_PASSWORD` from `.env` after creating the account.
+
+Sign in through the existing homepage dialog with those credentials. Admins
+are sent to `/admin`. Refreshing the page checks the stored session and current
+database role through `GET /api/auth/admin`: anonymous sessions receive 401,
+non-admins receive 403. Suspended and expired sessions lose access. Sign out
+revokes the session. This first dashboard contains account details only;
+management features will be added in later steps.
+
 ## Registration
 
 `POST /api/auth/register` accepts JSON:

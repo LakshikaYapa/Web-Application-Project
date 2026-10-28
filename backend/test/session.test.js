@@ -30,6 +30,30 @@ const login = (cookie) => post("/login", { email: " TEST@EXAMPLE.COM ", password
 const cookieFrom = (response) => response.headers.get("set-cookie")?.split(";")[0];
 const me = (cookie) => fetch(url + "/me", { headers: cookie ? { Cookie: cookie } : {} });
 
+test("admin access requires a current active admin session", async () => {
+  let selected = { ...account };
+  const findOne = mock.method(User, "findOne", () => ({ select: async () => selected }));
+  const findById = mock.method(User, "findById", async () => selected);
+  const admin = (cookie) => fetch(url + "/admin", { headers: cookie ? { Cookie: cookie } : {} });
+  try {
+    assert.equal((await admin()).status, 401);
+    const cookie = cookieFrom(await login());
+    assert.equal((await admin(cookie)).status, 403);
+    selected = { ...account, roles: ["admin"] };
+    const allowed = await admin(cookie);
+    assert.equal(allowed.status, 200);
+    assert.deepEqual((await allowed.json()).user.roles, ["admin"]);
+    selected = { ...selected, status: "suspended" };
+    assert.equal((await admin(cookie)).status, 401);
+    selected = { ...account, roles: ["admin"] };
+    const adminCookie = cookieFrom(await login());
+    selected = { ...account };
+    assert.equal((await admin(adminCookie)).status, 403);
+    await post("/logout", {}, adminCookie);
+    assert.equal((await admin(adminCookie)).status, 401);
+  } finally { findOne.mock.restore(); findById.mock.restore(); }
+});
+
 test("password comparison is exact and rejects malformed stored hashes", async () => {
   assert.equal(await verifyPassword(password, account.passwordHash), true);
   assert.equal(await verifyPassword(password + " ", account.passwordHash), false);

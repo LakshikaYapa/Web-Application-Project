@@ -53,6 +53,10 @@ export default function SignInDialog({ onClose, onRegister }) {
       const body = await response.json().catch(() => ({}));
       if (response.ok && body.success) {
         setPassword("");
+        if (body.user?.roles?.includes("admin")) {
+          window.location.assign("/admin");
+          return;
+        }
         setSignedIn(true);
       } else {
         const messages = {
