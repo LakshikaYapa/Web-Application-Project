@@ -18,8 +18,8 @@ export default function FunderPage() {
         <p className="max-w-[540px] leading-[1.8]">{t("Explore ways to support flood relief and help communities recover through FloodGuard.")}</p>
         <a className="mt-3.5 inline-flex items-center gap-[18px] rounded-lg bg-[#007667] px-5 py-[13px] font-bold text-white hover:bg-[#005e53]" href="#funder-support">{t("Explore ways to support")} <span aria-hidden="true">↓</span></a>
       </div>
-      <aside className="rounded-2xl border border-[#33877e] bg-[#12665e] p-6 text-white min-[761px]:p-[30px] [&_h2]:text-[26px] [&_h2]:leading-[1.4] [&_p]:mb-0 [&_p]:leading-[1.8]">
-        <span className="text-[64px] leading-none text-[#c5f5df]" aria-hidden="true">♡</span>
+      <aside className="flex min-h-[400px] flex-col justify-end rounded-2xl border border-[#33877e] bg-[linear-gradient(180deg,rgba(5,27,26,.05)_20%,rgba(5,27,26,.7)_60%,rgba(5,27,26,.95)_100%),url('/funder-background.jpg')] bg-cover bg-position-[center_45%] bg-no-repeat p-6 text-white min-[761px]:min-h-[440px] min-[761px]:p-[30px] [&_h2]:my-3 [&_h2]:text-[26px] [&_h2]:leading-[1.4] [&_p]:mb-0 [&_p]:leading-[1.8]">
+        <span className="text-5xl leading-none text-[#c5f5df]" aria-hidden="true">♡</span>
         <h2>{t("Care that reaches communities.")}</h2>
         <p>{t("Food, shelter essentials and relief supplies can help families take their next step.")}</p>
       </aside>
