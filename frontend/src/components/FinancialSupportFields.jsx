@@ -38,7 +38,7 @@ export default function FinancialSupportFields() {
     <legend className="px-2 font-bold">{t("Financial support")}</legend>
     {bankReady ? <>
       <p className="mb-4 leading-[1.7]">{t("Transfer your contribution to the bank account below, then enter the amount paid and attach your receipt.")}</p>
-      <dl className="mb-5 grid gap-3 rounded-lg border border-[#73aaa3] p-4 min-[540px]:grid-cols-2">
+      <dl className="mb-5 grid gap-4 rounded-xl border-2 border-blue-400 bg-blue-100 p-5 text-blue-950 min-[540px]:grid-cols-2 dark:border-blue-500 dark:bg-blue-950 dark:text-blue-100">
         {[["Bank", donationBank.bankName], ["Branch", donationBank.branch], ["Account holder", donationBank.accountName], ["Account number", donationBank.accountNumber]].map(([label, value]) => <div key={label}>
           <dt className="text-sm font-bold">{t(label)}</dt><dd className="mt-1 break-all">{value}</dd>
         </div>)}

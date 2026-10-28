@@ -1,8 +1,7 @@
-// These details are public. Fill in the confirmed donation account before
-// displaying bank transfer instructions; never use a sample account number.
+// Sample public details for the current form preview.
 export const donationBank = {
-  bankName: "",
-  branch: "",
-  accountName: "",
-  accountNumber: "",
+  bankName: "Sample Bank",
+  branch: "Colombo Demo Branch",
+  accountName: "FloodGuard Demo Fund",
+  accountNumber: "0000000000",
 };
