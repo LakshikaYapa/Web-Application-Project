@@ -6,8 +6,8 @@ import SignInDialog from "./SignInDialog";
 const navigation = [
   { label: "Flood map", target: "flood-map-title" },
   { label: "Shelters", target: "shelters-title" },
-  { label: "Volunteer", target: "volunteers-title" },
-  { label: "Donate", target: "relief-action-title" },
+  { label: "Volunteer", target: "volunteers-title", page: "/volunteer" },
+  { label: "Donate", target: "relief-action-title", page: "/funder" },
 ];
 
 export default function Header() {
@@ -54,8 +54,8 @@ export default function Header() {
           aria-label={t("Main navigation")}
         >
           <a href="/" aria-current={window.location.pathname === "/" ? "page" : undefined} onClick={() => setMenuOpen(false)}>{t("Home")}</a>
-          {navigation.map(({ label, target }) => (
-            <a key={target} href={label === "Volunteer" ? "/volunteer" : `/#${target}`} aria-current={label === "Volunteer" && window.location.pathname.replace(/\/$/, "") === "/volunteer" ? "page" : undefined} onClick={() => setMenuOpen(false)}>
+          {navigation.map(({ label, target, page }) => (
+            <a key={target} href={page || `/#${target}`} aria-current={page && window.location.pathname.replace(/\/$/, "") === page ? "page" : undefined} onClick={() => setMenuOpen(false)}>
               {t(label)}
             </a>
           ))}
