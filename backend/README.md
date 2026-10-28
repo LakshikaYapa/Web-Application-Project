@@ -11,8 +11,16 @@ data are excluded. Invalid pages return 400; missing/inactive sessions return 40
 Visit `/my-contributions` through the funder page or submission success link.
 The Tailwind page displays formatted LKR amounts and dates in Asia/Colombo,
 pending-review badges, loading/empty/error states, pagination and a refresh
-button. After signing in through the header, refresh the list. Receipt viewing
-will follow in a separate step.
+button. After signing in through the header, refresh the list. Records with
+receipts include View receipt and Download receipt links. Only the receipt's
+presence is returned with the list; binary data stays out of list responses.
+
+`GET /api/contributions/:id/receipt` returns the saved JPG/PNG/WebP/PDF only
+to its active authenticated owner. `?download=1` sends it as an attachment;
+otherwise it opens inline. Responses have a generated filename, stored MIME
+type, `no-store`, `nosniff` and a sandbox CSP. Invalid IDs, missing receipts and
+another user's contribution return the same 404; inactive/missing sessions
+return 401. No public receipt access is provided.
 
 `POST /api/contributions` requires an active login session and
 `X-CSRF-Protection: 1`. Send multipart form data with repeated `supportTypes`
@@ -33,7 +41,7 @@ document, including private receipt binary data and contact details. Default
 queries exclude receipts and phone numbers. Nothing is stored before all
 validation passes. Each contribution starts as `pending_review`; receipt
 submission does not verify or confirm a bank payment. Success returns 201 with
-ID, status and creation time only. There is no receipt download endpoint yet.
+ID, status and creation time only. Receipt viewing uses the protected endpoint above.
 Other responses: 400 validation, 401 unauthenticated/inactive account, 403 missing
 CSRF header, 429 (10 attempts per IP per 15 minutes), 500 save failure.
 

@@ -48,6 +48,10 @@ export default function MyContributions() {
         {contribution.otherSupport && <p className="mt-3 whitespace-pre-wrap wrap-anywhere"><strong>{t("Other support")}:</strong> {contribution.otherSupport}</p>}
         {contribution.notes && <p className="mt-3 whitespace-pre-wrap wrap-anywhere">{contribution.notes}</p>}
         <p className="mt-4 text-sm">{t("Sent on")}: <time dateTime={contribution.createdAt}>{new Date(contribution.createdAt).toLocaleString(locale, { timeZone: "Asia/Colombo" })}</time></p>
+        {contribution.hasReceipt && <div className="mt-5 flex flex-wrap gap-3 border-t border-[#9cc6b6] pt-4 dark:border-[#578e83]">
+          <a className="rounded-lg bg-[#007667] px-4 py-2 text-sm font-semibold text-white hover:bg-[#005e53]" href={`/api/contributions/${encodeURIComponent(contribution.id)}/receipt`} target="_blank" rel="noopener noreferrer">{t("View receipt")}</a>
+          <a className="rounded-lg border border-[#73aaa3] px-4 py-2 text-sm font-semibold hover:bg-[#c1dfd1] dark:hover:bg-[#315f4e]" href={`/api/contributions/${encodeURIComponent(contribution.id)}/receipt?download=1`}>{t("Download receipt")}</a>
+        </div>}
       </li>)}</ul>
       <nav className="mt-6 flex justify-between gap-4" aria-label={t("Contribution list pages")}>
         {page > 1 && <a className={linkClass} href={`/my-contributions?page=${page - 1}`}>{t("Previous page")}</a>}

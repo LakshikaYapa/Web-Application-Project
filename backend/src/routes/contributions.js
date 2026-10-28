@@ -14,13 +14,28 @@ module.exports = function createContributionRoutes() {
     }
     try {
       const records = await Contribution.find({ contributor: req.user.id })
-        .select("supportTypes nearestTown otherSupport notes amountMinor currency status createdAt")
+        .select("supportTypes nearestTown otherSupport notes amountMinor currency status createdAt receipt.contentType")
         .sort({ createdAt: -1, _id: -1 }).skip((page - 1) * 20).limit(21).lean();
       return res.json({ success: true, page, hasMore: records.length > 20, contributions: records.slice(0, 20).map((record) => ({
         id: String(record._id), supportTypes: record.supportTypes, nearestTown: record.nearestTown,
         otherSupport: record.otherSupport, notes: record.notes, amountMinor: record.amountMinor,
         currency: record.currency, status: record.status, createdAt: record.createdAt,
+        hasReceipt: Boolean(record.receipt?.contentType),
       })) });
+    } catch (error) { return next(error); }
+  });
+  router.get("/:id/receipt", requireUser, async (req, res, next) => {
+    const { id } = req.params;
+    if (!/^[a-f\d]{24}$/i.test(id)) return res.status(404).json({ success: false, code: "RECEIPT_NOT_FOUND" });
+    try {
+      const contribution = await Contribution.findOne({ _id: id, contributor: req.user.id }).select("+receipt");
+      const receipt = contribution?.receipt;
+      const extensions = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "application/pdf": "pdf" };
+      if (!receipt?.data?.length || !Object.hasOwn(extensions, receipt.contentType)) return res.status(404).json({ success: false, code: "RECEIPT_NOT_FOUND" });
+      res.set("X-Content-Type-Options", "nosniff");
+      res.set("Content-Security-Policy", "sandbox; default-src 'none'");
+      res.set("Content-Disposition", `${req.query.download === "1" ? "attachment" : "inline"}; filename="receipt-${id}.${extensions[receipt.contentType]}"`);
+      return res.type(receipt.contentType).send(receipt.data);
     } catch (error) { return next(error); }
   });
   router.post("/", (req, res, next) => {

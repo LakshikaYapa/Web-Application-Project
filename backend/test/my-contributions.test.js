@@ -16,11 +16,11 @@ test("my contributions enforces ownership, pagination and private field filterin
   t.mock.method(User, "findOne", () => ({ select: async () => account }));
   t.mock.method(User, "findById", async () => account);
   let skip;
-  let records = Array.from({ length: 21 }, (_, i) => ({ _id: String(i), supportTypes: ["financial"], nearestTown: "Kandy", amountMinor: 123456, currency: "LKR", status: "pending_review", createdAt: new Date(), contributor: "private", phone: "private", receipt: { data: Buffer.from("private") } }));
+  let records = Array.from({ length: 21 }, (_, i) => ({ _id: String(i), supportTypes: ["financial"], nearestTown: "Kandy", amountMinor: 123456, currency: "LKR", status: "pending_review", createdAt: new Date(), contributor: "private", phone: "private", receipt: { contentType: "image/png", data: Buffer.from("private") } }));
   const find = t.mock.method(Contribution, "find", (filter) => {
     assert.deepEqual(filter, { contributor: account.id });
     const query = {
-      select(fields) { for (const field of ["receipt", "phone", "contributor"]) assert.equal(fields.includes(field), false); return query; },
+      select(fields) { assert.ok(fields.includes("receipt.contentType")); for (const field of ["receipt.data", "phone", "contributor"]) assert.equal(fields.includes(field), false); return query; },
       sort(order) { assert.deepEqual(order, { createdAt: -1, _id: -1 }); return query; },
       skip(value) { skip = value; return query; },
       limit(value) { assert.equal(value, 21); return query; },
@@ -45,6 +45,7 @@ test("my contributions enforces ownership, pagination and private field filterin
     assert.equal(body.contributions.length, 20);
     assert.equal(body.contributions[0].amountMinor, 123456);
     assert.equal(body.contributions[0].status, "pending_review");
+    assert.equal(body.contributions[0].hasReceipt, true);
     for (const field of ["receipt", "phone", "contributor"]) assert.equal(Object.hasOwn(body.contributions[0], field), false);
     const calls = find.mock.callCount();
     for (const page of ["0", "-1", "1.5", "abc", "100001", "1&page=2"]) assert.equal((await get(`?page=${page}`, cookie)).status, 400);
