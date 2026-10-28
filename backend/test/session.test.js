@@ -7,7 +7,7 @@ const { hashPassword, verifyPassword } = require("../src/utils/password");
 
 const store = new session.MemoryStore();
 const app = createApp({ sessionStore: store, sessionSecret: "test-only-session-secret-at-least-32-chars", secureCookies: false });
-const password = "a long secret passphrase";
+const password = "a";
 let account;
 let server;
 let url;

@@ -68,7 +68,7 @@ export default function RegisterDialog({ onClose, onSignIn }) {
     const nextErrors = {};
     if (values.name.trim().length < 2 || values.name.trim().length > 100) nextErrors.name = "Name must contain 2 to 100 characters.";
     if (values.email.trim().length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) nextErrors.email = "Enter a valid email address.";
-    if ([...values.password].length < 15 || [...values.password].length > 128) nextErrors.password = "Password must contain 15 to 128 characters.";
+    if (!values.password.length || [...values.password].length > 128) nextErrors.password = "Password is required and must not exceed 128 characters.";
     if (!values.roles.length) nextErrors.roles = "Select at least one role.";
     if (values.address.trim().length < 5 || values.address.trim().length > 300) nextErrors.address = "Address must contain 5 to 300 characters.";
     if (values.nearestTown.trim().length < 2 || values.nearestTown.trim().length > 100) nextErrors.nearestTown = "Nearest town must contain 2 to 100 characters.";
@@ -97,7 +97,7 @@ export default function RegisterDialog({ onClose, onSignIn }) {
         // Translate known server messages, rather than rendering arbitrary errors.
         const allowed = new Set([
           "Name must contain 2 to 100 characters.", "Enter a valid email address.",
-          "Password must contain 15 to 128 characters.", "Choose one or more distinct roles: volunteer, help_seeker or funder.",
+          "Password is required and must not exceed 128 characters.", "Choose one or more distinct roles: volunteer, help_seeker or funder.",
           "Address must contain 5 to 300 characters.", "Nearest town must contain 2 to 100 characters.",
           "Enter a valid Sri Lankan phone number.",
         ]);
@@ -157,7 +157,7 @@ export default function RegisterDialog({ onClose, onSignIn }) {
               <input id="register-password" name="password" type={showPassword ? "text" : "password"} autoComplete="new-password" value={values.password} onChange={update} required aria-invalid={Boolean(errors.password)} aria-describedby={`register-password-hint${errors.password ? " register-password-error" : ""}`} />
               <button type="button" aria-pressed={showPassword} aria-controls="register-password" onClick={() => setShowPassword((visible) => !visible)}>{t(showPassword ? "Hide" : "Show")}</button>
             </div>
-            <p className="register-hint" id="register-password-hint">{t("Use a unique passphrase of 15 to 128 characters.")}</p>
+            <p className="register-hint" id="register-password-hint">{t("Use any nonempty password up to 128 characters.")}</p>
             {fieldError("password")}
             </div>
             <fieldset className="auth-role-group" aria-describedby={`register-roles-hint${errors.roles ? " register-roles-error" : ""}`} aria-invalid={Boolean(errors.roles)}>
