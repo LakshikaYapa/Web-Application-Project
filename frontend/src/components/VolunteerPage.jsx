@@ -1,5 +1,6 @@
 import { useLanguage } from "../i18n/useLanguage";
 import "./VolunteerPage.css";
+import VolunteerForm from "./VolunteerForm";
 
 const waysToHelp = [
   { number: "01", title: "Relief distribution", description: "Help organise and distribute food, drinking water and essential supplies." },
@@ -32,6 +33,6 @@ export default function VolunteerPage() {
         <h3>{t(way.title)}</h3><p>{t(way.description)}</p>
       </li>)}</ul>
     </section>
-    <p className="volunteer-next-step">{t("Volunteer applications will open here soon.")}</p>
+    <VolunteerForm />
   </main>;
 }

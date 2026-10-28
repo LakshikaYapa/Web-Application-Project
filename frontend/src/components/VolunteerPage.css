@@ -16,14 +16,30 @@
 .volunteer-way-number { display: inline-block; padding: 8px 10px; border-radius: 8px; background: #add9d3; color: #00545e; font-weight: 700; }
 .volunteer-ways-grid h3 { font-size: 18px; margin-bottom: 10px; }
 .volunteer-ways-grid p { margin: 0; line-height: 1.7; }
-.volunteer-next-step { font-size: 14px; margin-top: 28px; }
+.volunteer-form-section { margin-top: 36px; padding: 28px; border: 1px solid #73aeb9; border-radius: 16px; background: #d9ecef; }
+.volunteer-form-section h2 { margin: 0 0 12px; font-size: 28px; }
+.volunteer-form-section > p { line-height: 1.6; }
+.volunteer-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 24px; }
+.volunteer-form-field { display: grid; align-content: start; gap: 9px; min-width: 0; }
+.volunteer-form-field label { font-size: 14px; font-weight: 700; }
+.volunteer-form-field :is(input, select, textarea) { width: 100%; min-width: 0; padding: 12px; border: 1px solid #6d9da8; border-radius: 8px; color: inherit; background: #f5fbfc; font: inherit; }
+.volunteer-form-field textarea { resize: vertical; }
+.volunteer-form-field option { background: #f5fbfc; color: #102a43; }
+.volunteer-form-wide { grid-column: 1 / -1; }
+.volunteer-form-hint { margin: 0; font-size: 13px; line-height: 1.6; }
+.volunteer-form-submit { justify-self: start; padding: 13px 20px; border: 0; border-radius: 8px; background: #007e8d; color: white; font-weight: 700; }
+.volunteer-form-submit:disabled { opacity: .6; cursor: not-allowed; }
 [data-theme="dark"] .volunteer-page-intro { background: linear-gradient(120deg, #133a43, #163043); border-color: #315969; }
 [data-theme="dark"] .volunteer-page-eyebrow { color: #87e1db; }
 [data-theme="dark"] .volunteer-ways-grid li { background: #1c4250; border-color: #578d9d; }
 [data-theme="dark"] .volunteer-way-number { background: #32676c; color: #e1fffa; }
+[data-theme="dark"] .volunteer-form-section { background: #1c4250; border-color: #578d9d; }
+[data-theme="dark"] .volunteer-form-field :is(input, select, textarea) { background: #12313e; border-color: #578d9d; }
 @media (max-width: 760px) {
   .volunteer-page { padding: 24px 16px 40px; }
   .volunteer-page-intro { grid-template-columns: 1fr; padding: 24px; gap: 24px; }
   .volunteer-page-message { min-height: 400px; padding: 20px; }
   .volunteer-ways-grid { grid-template-columns: 1fr; }
+  .volunteer-form-section { padding: 20px; }
+  .volunteer-form { grid-template-columns: 1fr; }
 }
