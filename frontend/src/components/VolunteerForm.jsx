@@ -11,6 +11,29 @@ const supportOptions = [
 export default function VolunteerForm() {
   const { t } = useLanguage();
   const [areas, setAreas] = useState({});
+  const [town, setTown] = useState("");
+  const [loadState, setLoadState] = useState("loading");
+  const [reload, setReload] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/volunteers/me", {
+      credentials: "same-origin", signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]),
+    }).then(async (response) => {
+      if (response.status === 401) {
+        if (!controller.signal.aborted) setLoadState("signin");
+        return;
+      }
+      if (!response.ok) throw new Error("Load failed");
+      const body = await response.json();
+      if (!body.success || (body.profile !== null && (!body.profile?.areas || typeof body.profile.nearestTown !== "string"))) throw new Error("Invalid profile");
+      if (controller.signal.aborted) return;
+      setAreas(body.profile?.areas || {});
+      setTown(body.profile?.nearestTown || "");
+      setLoadState("ready");
+    }).catch(() => { if (!controller.signal.aborted) setLoadState("error"); });
+    return () => controller.abort();
+  }, [reload]);
   const [pending, setPending] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const pendingRef = useRef(false);
@@ -22,7 +45,7 @@ export default function VolunteerForm() {
 
   async function submit(event) {
     event.preventDefault();
-    if (pendingRef.current) return;
+    if (pendingRef.current || loadState !== "ready") return;
     const nearestTown = String(new FormData(event.currentTarget).get("nearestTown") || "").trim();
     const entries = Object.entries(areas);
     if (!nearestTown || !entries.length || entries.some(([id, details]) => !details.skills.length
@@ -88,9 +111,14 @@ export default function VolunteerForm() {
   return <section id="volunteer-form" className="volunteer-form-section" aria-labelledby="volunteer-form-title">
     <h2 id="volunteer-form-title">{t("Offer your support")}</h2>
     <p id="volunteer-form-note">{t("Sign in to save. Saving replaces your previous support areas and skills with the selections below.")}</p>
+    {loadState === "loading" && <p role="status">{t("Loading your volunteer details…")}</p>}
+    {(loadState === "signin" || loadState === "error") && <div className="volunteer-feedback" role="alert">
+      <p>{t(loadState === "signin" ? "Sign in using the page header, then load your volunteer details." : "Unable to load your volunteer details. Try again before editing.")}</p>
+      <button type="button" className="volunteer-form-submit" onClick={() => { setLoadState("loading"); setReload((value) => value + 1); }}>{t("Load my volunteer details")}</button>
+    </div>}
     {feedback && <p className={`volunteer-feedback${feedback.success ? " is-success" : ""}`} ref={feedbackRef} tabIndex={-1} role={feedback.success ? "status" : "alert"}>{t(feedback.text)}</p>}
-    <form onSubmit={submit} onChange={() => setFeedback(null)} aria-describedby="volunteer-form-note" aria-busy={pending}>
-    <fieldset className="volunteer-form" disabled={pending}>
+    <form onSubmit={submit} onChange={() => setFeedback(null)} aria-describedby="volunteer-form-note" aria-busy={pending || loadState === "loading"}>
+    <fieldset className="volunteer-form" disabled={pending || loadState !== "ready"}>
       <legend className="sr-only">{t("Offer your support")}</legend>
       <fieldset className="volunteer-choice-group volunteer-form-wide" aria-describedby="volunteer-support-hint">
         <legend>{t("How would you like to help?")}</legend>
@@ -119,9 +147,9 @@ export default function VolunteerForm() {
       </fieldset>)}
       <div className="volunteer-form-field">
         <label htmlFor="volunteer-town">{t("Nearest town")}</label>
-        <input id="volunteer-town" name="nearestTown" autoComplete="address-level2" required maxLength={100} />
+        <input id="volunteer-town" name="nearestTown" autoComplete="address-level2" required maxLength={100} value={town} onChange={(event) => setTown(event.target.value)} />
       </div>
-      <button className="volunteer-form-submit volunteer-form-wide" type="submit" disabled={pending}>{t(pending ? "Saving volunteer details…" : "Save volunteer details")}</button>
+      <button className="volunteer-form-submit volunteer-form-wide" type="submit" disabled={pending || loadState !== "ready"}>{t(pending ? "Saving volunteer details…" : "Save volunteer details")}</button>
     </fieldset>
     </form>
   </section>;

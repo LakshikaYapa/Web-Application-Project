@@ -6,6 +6,17 @@ const VolunteerProfile = require("../models/VolunteerProfile");
 
 module.exports = function createVolunteerRoutes() {
   const router = express.Router();
+  router.get("/me", requireUser, async (req, res, next) => {
+    try {
+      const profile = await VolunteerProfile.findOne({ user: req.user.id }).select("nearestTown supportAreas updatedAt");
+      return res.json({ success: true, profile: profile ? {
+        id: profile.id, nearestTown: profile.nearestTown, updatedAt: profile.updatedAt,
+        areas: Object.fromEntries(profile.supportAreas.map((item) => [item.area, {
+          skills: [...item.skills], otherSkills: item.otherSkills || "", otherSupport: item.otherSupport || "",
+        }])),
+      } : null });
+    } catch (error) { return next(error); }
+  });
   router.put("/me", (req, res, next) => {
     if (req.get("X-CSRF-Protection") !== "1") return res.status(403).json({ success: false, code: "CSRF_REJECTED" });
     return next();

@@ -33,8 +33,13 @@ index. Success returns 200 with profile ID and update time. Errors include 400
 The volunteer form sends these selections to the API and displays success or
 error feedback. Fields are disabled while saving; failures preserve the entered
 details so users can sign in from the header and retry. Saving again replaces
-the prior selections. The form does not load existing profiles yet. Database
-writes are mocked in HTTP tests; live persistence and unique indexes require MongoDB.
+the prior selections. The form loads existing profiles before allowing edits.
+`GET /api/volunteers/me` returns the current owner's town and an `areas` object
+matching the form, or `profile: null` for a new volunteer. No other user's profile
+can be requested. Anonymous/expired/suspended sessions return 401. Responses
+use `no-store`. Failed loads block editing and saving; after signing in through
+the header, use **Load my volunteer details** to retry. Database writes are mocked
+in HTTP tests; live persistence and unique indexes require MongoDB.
 
 ## Help requests — backend step
 
