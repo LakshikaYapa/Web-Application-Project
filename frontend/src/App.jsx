@@ -10,6 +10,7 @@ import CommunityGallery from "./components/CommunityGallery";
 import ShelterNeeds from "./components/ShelterNeeds";
 import SafetyGuidance from "./components/SafetyGuidance";
 import Footer from "./components/Footer";
+import HelpRequestPage from "./components/HelpRequestPage";
 
 function App() {
   const { t } = useLanguage();
@@ -45,6 +46,7 @@ function App() {
     <>
       <a id="page-top" className="skip-link" href="#main">{t("Skip to content")}</a>
       <Header />
+      {window.location.pathname.replace(/\/$/, "") === "/request-help" ? <HelpRequestPage /> : (
       <main id="main" className="homepage" tabIndex={-1}>
         <Hero />
         <div className="homepage-overview">
@@ -58,6 +60,7 @@ function App() {
         <SafetyGuidance />
         <p role="status" className="connection-status">{t(message)}</p>
       </main>
+      )}
       <Footer />
     </>
   );

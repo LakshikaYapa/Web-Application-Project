@@ -30,12 +30,12 @@ export default function Hero() {
             <ActionIcon />
             <span><strong>{t("Report a flood")}</strong><span>{t("Share what you see")}</span></span>
           </button>
-          <button className="hero-action hero-action-secondary" type="button" disabled aria-describedby="hero-preview-note">
+          <a className="hero-action hero-action-secondary" href="/request-help">
             <ActionIcon help />
             <span><strong>{t("Request help")}</strong><span>{t("Get support")}</span></span>
-          </button>
+          </a>
         </div>
-        <p id="hero-preview-note" className="hero-preview-note">{t("Reporting and help requests are coming soon.")}</p>
+        <p id="hero-preview-note" className="hero-preview-note">{t("Flood reporting is coming soon. Help request form is a preview.")}</p>
       </div>
       <p className="hero-motto">{t("Stronger communities.")}<br />{t("Safer tomorrows.")}</p>
       
