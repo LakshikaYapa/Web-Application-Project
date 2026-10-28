@@ -3,7 +3,7 @@ const multer = require("multer");
 const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { files: 3, fileSize: MAX_PHOTO_SIZE, fields: 4, fieldSize: 8192, parts: 7 },
+  limits: { files: 3, fileSize: MAX_PHOTO_SIZE, fields: 5, fieldSize: 8192, parts: 8 },
   fileFilter(_req, file, callback) {
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.mimetype)) {
       return callback(Object.assign(new Error("Unsupported image type"), { code: "INVALID_PHOTOS" }));

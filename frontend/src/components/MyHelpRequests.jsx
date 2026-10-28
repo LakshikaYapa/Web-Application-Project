@@ -34,6 +34,7 @@ export default function MyHelpRequests() {
       <ul className="my-requests-list">{result.requests.map((request) => <li className="my-request-card" key={request.id}>
         <div className="my-requests-heading"><h2>{t(request.helpType)}</h2><span className="my-request-status">{t(request.status === "pending" ? "Pending" : request.status)}</span></div>
         <p><strong>{t("Nearest town")}:</strong> {request.nearestTown}</p>
+        {request.otherHelp && <p><strong>{t("What other help do you need?")}:</strong> {request.otherHelp}</p>}
         <p><strong>{t("Location or nearby landmark")}:</strong> {request.location}</p>
         <p className="my-request-description">{request.description}</p>
         <p>{t("Sent on")}: <time dateTime={request.createdAt}>{new Date(request.createdAt).toLocaleString(language === "si" ? "si-LK" : "en-LK")}</time></p>

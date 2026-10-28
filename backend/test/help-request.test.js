@@ -141,6 +141,19 @@ test("multipart photos are validated and saved with the request without exposing
     }
     assert.equal((await send(form([Buffer.alloc(5 * 1024 * 1024 + 1)]), cookie)).status, 413);
     assert.equal(create.mock.callCount(), 2);
+    const missingOther = form([]);
+    missingOther.set("helpType", "Other help");
+    assert.equal((await send(missingOther, cookie)).status, 400);
+    const longOther = form([]);
+    longOther.set("helpType", "Other help");
+    longOther.set("otherHelp", "x".repeat(201));
+    assert.equal((await send(longOther, cookie)).status, 400);
+    const other = form([png, png, png]);
+    other.set("helpType", "Other help");
+    other.set("otherHelp", "  Baby supplies  ");
+    assert.equal((await send(other, cookie)).status, 201);
+    assert.equal(create.mock.calls[2].arguments[0].otherHelp, "Baby supplies");
+    assert.equal(create.mock.calls[2].arguments[0].photos.length, 3);
   } finally {
     await new Promise((resolve) => server.close(resolve));
     store.clear();

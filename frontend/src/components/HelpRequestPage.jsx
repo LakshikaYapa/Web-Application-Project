@@ -16,6 +16,7 @@ function PhotoPreview({ file }) {
 export default function HelpRequestPage() {
   const { t } = useLanguage();
   const [photos, setPhotos] = useState([]);
+  const [helpType, setHelpType] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState("");
@@ -35,6 +36,7 @@ export default function HelpRequestPage() {
     setMessage("");
     const form = new FormData(event.currentTarget);
     const payload = Object.fromEntries(["helpType", "nearestTown", "location", "description"].map((field) => [field, String(form.get(field) || "").trim()]));
+    if (payload.helpType === "Other help") payload.otherHelp = String(form.get("otherHelp") || "").trim();
     if (Object.values(payload).some((value) => !value)) {
       setMessage("Please complete all required fields.");
       return;
@@ -107,10 +109,14 @@ export default function HelpRequestPage() {
       <fieldset className="help-request-form" disabled={pending}>
         <legend className="sr-only">{t("Request help")}</legend>
         <label htmlFor="help-type">{t("What help do you need?")}</label>
-        <select id="help-type" name="helpType" required defaultValue="">
+        <select id="help-type" name="helpType" required value={helpType} onChange={(event) => setHelpType(event.target.value)}>
           <option value="" disabled>{t("Select a help type")}</option>
           {helpTypes.map((type) => <option key={type} value={type}>{t(type)}</option>)}
         </select>
+        {helpType === "Other help" && <>
+          <label htmlFor="help-other">{t("What other help do you need?")}</label>
+          <input id="help-other" name="otherHelp" type="text" required maxLength={200} />
+        </>}
         <label htmlFor="help-town">{t("Nearest town")}</label>
         <input id="help-town" name="nearestTown" autoComplete="address-level2" required maxLength={100} />
         <label htmlFor="help-location">{t("Location or nearby landmark")}</label>

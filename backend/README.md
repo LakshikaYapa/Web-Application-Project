@@ -14,6 +14,9 @@ in through the header, refresh the list. Photo viewing is a future step.
 characters), `location` (1–300) and `description` (1–2000). Text is trimmed.
 Supported help types: `Food and drinking water`, `Shelter`, `Rescue or transport`,
 `Medical assistance`, `Other help`.
+Choosing `Other help` reveals a required text field. Send `otherHelp` with
+1–200 characters for that category only; the value is saved and shown in the
+owner's request list. Other categories must omit `otherHelp`.
 
 The server derives the requester from the session and saves a `pending` request
 in MongoDB's `helprequests` collection. Client-supplied owners, statuses and
