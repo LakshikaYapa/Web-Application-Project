@@ -2,6 +2,13 @@
 
 ## Help requests — backend step
 
+`GET /api/help-requests/mine?page=1` lists only the authenticated user's requests,
+newest first, 20 per page. The response contains `requests`, `page` and `hasMore`.
+Owner IDs, account details and photo buffers are excluded. Missing/invalid sessions
+return 401; invalid page numbers return 400. The `/my-requests` frontend includes
+loading, empty and error states, pagination and a refresh button. After signing
+in through the header, refresh the list. Photo viewing is a future step.
+
 `POST /api/help-requests` requires an active login session and the header
 `X-CSRF-Protection: 1`. Send JSON with `helpType`, `nearestTown` (1–100
 characters), `location` (1–300) and `description` (1–2000). Text is trimmed.

@@ -24,6 +24,15 @@ body {
 .help-photo-list span { overflow-wrap: anywhere; font-size: 13px; }
 .help-photo-list button { padding: 8px; border: 1px solid #94adb8; border-radius: 6px; color: inherit; background: transparent; cursor: pointer; }
 .help-request-form button:disabled { opacity: .55; cursor: not-allowed; }
+.my-requests-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.my-requests-heading .help-back { margin: 0; }
+.my-requests-list { padding: 0; list-style: none; display: grid; gap: 20px; }
+.my-request-card { border: 1px solid #94adb8; padding: 20px; border-radius: 12px; overflow-wrap: anywhere; }
+.my-request-card h2 { margin: 0; font-size: 20px; }
+.my-request-status { padding: 6px 12px; background: #fff0c7; color: #674500; border-radius: 20px; font-size: 13px; }
+.my-request-description { white-space: pre-wrap; line-height: 1.6; }
+.my-request-reference { font-size: 13px; }
+.my-requests-refresh { padding: 9px 16px; background: transparent; color: inherit; border: 1px solid #94adb8; border-radius: 8px; cursor: pointer; }
 
 * { box-sizing: border-box; }
 

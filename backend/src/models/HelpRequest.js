@@ -18,5 +18,6 @@ const schema = new mongoose.Schema({
     validate: (photos) => photos.length <= 3 && photos.every((photo) => photo.data.length > 0 && photo.data.length <= 5 * 1024 * 1024),
   },
 }, { timestamps: true, strict: "throw" });
+schema.index({ requester: 1, createdAt: -1, _id: -1 });
 
 module.exports = { HelpRequest: mongoose.model("HelpRequest", schema), HELP_TYPES };

@@ -93,6 +93,7 @@ export default function HelpRequestPage() {
     <main id="main" className="help-request-page" tabIndex={-1}>
       <a className="help-back" href="/">← {t("Back to homepage")}</a>
       <h1>{t("Request help")}</h1>
+      <a className="help-back" href="/my-requests">{t("My help requests")}</a>
       <p>{t("Tell us what support you need and where you are.")}</p>
       <p className="help-preview-note" id="help-preview-note">{t("Sign in to send a help request. You can attach up to 3 photos.")}</p>
       {saved ? <section className="help-preview-note" role="status" ref={feedbackRef} tabIndex={-1}>

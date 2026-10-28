@@ -6,6 +6,53 @@ const User = require("../src/models/User");
 const { HelpRequest } = require("../src/models/HelpRequest");
 const { hashPassword } = require("../src/utils/password");
 
+test("my requests use only the session owner, paginate and omit photos and private account fields", async (t) => {
+  const store = new session.MemoryStore();
+  const app = createApp({ sessionStore: store, sessionSecret: "my-requests-test-secret-at-least-32-chars", secureCookies: false });
+  const server = app.listen(0, "127.0.0.1");
+  await new Promise((resolve) => server.once("listening", resolve));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  const account = { id: "507f1f77bcf86cd799439011", name: "Test", email: "test@example.com", roles: ["help_seeker"], status: "active", passwordHash: await hashPassword("test") };
+  t.mock.method(User, "findOne", () => ({ select: async () => account }));
+  t.mock.method(User, "findById", async () => account);
+  let skip;
+  let rows = Array.from({ length: 21 }, (_, i) => ({ _id: String(i), helpType: "Shelter", nearestTown: "Kandy", location: "Town hall", description: "Need help", status: "pending", createdAt: new Date(), requester: "private", photos: ["private"], email: "private" }));
+  const find = t.mock.method(HelpRequest, "find", (filter) => {
+    assert.deepEqual(filter, { requester: account.id });
+    const query = {
+      select(fields) { assert.equal(fields.includes("photos"), false); return query; },
+      sort(order) { assert.deepEqual(order, { createdAt: -1, _id: -1 }); return query; },
+      skip(value) { skip = value; return query; },
+      limit(value) { assert.equal(value, 21); return query; },
+      lean: async () => rows,
+    };
+    return query;
+  });
+  const get = (path, cookie) => fetch(base + path, { headers: cookie ? { Cookie: cookie } : {} });
+  try {
+    assert.equal((await get("/api/help-requests/mine")).status, 401);
+    assert.equal(find.mock.callCount(), 0);
+    const login = await fetch(base + "/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json", "X-CSRF-Protection": "1" }, body: JSON.stringify({ email: account.email, password: "test" }) });
+    const cookie = login.headers.get("set-cookie").split(";")[0];
+    const response = await get("/api/help-requests/mine?page=2&requester=someone-else", cookie);
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("cache-control"), "no-store");
+    const body = await response.json();
+    assert.equal(skip, 20);
+    assert.equal(body.hasMore, true);
+    assert.equal(body.requests.length, 20);
+    for (const field of ["photos", "requester", "email"]) assert.equal(Object.hasOwn(body.requests[0], field), false);
+    for (const page of ["0", "-1", "1.5", "abc", "100001", "1&page=2"]) assert.equal((await get(`/api/help-requests/mine?page=${page}`, cookie)).status, 400);
+    rows = [];
+    assert.deepEqual((await (await get("/api/help-requests/mine", cookie)).json()).requests, []);
+    account.status = "suspended";
+    assert.equal((await get("/api/help-requests/mine", cookie)).status, 401);
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+    store.clear();
+  }
+});
+
 test("help requests enforce sessions, validate fields and save the authenticated owner", async (t) => {
   const store = new session.MemoryStore();
   const app = createApp({ sessionStore: store, sessionSecret: "help-request-test-secret-at-least-32-chars", secureCookies: false });

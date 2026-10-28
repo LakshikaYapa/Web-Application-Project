@@ -6,6 +6,21 @@ const { helpPhotos } = require("../validation/help-photos");
 
 module.exports = function createHelpRequestRoutes() {
   const router = express.Router();
+  router.get("/mine", requireUser, async (req, res, next) => {
+    const page = req.query.page === undefined ? 1 : Number(req.query.page);
+    if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || (req.query.page !== undefined && typeof req.query.page !== "string")) {
+      return res.status(400).json({ success: false, code: "INVALID_PAGE" });
+    }
+    try {
+      const requests = await HelpRequest.find({ requester: req.user.id })
+        .select("helpType nearestTown location description status createdAt")
+        .sort({ createdAt: -1, _id: -1 }).skip((page - 1) * 20).limit(21).lean();
+      return res.json({ success: true, page, hasMore: requests.length > 20, requests: requests.slice(0, 20).map((request) => ({
+        id: String(request._id), helpType: request.helpType, nearestTown: request.nearestTown,
+        location: request.location, description: request.description, status: request.status, createdAt: request.createdAt,
+      })) });
+    } catch (error) { return next(error); }
+  });
   router.post("/", (req, res, next) => {
     if (req.get("X-CSRF-Protection") !== "1") return res.status(403).json({ success: false, code: "CSRF_REJECTED" });
     return next();
