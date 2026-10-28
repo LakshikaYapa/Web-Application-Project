@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const HELP_TYPES = Object.freeze(["Food and drinking water", "Shelter", "Rescue or transport", "Medical assistance", "Other help"]);
 const schema = new mongoose.Schema({
   requester: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  phone: { type: String, required: true, match: /^\+94[1-9]\d{8}$/, select: false },
   helpType: { type: String, enum: HELP_TYPES, required: true },
   otherHelp: { type: String, trim: true, maxlength: 200, required() { return this.helpType === "Other help"; } },
   nearestTown: { type: String, required: true, trim: true, maxlength: 100 },

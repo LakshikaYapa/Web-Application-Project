@@ -14,6 +14,10 @@ in through the header, refresh the list. Photo viewing is a future step.
 characters), `location` (1–300) and `description` (1–2000). Text is trimmed.
 Supported help types: `Food and drinking water`, `Shelter`, `Rescue or transport`,
 `Medical assistance`, `Other help`.
+The request also requires `phone`, a Sri Lankan number in local or +94 format
+(for example `077 123 4567`). It is normalized to +94 format and is shown only
+in the owner's authenticated request list. Existing requests without phone
+numbers remain readable.
 Choosing `Other help` reveals a required text field. Send `otherHelp` with
 1–200 characters for that category only; the value is saved and shown in the
 owner's request list. Other categories must omit `otherHelp`.

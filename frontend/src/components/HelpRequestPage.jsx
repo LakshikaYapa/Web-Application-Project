@@ -35,10 +35,14 @@ export default function HelpRequestPage() {
     if (pendingRef.current) return;
     setMessage("");
     const form = new FormData(event.currentTarget);
-    const payload = Object.fromEntries(["helpType", "nearestTown", "location", "description"].map((field) => [field, String(form.get(field) || "").trim()]));
+    const payload = Object.fromEntries(["helpType", "phone", "nearestTown", "location", "description"].map((field) => [field, String(form.get(field) || "").trim()]));
     if (payload.helpType === "Other help") payload.otherHelp = String(form.get("otherHelp") || "").trim();
     if (Object.values(payload).some((value) => !value)) {
       setMessage("Please complete all required fields.");
+      return;
+    }
+    if (!/^(?:0[1-9]\d{8}|\+94[1-9]\d{8})$/.test(payload.phone.replace(/[\s()-]/g, ""))) {
+      setMessage("Enter a valid Sri Lankan phone number.");
       return;
     }
     const upload = new FormData();
@@ -117,6 +121,9 @@ export default function HelpRequestPage() {
           <label htmlFor="help-other">{t("What other help do you need?")}</label>
           <input id="help-other" name="otherHelp" type="text" required maxLength={200} />
         </>}
+        <label htmlFor="help-phone">{t("Phone number")}</label>
+        <input id="help-phone" name="phone" type="tel" autoComplete="tel" required maxLength={30} aria-describedby="help-phone-hint" />
+        <p className="help-photo-hint" id="help-phone-hint">{t("Use 077 123 4567 or +94 77 123 4567.")}</p>
         <label htmlFor="help-town">{t("Nearest town")}</label>
         <input id="help-town" name="nearestTown" autoComplete="address-level2" required maxLength={100} />
         <label htmlFor="help-location">{t("Location or nearby landmark")}</label>

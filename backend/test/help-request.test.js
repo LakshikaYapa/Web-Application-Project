@@ -64,7 +64,7 @@ test("help requests enforce sessions, validate fields and save the authenticated
   t.mock.method(User, "findById", async () => ({ ...account, status: active ? "active" : "suspended" }));
   const create = t.mock.method(HelpRequest, "create", async (data) => new HelpRequest(data));
   const base = `http://127.0.0.1:${server.address().port}`;
-  const valid = { helpType: "Shelter", nearestTown: " Kandy ", location: "Near town hall", description: "We need shelter for our family." };
+  const valid = { helpType: "Shelter", phone: "077 123 4567", nearestTown: " Kandy ", location: "Near town hall", description: "We need shelter for our family." };
   const post = (path, body, cookie, csrf = true) => fetch(base + path, {
     method: "POST", headers: { "Content-Type": "application/json", ...(csrf ? { "X-CSRF-Protection": "1" } : {}), ...(cookie ? { Cookie: cookie } : {}) }, body: JSON.stringify(body),
   });
@@ -74,7 +74,7 @@ test("help requests enforce sessions, validate fields and save the authenticated
     assert.equal(login.status, 200);
     const cookie = login.headers.get("set-cookie").split(";")[0];
     assert.equal((await post("/api/help-requests", valid, cookie, false)).status, 403);
-    for (const body of [null, [], {}, { ...valid, requester: account.id }, { ...valid, status: "approved" }, { ...valid, photos: [] }, { ...valid, helpType: "invalid" }, { ...valid, location: " " }, { ...valid, description: "a".repeat(2001) }]) {
+    for (const body of [null, [], { ...valid, phone: undefined }, { ...valid, requester: account.id }, { ...valid, status: "approved" }, { ...valid, phone: "123" }, { ...valid, helpType: "invalid" }, { ...valid, location: " " }, { ...valid, description: "a".repeat(2001) }]) {
       assert.equal((await post("/api/help-requests", body, cookie)).status, 400);
     }
     assert.equal(create.mock.callCount(), 0);
@@ -86,6 +86,8 @@ test("help requests enforce sessions, validate fields and save the authenticated
     assert.equal(Object.hasOwn(result.request, "location"), false);
     assert.equal(create.mock.calls[0].arguments[0].requester, account.id);
     assert.equal(create.mock.calls[0].arguments[0].nearestTown, "Kandy");
+    assert.equal(create.mock.calls[0].arguments[0].phone, "+94771234567");
+    assert.equal(Object.hasOwn(result.request, "phone"), false);
     active = false;
     assert.equal((await post("/api/help-requests", valid, cookie)).status, 401);
     assert.equal(create.mock.callCount(), 1);
@@ -114,6 +116,7 @@ test("multipart photos are validated and saved with the request without exposing
     const body = new FormData();
     body.append("helpType", "Shelter");
     body.append("nearestTown", "Kandy");
+    body.append("phone", "+94 77 123 4567");
     body.append("location", "Town hall");
     if (valid) body.append("description", "We need shelter.");
     for (const file of files) body.append("photos", new Blob([file], { type }), "photo.png");
