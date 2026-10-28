@@ -27,7 +27,7 @@ export default function VolunteerPage() {
     </section>
     <section id="volunteer-ways" className="volunteer-ways" aria-labelledby="volunteer-ways-title">
       <h2 id="volunteer-ways-title">{t("How you can help")}</h2>
-      <p>{t("Choose an area that fits your skills and availability.")}</p>
+      <p>{t("Choose one or more areas that match your skills.")}</p>
       <ul className="volunteer-ways-grid">{waysToHelp.map((way) => <li key={way.number}>
         <span className="volunteer-way-number" aria-hidden="true">{way.number}</span>
         <h3>{t(way.title)}</h3><p>{t(way.description)}</p>

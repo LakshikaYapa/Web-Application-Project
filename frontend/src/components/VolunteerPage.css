@@ -29,12 +29,22 @@
 .volunteer-form-hint { margin: 0; font-size: 13px; line-height: 1.6; }
 .volunteer-form-submit { justify-self: start; padding: 13px 20px; border: 0; border-radius: 8px; background: #007e8d; color: white; font-weight: 700; }
 .volunteer-form-submit:disabled { opacity: .6; cursor: not-allowed; }
+.volunteer-choice-group { min-width: 0; margin: 0; padding: 0; border: 0; }
+.volunteer-choice-group legend { margin-bottom: 10px; padding: 0; font-weight: 700; }
+.volunteer-choice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 10px; margin-top: 14px; }
+.volunteer-choice { display: flex; align-items: center; gap: 10px; padding: 13px; border: 1px solid #6d9da8; border-radius: 8px; background: #edf7f8; cursor: pointer; }
+.volunteer-choice.is-selected { border-color: #00717e; background: #b5ded8; }
+.volunteer-choice input { width: 18px; height: 18px; margin: 0; flex: 0 0 18px; accent-color: #00717e; }
+.volunteer-skills-group { padding: 18px; border: 1px solid #7eafb8; border-radius: 10px; }
+.volunteer-other-skills { margin-top: 16px; }
 [data-theme="dark"] .volunteer-page-intro { background: linear-gradient(120deg, #133a43, #163043); border-color: #315969; }
 [data-theme="dark"] .volunteer-page-eyebrow { color: #87e1db; }
 [data-theme="dark"] .volunteer-ways-grid li { background: #1c4250; border-color: #578d9d; }
 [data-theme="dark"] .volunteer-way-number { background: #32676c; color: #e1fffa; }
 [data-theme="dark"] .volunteer-form-section { background: #1c4250; border-color: #578d9d; }
 [data-theme="dark"] .volunteer-form-field :is(input, select, textarea) { background: #12313e; border-color: #578d9d; }
+[data-theme="dark"] .volunteer-choice { background: #12313e; border-color: #578d9d; }
+[data-theme="dark"] .volunteer-choice.is-selected { background: #245c60; border-color: #87e1db; }
 @media (max-width: 760px) {
   .volunteer-page { padding: 24px 16px 40px; }
   .volunteer-page-intro { grid-template-columns: 1fr; padding: 24px; gap: 24px; }
