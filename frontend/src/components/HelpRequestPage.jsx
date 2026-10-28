@@ -17,6 +17,62 @@ export default function HelpRequestPage() {
   const { t } = useLanguage();
   const [photos, setPhotos] = useState([]);
   const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
+  const [message, setMessage] = useState("");
+  const [saved, setSaved] = useState(null);
+  const pendingRef = useRef(false);
+  const requestRef = useRef(null);
+  const feedbackRef = useRef(null);
+
+  useEffect(() => () => requestRef.current?.abort(), []);
+  useEffect(() => {
+    if (message || saved) feedbackRef.current?.focus();
+  }, [message, saved]);
+
+  async function submit(event) {
+    event.preventDefault();
+    if (pendingRef.current) return;
+    setMessage("");
+    if (photos.length) {
+      setMessage("Photo uploads are coming soon. Remove selected photos to send a text request.");
+      return;
+    }
+    const form = new FormData(event.currentTarget);
+    const payload = Object.fromEntries(["helpType", "nearestTown", "location", "description"].map((field) => [field, String(form.get(field) || "").trim()]));
+    if (Object.values(payload).some((value) => !value)) {
+      setMessage("Please complete all required fields.");
+      return;
+    }
+    pendingRef.current = true;
+    setPending(true);
+    const controller = new AbortController();
+    requestRef.current = controller;
+    try {
+      const response = await fetch("/api/help-requests", {
+        method: "POST", credentials: "same-origin",
+        headers: { "Content-Type": "application/json", "X-CSRF-Protection": "1" },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]),
+      });
+      const body = await response.json().catch(() => ({}));
+      if (response.status === 201 && body.success && body.request?.id) {
+        setSaved(body.request);
+      } else {
+        const messages = {
+          400: "Please check your request details and try again.",
+          401: "Please use Sign in at the top of this page, then send your request again.",
+          403: "Unable to send your request. Reload this page and try again.",
+          429: "Too many requests. Please try again later.",
+        };
+        setMessage(messages[response.status] || "Unable to save your request. Please try again.");
+      }
+    } catch {
+      if (!controller.signal.aborted) setMessage("Connection interrupted. Your request may have been saved. Please check before sending again.");
+    } finally {
+      pendingRef.current = false;
+      if (!controller.signal.aborted) setPending(false);
+    }
+  }
 
   function selectPhotos(event) {
     const files = Array.from(event.target.files || []);
@@ -38,8 +94,16 @@ export default function HelpRequestPage() {
       <a className="help-back" href="/">← {t("Back to homepage")}</a>
       <h1>{t("Request help")}</h1>
       <p>{t("Tell us what support you need and where you are.")}</p>
-      <p className="help-preview-note" id="help-preview-note">{t("Form preview only. Requests and photos are not sent or saved yet.")}</p>
-      <form className="help-request-form" onSubmit={(event) => event.preventDefault()} aria-describedby="help-preview-note">
+      <p className="help-preview-note" id="help-preview-note">{t("Sign in to send a help request. Photo uploads are coming soon.")}</p>
+      {saved ? <section className="help-preview-note" role="status" ref={feedbackRef} tabIndex={-1}>
+        <h2>{t("Help request saved")}</h2>
+        <p>{t("Your request is pending. This does not confirm that help has been dispatched.")}</p>
+        <p>{t("Request reference")}: {saved.id}</p>
+        <a href="/">{t("Back to homepage")}</a>
+      </section> : <form onSubmit={submit} aria-describedby="help-preview-note" aria-busy={pending}>
+      {message && <p className="help-preview-note" role="alert" ref={feedbackRef} tabIndex={-1}>{t(message)}</p>}
+      <fieldset className="help-request-form" disabled={pending}>
+        <legend className="sr-only">{t("Request help")}</legend>
         <label htmlFor="help-type">{t("What help do you need?")}</label>
         <select id="help-type" name="helpType" required defaultValue="">
           <option value="" disabled>{t("Select a help type")}</option>
@@ -61,8 +125,10 @@ export default function HelpRequestPage() {
             <button type="button" aria-label={`${t("Remove photo")}: ${file.name}`} onClick={() => setPhotos((current) => current.filter((_, i) => i !== index))}>{t("Remove photo")}</button>
           </li>)}
         </ul>}
-        <button className="register-submit" type="submit" disabled>{t("Send request (coming soon)")}</button>
-      </form>
+        <button className="register-submit" type="submit" disabled={pending || photos.length > 0}>{t(pending ? "Sending request…" : "Send request")}</button>
+        {photos.length > 0 && <p role="status">{t("Photo uploads are coming soon. Remove selected photos to send a text request.")}</p>}
+      </fieldset>
+      </form>}
     </main>
   );
 }

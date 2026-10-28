@@ -15,8 +15,10 @@ status and creation time. Other responses include 400 (invalid fields), 401
 (missing, expired or inactive account), 403 (missing CSRF header), 429 (more
 than 10 requests per IP per 15 minutes) and 500 (save failure).
 
-The frontend remains a preview in this step; submission wiring and image uploads
-will follow. HTTP tests mock database writes and do not create real help requests.
+The frontend sends text requests from `/request-help` and displays the saved
+request reference. Sign in through the page header before submitting. Photos
+remain local previews; remove selected photos to submit until uploads are added.
+HTTP tests mock database writes and do not create real help requests.
 
 ## Registration
 

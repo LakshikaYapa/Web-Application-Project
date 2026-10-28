@@ -35,7 +35,7 @@ export default function Hero() {
             <span><strong>{t("Request help")}</strong><span>{t("Get support")}</span></span>
           </a>
         </div>
-        <p id="hero-preview-note" className="hero-preview-note">{t("Flood reporting is coming soon. Help request form is a preview.")}</p>
+        <p id="hero-preview-note" className="hero-preview-note">{t("Flood reporting is coming soon. Sign in to request help.")}</p>
       </div>
       <p className="hero-motto">{t("Stronger communities.")}<br />{t("Safer tomorrows.")}</p>
       

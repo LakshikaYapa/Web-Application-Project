@@ -12,7 +12,7 @@ body {
 .help-back { color: #007e8d; display: inline-block; margin-bottom: 16px; }
 .help-request-page h1 { font-size: 32px; margin: 8px 0; }
 .help-preview-note { padding: 16px; border: 1px solid #8cb9c4; border-radius: 10px; line-height: 1.6; }
-.help-request-form { display: grid; gap: 10px; margin-top: 24px; }
+.help-request-form { display: grid; gap: 10px; margin: 24px 0 0; padding: 0; border: 0; min-width: 0; }
 .help-request-form label { margin-top: 10px; font-weight: 700; }
 .help-request-form :is(input, select, textarea) { width: 100%; min-width: 0; padding: 12px; border: 1px solid #94adb8; border-radius: 8px; font: inherit; color: inherit; background: transparent; }
 .help-request-form select option { color: #102a43; background: white; }
