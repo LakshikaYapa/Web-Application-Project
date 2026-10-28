@@ -13,10 +13,19 @@ import Footer from "./components/Footer";
 import HelpRequestPage from "./components/HelpRequestPage";
 import MyHelpRequests from "./components/MyHelpRequests";
 import VolunteerPage from "./components/VolunteerPage";
+import FunderPage from "./components/FunderPage";
+
+const pages = {
+  "/volunteer": VolunteerPage,
+  "/funder": FunderPage,
+  "/my-requests": MyHelpRequests,
+  "/request-help": HelpRequestPage,
+};
 
 function App() {
   const { t } = useLanguage();
   const [message, setMessage] = useState("Connecting to backend...");
+  const Page = pages[window.location.pathname.replace(/\/$/, "")];
 
   useEffect(() => {
     const controller = new AbortController();
@@ -48,7 +57,7 @@ function App() {
     <>
       <a id="page-top" className="skip-link" href="#main">{t("Skip to content")}</a>
       <Header />
-      {window.location.pathname.replace(/\/$/, "") === "/volunteer" ? <VolunteerPage /> : window.location.pathname.replace(/\/$/, "") === "/my-requests" ? <MyHelpRequests /> : window.location.pathname.replace(/\/$/, "") === "/request-help" ? <HelpRequestPage /> : (
+      {Page ? <Page /> : (
       <main id="main" className="homepage" tabIndex={-1}>
         <Hero />
         <div className="homepage-overview">

@@ -108,48 +108,48 @@ export default function VolunteerForm() {
     setAreas((current) => ({ ...current, [id]: { ...current[id], [field]: value } }));
   }
 
-  return <section id="volunteer-form" className="volunteer-form-section" aria-labelledby="volunteer-form-title">
+  return <section id="volunteer-form" className="mt-9 rounded-2xl border border-[#73aeb9] bg-[#d9ecef] p-5 min-[761px]:p-7 dark:border-[#578d9d] dark:bg-[#1c4250] [&>h2]:mb-3 [&>h2]:text-[28px] [&>p]:leading-[1.6]" aria-labelledby="volunteer-form-title">
     <h2 id="volunteer-form-title">{t("Offer your support")}</h2>
     <p id="volunteer-form-note">{t("Sign in to save. Saving replaces your previous support areas and skills with the selections below.")}</p>
     {loadState === "loading" && <p role="status">{t("Loading your volunteer details…")}</p>}
-    {(loadState === "signin" || loadState === "error") && <div className="volunteer-feedback" role="alert">
+    {(loadState === "signin" || loadState === "error") && <div className="rounded-lg border border-[#a04040] bg-[#fff0f0] px-[18px] py-3.5 text-[#812323]" role="alert">
       <p>{t(loadState === "signin" ? "Sign in using the page header, then load your volunteer details." : "Unable to load your volunteer details. Try again before editing.")}</p>
-      <button type="button" className="volunteer-form-submit" onClick={() => { setLoadState("loading"); setReload((value) => value + 1); }}>{t("Load my volunteer details")}</button>
+      <button type="button" className="cursor-pointer justify-self-start rounded-lg border-0 bg-[#007e8d] px-5 py-[13px] font-bold text-white enabled:hover:bg-[#006776] disabled:cursor-not-allowed disabled:opacity-60" onClick={() => { setLoadState("loading"); setReload((value) => value + 1); }}>{t("Load my volunteer details")}</button>
     </div>}
-    {feedback && <p className={`volunteer-feedback${feedback.success ? " is-success" : ""}`} ref={feedbackRef} tabIndex={-1} role={feedback.success ? "status" : "alert"}>{t(feedback.text)}</p>}
+    {feedback && <p className={`rounded-lg border px-[18px] py-3.5 ${feedback.success ? "border-[#237750] bg-[#e5f7ed] text-[#155135]" : "border-[#a04040] bg-[#fff0f0] text-[#812323]"}`} ref={feedbackRef} tabIndex={-1} role={feedback.success ? "status" : "alert"}>{t(feedback.text)}</p>}
     <form onSubmit={submit} onChange={() => setFeedback(null)} aria-describedby="volunteer-form-note" aria-busy={pending || loadState === "loading"}>
-    <fieldset className="volunteer-form" disabled={pending || loadState !== "ready"}>
+    <fieldset className="mt-6 grid min-w-0 gap-[22px] border-0 p-0 min-[761px]:grid-cols-2" disabled={pending || loadState !== "ready"}>
       <legend className="sr-only">{t("Offer your support")}</legend>
-      <fieldset className="volunteer-choice-group volunteer-form-wide" aria-describedby="volunteer-support-hint">
+      <fieldset className="m-0 min-w-0 border-0 p-0 [&_legend]:mb-2.5 [&_legend]:p-0 [&_legend]:font-bold col-span-full" aria-describedby="volunteer-support-hint">
         <legend>{t("How would you like to help?")}</legend>
-        <p id="volunteer-support-hint" className="volunteer-form-hint">{t("Select one or more support areas.")}</p>
-        <div className="volunteer-choice-grid">{supportOptions.map((option) => <label className={`volunteer-choice${areas[option.id] ? " is-selected" : ""}`} key={option.id}>
+        <p id="volunteer-support-hint" className="m-0 text-[13px] leading-[1.6]">{t("Select one or more support areas.")}</p>
+        <div className="mt-3.5 grid grid-cols-[repeat(auto-fit,minmax(min(100%,210px),1fr))] gap-2.5">{supportOptions.map((option) => <label className="flex cursor-pointer items-center gap-2.5 rounded-lg border border-[#6d9da8] bg-[#edf7f8] p-[13px] has-checked:border-[#00717e] has-checked:bg-[#b5ded8] dark:border-[#578d9d] dark:bg-[#12313e] dark:has-checked:border-[#87e1db] dark:has-checked:bg-[#245c60] [&_input]:m-0 [&_input]:size-[18px] [&_input]:shrink-0 [&_input]:accent-[#00717e]" key={option.id}>
           <input type="checkbox" name="supportAreas" value={option.id} checked={Boolean(areas[option.id])} onChange={() => toggleArea(option.id)} />
           <span>{t(option.label)}</span>
         </label>)}</div>
       </fieldset>
-      {areas.other && <div className="volunteer-form-field volunteer-form-wide">
+      {areas.other && <div className="grid min-w-0 content-start gap-[9px] [&_label]:text-sm [&_label]:font-bold [&_input]:w-full [&_input]:min-w-0 [&_input]:rounded-lg [&_input]:border [&_input]:border-[#6d9da8] [&_input]:bg-[#f5fbfc] [&_input]:p-3 [&_textarea]:w-full [&_textarea]:min-w-0 [&_textarea]:resize-y [&_textarea]:rounded-lg [&_textarea]:border [&_textarea]:border-[#6d9da8] [&_textarea]:bg-[#f5fbfc] [&_textarea]:p-3 dark:[&_input]:border-[#578d9d] dark:[&_input]:bg-[#12313e] dark:[&_textarea]:border-[#578d9d] dark:[&_textarea]:bg-[#12313e] col-span-full">
         <label htmlFor="volunteer-other">{t("Describe the support you can offer")}</label>
         <input id="volunteer-other" name="otherSupport" value={areas.other.otherSupport} onChange={(event) => updateDetails("other", "otherSupport", event.target.value)} required maxLength={200} />
       </div>}
-      {!Object.keys(areas).length && <p className="volunteer-form-hint volunteer-form-wide">{t("Select a support area to see matching skills.")}</p>}
-      {supportOptions.filter((option) => areas[option.id]).map((option) => <fieldset className="volunteer-choice-group volunteer-skills-group volunteer-form-wide" key={option.id}>
+      {!Object.keys(areas).length && <p className="m-0 text-[13px] leading-[1.6] col-span-full">{t("Select a support area to see matching skills.")}</p>}
+      {supportOptions.filter((option) => areas[option.id]).map((option) => <fieldset className="rounded-[10px] border border-[#7eafb8] p-[18px] col-span-full m-0 min-w-0 [&_legend]:mb-2.5 [&_legend]:p-0 [&_legend]:font-bold" key={option.id}>
         <legend>{t(option.label)} - {t("Skills")}</legend>
-        <p className="volunteer-form-hint">{t("Select all skills that apply, or describe other skills.")}</p>
-        <div className="volunteer-choice-grid">{[...option.skills, "Other skills"].map((skill) => <label className={`volunteer-choice${areas[option.id].skills.includes(skill) ? " is-selected" : ""}`} key={skill}>
+        <p className="m-0 text-[13px] leading-[1.6]">{t("Select all skills that apply, or describe other skills.")}</p>
+        <div className="mt-3.5 grid grid-cols-[repeat(auto-fit,minmax(min(100%,210px),1fr))] gap-2.5">{[...option.skills, "Other skills"].map((skill) => <label className="flex cursor-pointer items-center gap-2.5 rounded-lg border border-[#6d9da8] bg-[#edf7f8] p-[13px] has-checked:border-[#00717e] has-checked:bg-[#b5ded8] dark:border-[#578d9d] dark:bg-[#12313e] dark:has-checked:border-[#87e1db] dark:has-checked:bg-[#245c60] [&_input]:m-0 [&_input]:size-[18px] [&_input]:shrink-0 [&_input]:accent-[#00717e]" key={skill}>
           <input type="checkbox" name={`skills-${option.id}`} value={skill} checked={areas[option.id].skills.includes(skill)} onChange={() => toggleSkill(option.id, skill)} />
           <span>{t(skill)}</span>
         </label>)}</div>
-        {areas[option.id].skills.includes("Other skills") && <div className="volunteer-form-field volunteer-other-skills">
+        {areas[option.id].skills.includes("Other skills") && <div className="grid min-w-0 content-start gap-[9px] [&_label]:text-sm [&_label]:font-bold [&_input]:w-full [&_input]:min-w-0 [&_input]:rounded-lg [&_input]:border [&_input]:border-[#6d9da8] [&_input]:bg-[#f5fbfc] [&_input]:p-3 [&_textarea]:w-full [&_textarea]:min-w-0 [&_textarea]:resize-y [&_textarea]:rounded-lg [&_textarea]:border [&_textarea]:border-[#6d9da8] [&_textarea]:bg-[#f5fbfc] [&_textarea]:p-3 dark:[&_input]:border-[#578d9d] dark:[&_input]:bg-[#12313e] dark:[&_textarea]:border-[#578d9d] dark:[&_textarea]:bg-[#12313e] mt-4">
           <label htmlFor={`volunteer-skills-${option.id}`}>{t("Describe your other skills")}</label>
           <textarea id={`volunteer-skills-${option.id}`} name={`otherSkills-${option.id}`} rows={2} required maxLength={500} value={areas[option.id].otherSkills} onChange={(event) => updateDetails(option.id, "otherSkills", event.target.value)} />
         </div>}
       </fieldset>)}
-      <div className="volunteer-form-field">
+      <div className="grid min-w-0 content-start gap-[9px] [&_label]:text-sm [&_label]:font-bold [&_input]:w-full [&_input]:min-w-0 [&_input]:rounded-lg [&_input]:border [&_input]:border-[#6d9da8] [&_input]:bg-[#f5fbfc] [&_input]:p-3 [&_textarea]:w-full [&_textarea]:min-w-0 [&_textarea]:resize-y [&_textarea]:rounded-lg [&_textarea]:border [&_textarea]:border-[#6d9da8] [&_textarea]:bg-[#f5fbfc] [&_textarea]:p-3 dark:[&_input]:border-[#578d9d] dark:[&_input]:bg-[#12313e] dark:[&_textarea]:border-[#578d9d] dark:[&_textarea]:bg-[#12313e]">
         <label htmlFor="volunteer-town">{t("Nearest town")}</label>
         <input id="volunteer-town" name="nearestTown" autoComplete="address-level2" required maxLength={100} value={town} onChange={(event) => setTown(event.target.value)} />
       </div>
-      <button className="volunteer-form-submit volunteer-form-wide" type="submit" disabled={pending || loadState !== "ready"}>{t(pending ? "Saving volunteer details…" : "Save volunteer details")}</button>
+      <button className="cursor-pointer justify-self-start rounded-lg border-0 bg-[#007e8d] px-5 py-[13px] font-bold text-white enabled:hover:bg-[#006776] disabled:cursor-not-allowed disabled:opacity-60 col-span-full" type="submit" disabled={pending || loadState !== "ready"}>{t(pending ? "Saving volunteer details…" : "Save volunteer details")}</button>
     </fieldset>
     </form>
   </section>;

@@ -31,8 +31,7 @@ export default function CommunityActions() {
           </div>
           <div className="relief-total"><span><strong>{t("LKR 2,350,000")}</strong>{" "}{t("raised (demo)")}</span><strong>47%</strong></div>
           <p className="relief-demo-note">{t("Sample figures, not actual donations.")}</p>
-          <button type="button" disabled aria-describedby="donations-coming-soon">{t("Support relief efforts")}<span aria-hidden="true">→</span></button>
-          <span className="action-coming-soon" id="donations-coming-soon">{t("Donations coming soon")}</span>
+          <a className="community-action-link" href="/funder">{t("Support relief efforts")}<span aria-hidden="true">→</span></a>
         </div>
       </section>
     </div>
