@@ -101,14 +101,13 @@ export default function HelpRequestPage() {
       <h1>{t("Request help")}</h1>
       <a className="help-back" href="/my-requests">{t("My help requests")}</a>
       <p>{t("Tell us what support you need and where you are.")}</p>
-      <p className="help-preview-note" id="help-preview-note">{t("Sign in to send a help request. You can attach up to 3 photos.")}</p>
       {saved ? <section className="help-preview-note" role="status" ref={feedbackRef} tabIndex={-1}>
         <h2>{t("Help request saved")}</h2>
         <p>{t("Your request is pending. This does not confirm that help has been dispatched.")}</p>
         <p>{t("Request reference")}: {saved.id}</p>
         <p>{t("Photos saved")}: {saved.photoCount ?? 0}</p>
         <a href="/">{t("Back to homepage")}</a>
-      </section> : <form onSubmit={submit} aria-describedby="help-preview-note" aria-busy={pending}>
+      </section> : <form onSubmit={submit} aria-busy={pending}>
       {message && <p className="help-preview-note" role="alert" ref={feedbackRef} tabIndex={-1}>{t(message)}</p>}
       <fieldset className="help-request-form" disabled={pending}>
         <legend className="sr-only">{t("Request help")}</legend>
