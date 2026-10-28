@@ -1,5 +1,38 @@
 # Backend API
 
+## Volunteer profile — backend step
+
+`PUT /api/volunteers/me` requires an active signed-in account and
+`X-CSRF-Protection: 1`. Send JSON using the volunteer form's area IDs:
+
+```json
+{
+  "nearestTown": "Kandy",
+  "areas": {
+    "relief": { "skills": ["Packing supplies", "Food preparation"] },
+    "transport": { "skills": ["Driving", "Other skills"], "otherSkills": "Bicycle repairs" },
+    "other": { "skills": ["Communication"], "otherSupport": "Online coordination" }
+  }
+}
+```
+
+Supported areas are `relief`, `transport`, `community` and `other`. Each selected
+area requires at least one distinct skill from its matching options in
+`src/validation/volunteer.js`. `Other skills` requires `otherSkills` (1–500
+characters). Area `other` requires `otherSupport` (1–200). Non-selected custom
+fields must be omitted or empty. Town is required (1–100). Text is trimmed;
+unexpected fields, account IDs and availability fields are rejected.
+
+One profile per account is stored in `volunteerprofiles`; saving again replaces
+the town and selected support areas. The server derives ownership from the
+session and does not change account roles. Startup initializes the unique user
+index. Success returns 200 with profile ID and update time. Errors include 400
+(validation), 401 (authentication), 403 (CSRF), 409 (concurrent save conflict),
+429 (10 attempts per IP per 15 minutes) and 500 (save failure).
+
+The frontend is still a preview in this step. Database writes are mocked in HTTP
+tests; live persistence and unique indexes require MongoDB.
+
 ## Help requests — backend step
 
 `GET /api/help-requests/mine?page=1` lists only the authenticated user's requests,
