@@ -32,4 +32,4 @@ function helpPhotos(req, res, next) {
   });
 }
 
-module.exports = { helpPhotos };
+module.exports = { helpPhotos, matchesImageType };

@@ -1,5 +1,33 @@
 # Backend API
 
+## Funder contributions — backend step
+
+`POST /api/contributions` requires an active login session and
+`X-CSRF-Protection: 1`. Send multipart form data with repeated `supportTypes`
+fields (`financial`, `food_water`, `shelter`, `relief`, `other`), `nearestTown`
+(1–100 characters), and a Sri Lankan `phone` number. Optional `notes` supports
+1000 characters. Selecting `other` requires `otherSupport` (1–500 characters).
+Unknown/duplicate support types and client-supplied owners/statuses are rejected.
+
+For `financial`, include `amount` as a positive decimal LKR string (up to two
+decimal places, maximum 9,999,999,999.99) and one file named `receipt`. Amounts
+are stored as integer cents (`amountMinor`) with currency `LKR`. Non-financial
+contributions must omit both amount and receipt. Receipt files may be JPG, PNG,
+WebP or PDF, up to 5 MiB. MIME type and basic file signatures are checked, not
+full image/PDF decoding. Invalid files return 400; oversized files return 413.
+
+The server derives ownership from the session and stores one new `contributions`
+document, including private receipt binary data and contact details. Default
+queries exclude receipts and phone numbers. Nothing is stored before all
+validation passes. Each contribution starts as `pending_review`; receipt
+submission does not verify or confirm a bank payment. Success returns 201 with
+ID, status and creation time only. There is no receipt download endpoint yet.
+Other responses: 400 validation, 401 unauthenticated/inactive account, 403 missing
+CSRF header, 429 (10 attempts per IP per 15 minutes), 500 save failure.
+
+The funder form remains a UI preview in this step. API tests use mocked database
+writes and do not make real payments or persist contributions.
+
 ## Volunteer profile — backend step
 
 `PUT /api/volunteers/me` requires an active signed-in account and
