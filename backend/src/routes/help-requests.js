@@ -2,6 +2,7 @@ const express = require("express");
 const { rateLimit } = require("express-rate-limit");
 const { requireUser } = require("../controllers/session");
 const { HelpRequest, HELP_TYPES } = require("../models/HelpRequest");
+const { helpPhotos } = require("../validation/help-photos");
 
 module.exports = function createHelpRequestRoutes() {
   const router = express.Router();
@@ -11,7 +12,7 @@ module.exports = function createHelpRequestRoutes() {
   }, requireUser, rateLimit({
     windowMs: 15 * 60 * 1000, limit: 10, standardHeaders: "draft-8", legacyHeaders: false,
     message: { success: false, code: "RATE_LIMITED", message: "Too many requests. Try again later." },
-  }), async (req, res, next) => {
+  }), helpPhotos, async (req, res, next) => {
     const body = req.body;
     const errors = {};
     const fields = { nearestTown: 100, location: 300, description: 2000 };
@@ -28,8 +29,9 @@ module.exports = function createHelpRequestRoutes() {
       const request = await HelpRequest.create({
         requester: req.user.id, helpType: body.helpType,
         nearestTown: body.nearestTown.trim(), location: body.location.trim(), description: body.description.trim(),
+        photos: (req.files || []).map((file) => ({ contentType: file.mimetype, data: file.buffer })),
       });
-      return res.status(201).json({ success: true, request: { id: request.id, status: request.status, createdAt: request.createdAt } });
+      return res.status(201).json({ success: true, request: { id: request.id, status: request.status, createdAt: request.createdAt, photoCount: request.photos.length } });
     } catch (error) { return next(error); }
   });
   return router;

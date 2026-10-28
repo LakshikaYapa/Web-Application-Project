@@ -33,16 +33,15 @@ export default function HelpRequestPage() {
     event.preventDefault();
     if (pendingRef.current) return;
     setMessage("");
-    if (photos.length) {
-      setMessage("Photo uploads are coming soon. Remove selected photos to send a text request.");
-      return;
-    }
     const form = new FormData(event.currentTarget);
     const payload = Object.fromEntries(["helpType", "nearestTown", "location", "description"].map((field) => [field, String(form.get(field) || "").trim()]));
     if (Object.values(payload).some((value) => !value)) {
       setMessage("Please complete all required fields.");
       return;
     }
+    const upload = new FormData();
+    for (const [field, value] of Object.entries(payload)) upload.append(field, value);
+    for (const photo of photos) upload.append("photos", photo);
     pendingRef.current = true;
     setPending(true);
     const controller = new AbortController();
@@ -50,9 +49,9 @@ export default function HelpRequestPage() {
     try {
       const response = await fetch("/api/help-requests", {
         method: "POST", credentials: "same-origin",
-        headers: { "Content-Type": "application/json", "X-CSRF-Protection": "1" },
-        body: JSON.stringify(payload),
-        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]),
+        headers: { "X-CSRF-Protection": "1" },
+        body: upload,
+        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(60000)]),
       });
       const body = await response.json().catch(() => ({}));
       if (response.status === 201 && body.success && body.request?.id) {
@@ -62,9 +61,10 @@ export default function HelpRequestPage() {
           400: "Please check your request details and try again.",
           401: "Please use Sign in at the top of this page, then send your request again.",
           403: "Unable to send your request. Reload this page and try again.",
+          413: "Photos are too large. Use up to 3 images, maximum 5 MB each.",
           429: "Too many requests. Please try again later.",
         };
-        setMessage(messages[response.status] || "Unable to save your request. Please try again.");
+        setMessage(body.code === "INVALID_PHOTOS" ? "Use JPG, PNG or WebP images, up to 5 MB each." : (messages[response.status] || "Unable to save your request. Please try again."));
       }
     } catch {
       if (!controller.signal.aborted) setMessage("Connection interrupted. Your request may have been saved. Please check before sending again.");
@@ -94,11 +94,12 @@ export default function HelpRequestPage() {
       <a className="help-back" href="/">← {t("Back to homepage")}</a>
       <h1>{t("Request help")}</h1>
       <p>{t("Tell us what support you need and where you are.")}</p>
-      <p className="help-preview-note" id="help-preview-note">{t("Sign in to send a help request. Photo uploads are coming soon.")}</p>
+      <p className="help-preview-note" id="help-preview-note">{t("Sign in to send a help request. You can attach up to 3 photos.")}</p>
       {saved ? <section className="help-preview-note" role="status" ref={feedbackRef} tabIndex={-1}>
         <h2>{t("Help request saved")}</h2>
         <p>{t("Your request is pending. This does not confirm that help has been dispatched.")}</p>
         <p>{t("Request reference")}: {saved.id}</p>
+        <p>{t("Photos saved")}: {saved.photoCount ?? 0}</p>
         <a href="/">{t("Back to homepage")}</a>
       </section> : <form onSubmit={submit} aria-describedby="help-preview-note" aria-busy={pending}>
       {message && <p className="help-preview-note" role="alert" ref={feedbackRef} tabIndex={-1}>{t(message)}</p>}
@@ -125,8 +126,7 @@ export default function HelpRequestPage() {
             <button type="button" aria-label={`${t("Remove photo")}: ${file.name}`} onClick={() => setPhotos((current) => current.filter((_, i) => i !== index))}>{t("Remove photo")}</button>
           </li>)}
         </ul>}
-        <button className="register-submit" type="submit" disabled={pending || photos.length > 0}>{t(pending ? "Sending request…" : "Send request")}</button>
-        {photos.length > 0 && <p role="status">{t("Photo uploads are coming soon. Remove selected photos to send a text request.")}</p>}
+        <button className="register-submit" type="submit" disabled={pending}>{t(pending ? "Sending request…" : "Send request")}</button>
       </fieldset>
       </form>}
     </main>

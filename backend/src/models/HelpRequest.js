@@ -8,6 +8,15 @@ const schema = new mongoose.Schema({
   location: { type: String, required: true, trim: true, maxlength: 300 },
   description: { type: String, required: true, trim: true, maxlength: 2000 },
   status: { type: String, enum: ["pending"], default: "pending" },
+  photos: {
+    type: [new mongoose.Schema({
+      contentType: { type: String, enum: ["image/jpeg", "image/png", "image/webp"], required: true },
+      data: { type: Buffer, required: true },
+    }, { _id: false })],
+    default: [],
+    select: false,
+    validate: (photos) => photos.length <= 3 && photos.every((photo) => photo.data.length > 0 && photo.data.length <= 5 * 1024 * 1024),
+  },
 }, { timestamps: true, strict: "throw" });
 
 module.exports = { HelpRequest: mongoose.model("HelpRequest", schema), HELP_TYPES };

@@ -9,15 +9,22 @@ Supported help types: `Food and drinking water`, `Shelter`, `Rescue or transport
 `Medical assistance`, `Other help`.
 
 The server derives the requester from the session and saves a `pending` request
-in MongoDB's `helprequests` collection. Client-supplied owners, statuses, images
-and other extra fields are rejected. Success returns 201 with the request ID,
-status and creation time. Other responses include 400 (invalid fields), 401
+in MongoDB's `helprequests` collection. Client-supplied owners, statuses and
+other extra fields are rejected. Success returns 201 with the request ID,
+status, creation time and photo count. Other responses include 400 (invalid fields), 401
 (missing, expired or inactive account), 403 (missing CSRF header), 429 (more
 than 10 requests per IP per 15 minutes) and 500 (save failure).
 
-The frontend sends text requests from `/request-help` and displays the saved
-request reference. Sign in through the page header before submitting. Photos
-remain local previews; remove selected photos to submit until uploads are added.
+The frontend sends multipart requests from `/request-help` and displays the saved
+request reference and photo count. Sign in through the page header before submitting.
+Optional images use the repeated multipart field `photos`: up to 3 JPG, PNG or
+WebP files, maximum 5 MiB each. The server checks MIME types and file signatures;
+this is not full image decoding. Invalid uploads return 400 and oversized files
+return 413 before any request is saved. JSON text-only requests remain supported.
+Photos are stored as binary data in the same MongoDB document, excluded from
+default queries. There is no public image endpoint in this step. The 15 MiB
+combined photo cap leaves room under MongoDB's 16 MiB document limit. Nginx accepts
+bodies up to 16 MiB; rebuild the frontend Docker image to apply this setting.
 HTTP tests mock database writes and do not create real help requests.
 
 ## Registration
