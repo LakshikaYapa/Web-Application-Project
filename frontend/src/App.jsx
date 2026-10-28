@@ -12,6 +12,7 @@ import SafetyGuidance from "./components/SafetyGuidance";
 import Footer from "./components/Footer";
 import HelpRequestPage from "./components/HelpRequestPage";
 import MyHelpRequests from "./components/MyHelpRequests";
+import VolunteerPage from "./components/VolunteerPage";
 
 function App() {
   const { t } = useLanguage();
@@ -47,7 +48,7 @@ function App() {
     <>
       <a id="page-top" className="skip-link" href="#main">{t("Skip to content")}</a>
       <Header />
-      {window.location.pathname.replace(/\/$/, "") === "/my-requests" ? <MyHelpRequests /> : window.location.pathname.replace(/\/$/, "") === "/request-help" ? <HelpRequestPage /> : (
+      {window.location.pathname.replace(/\/$/, "") === "/volunteer" ? <VolunteerPage /> : window.location.pathname.replace(/\/$/, "") === "/my-requests" ? <MyHelpRequests /> : window.location.pathname.replace(/\/$/, "") === "/request-help" ? <HelpRequestPage /> : (
       <main id="main" className="homepage" tabIndex={-1}>
         <Hero />
         <div className="homepage-overview">

@@ -32,7 +32,7 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="header-inner">
-        <a className="brand" href="#main" aria-label={t("FloodGuard home")}>
+        <a className="brand" href="/" aria-label={t("FloodGuard home")}>
           <img src="/floodguard-logo.png" alt="" width="48" height="56" />
           <span>FloodGuard</span>
         </a>
@@ -53,9 +53,9 @@ export default function Header() {
           className={`primary-navigation${menuOpen ? " is-open" : ""}`}
           aria-label={t("Main navigation")}
         >
-          <a href="#main" aria-current="page" onClick={() => setMenuOpen(false)}>{t("Home")}</a>
+          <a href="/" aria-current={window.location.pathname === "/" ? "page" : undefined} onClick={() => setMenuOpen(false)}>{t("Home")}</a>
           {navigation.map(({ label, target }) => (
-            <a key={target} href={`#${target}`} onClick={() => setMenuOpen(false)}>
+            <a key={target} href={label === "Volunteer" ? "/volunteer" : `/#${target}`} aria-current={label === "Volunteer" && window.location.pathname.replace(/\/$/, "") === "/volunteer" ? "page" : undefined} onClick={() => setMenuOpen(false)}>
               {t(label)}
             </a>
           ))}
