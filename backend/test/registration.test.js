@@ -10,7 +10,7 @@ const { hashPassword } = require("../src/utils/password");
 
 let server;
 let baseUrl;
-const valid = { name: "Test Volunteer", email: " Volunteer@Example.COM ", password: "a long test passphrase", roles: ["volunteer"], address: "123 Test Road", nearestTown: "Kandy", phone: "077 123 4567" };
+const valid = { name: "Test Volunteer", email: " Volunteer@Example.COM ", password: "a", roles: ["volunteer"], address: "123 Test Road", nearestTown: "Kandy", phone: "077 123 4567" };
 
 before(async () => {
   server = app.listen(0, "127.0.0.1");
@@ -68,7 +68,7 @@ test("invalid bodies and privilege escalation are rejected before persistence", 
       { ...valid, roles: ["volunteer", "admin"] },
       { ...valid, status: "active", isAdmin: true },
       { ...valid, email: { $ne: null } },
-      { ...valid, password: "short" },
+      { ...valid, password: "" },
     ]) {
       const response = await post(body);
       assert.equal(response.status, 400);

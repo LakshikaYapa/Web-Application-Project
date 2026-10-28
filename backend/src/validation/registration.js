@@ -16,8 +16,8 @@ function validateRegistration(body) {
   if (typeof body.email !== "string" || body.email.trim().length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email.trim())) {
     errors.email = "Enter a valid email address.";
   }
-  if (typeof body.password !== "string" || [...body.password].length < 15 || [...body.password].length > 128) {
-    errors.password = "Password must contain 15 to 128 characters.";
+  if (typeof body.password !== "string" || !body.password.length || [...body.password].length > 128) {
+    errors.password = "Password is required and must not exceed 128 characters.";
   }
   if (!isPublicRoles(body.roles)) {
     errors.roles = "Choose one or more distinct roles: volunteer, help_seeker or funder.";
