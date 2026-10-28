@@ -14,10 +14,12 @@ import HelpRequestPage from "./components/HelpRequestPage";
 import MyHelpRequests from "./components/MyHelpRequests";
 import VolunteerPage from "./components/VolunteerPage";
 import FunderPage from "./components/FunderPage";
+import MyContributions from "./components/MyContributions";
 
 const pages = {
   "/volunteer": VolunteerPage,
   "/funder": FunderPage,
+  "/my-contributions": MyContributions,
   "/my-requests": MyHelpRequests,
   "/request-help": HelpRequestPage,
 };

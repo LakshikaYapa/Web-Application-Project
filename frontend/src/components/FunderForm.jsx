@@ -97,6 +97,7 @@ export default function FunderForm() {
       <h3 className="text-xl font-bold">{t("Contribution submitted")}</h3>
       <p className="mt-3 leading-[1.7]">{t("Your contribution is pending review. This does not confirm a bank payment.")}</p>
       <p className="mt-3 break-all text-sm">{t("Contribution reference")}: {saved.id}</p>
+      <a className="mt-4 mr-6 inline-block font-bold text-[#007667] hover:underline dark:text-[#99e4c9]" href="/my-contributions">{t("My contributions")}</a>
       <a className="mt-4 inline-block font-bold text-[#007667] dark:text-[#99e4c9]" href="/">{t("Back to homepage")}</a>
     </div> : <form onSubmit={submit} onChange={() => setMessage("")} aria-describedby="funder-form-note" aria-busy={pending}>
     {message && <p className="mt-5 rounded-lg border border-red-400 bg-red-50 p-4 text-red-900" role="alert" ref={feedbackRef} tabIndex={-1}>{t(message)}</p>}

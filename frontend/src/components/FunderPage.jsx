@@ -11,6 +11,7 @@ export default function FunderPage() {
   const { t } = useLanguage();
   return <main id="main" className="mx-auto max-w-[1180px] px-4 pt-6 pb-10 min-[761px]:px-6 min-[761px]:pt-[30px] min-[761px]:pb-14" tabIndex={-1}>
     <a className="mb-4 inline-block text-[#007e8d] dark:text-[#99e4c9]" href="/">← {t("Back to homepage")}</a>
+    <a className="mb-4 ml-6 inline-block font-semibold text-[#007667] hover:underline dark:text-[#99e4c9]" href="/my-contributions">{t("My contributions")}</a>
     <section className="grid items-center gap-6 rounded-[20px] border border-[#79b5af] bg-linear-[120deg,#c9e9e0,#c9e3ec] p-6 min-[761px]:grid-cols-[1.4fr_1fr] min-[761px]:gap-10 min-[761px]:p-10 dark:border-[#4b817b] dark:bg-linear-[120deg,#163f3b,#173344] [&_h1]:my-4 [&_h1]:max-w-[570px] [&_h1]:text-[clamp(32px,4vw,48px)] [&_h1]:leading-[1.2] [&_h1]:tracking-[-.03em]" aria-labelledby="funder-title">
       <div>
         <p className="text-[13px] font-bold tracking-[.08em] text-[#00685b] dark:text-[#99e4c9]">{t("Support our communities")}</p>

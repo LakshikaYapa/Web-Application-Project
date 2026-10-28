@@ -19,5 +19,5 @@ const schema = new mongoose.Schema({
   },
   status: { type: String, enum: ["pending_review"], default: "pending_review" },
 }, { timestamps: true, strict: "throw" });
-schema.index({ contributor: 1, createdAt: -1 });
+schema.index({ contributor: 1, createdAt: -1, _id: -1 });
 module.exports = mongoose.model("Contribution", schema);

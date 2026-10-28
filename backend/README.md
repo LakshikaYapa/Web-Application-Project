@@ -2,6 +2,18 @@
 
 ## Funder contributions — backend step
 
+`GET /api/contributions/mine?page=1` lists only the signed-in user's contributions,
+newest first, 20 per page. The response includes `contributions`, `page` and
+`hasMore`. Explicit fields include support types, town, notes, custom support,
+amount in cents, currency, status and date. Owner IDs, phone numbers and receipt
+data are excluded. Invalid pages return 400; missing/inactive sessions return 401.
+
+Visit `/my-contributions` through the funder page or submission success link.
+The Tailwind page displays formatted LKR amounts and dates in Asia/Colombo,
+pending-review badges, loading/empty/error states, pagination and a refresh
+button. After signing in through the header, refresh the list. Receipt viewing
+will follow in a separate step.
+
 `POST /api/contributions` requires an active login session and
 `X-CSRF-Protection: 1`. Send multipart form data with repeated `supportTypes`
 fields (`financial`, `food_water`, `shelter`, `relief`, `other`), `nearestTown`
