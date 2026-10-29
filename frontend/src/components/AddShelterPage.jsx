@@ -8,10 +8,14 @@ export default function AddShelterPage() {
   return (
     <main id="main" tabIndex={-1} className="mx-auto max-w-[1180px] px-4 py-6 min-[761px]:px-6 min-[761px]:py-10">
       <a href="/" className="mb-5 inline-block font-semibold text-[#007e8d] hover:underline dark:text-[#99e4c9]">← {t("Back to homepage")}</a>
-      <section aria-labelledby="add-shelter-title" className="rounded-[20px] border border-[#79b5af] bg-linear-[120deg,#c9e9e0,#c9e3ec] p-6 min-[761px]:p-10 dark:border-[#4b817b] dark:bg-linear-[120deg,#163f3b,#173344]">
+      <section aria-labelledby="add-shelter-title" className="grid items-center gap-8 rounded-[20px] border border-[#79b5af] bg-linear-[120deg,#c9e9e0,#c9e3ec] p-6 min-[761px]:grid-cols-[1.4fr_1fr] min-[761px]:p-10 dark:border-[#4b817b] dark:bg-linear-[120deg,#163f3b,#173344]">
+        <div>
         <p className="text-sm font-bold tracking-wide text-[#00685b] dark:text-[#99e4c9]">{t("Support our communities")}</p>
         <h1 id="add-shelter-title" className="my-4 text-[clamp(32px,4vw,48px)] leading-tight font-bold">{t("Add a shelter")}</h1>
         <p className="max-w-2xl leading-8">{t("Share shelter details to help families find a place to stay during flooding.")}</p>
+        </div>
+        <img src="/shelter-background.jpg" alt={t("A hand shielding a person from the rain")}
+          width="440" height="478" className="mx-auto w-full max-w-[440px] rounded-2xl border border-[#438c8b] shadow-lg" />
       </section>
       <section aria-labelledby="shelter-details-title" className="mt-8 rounded-[20px] border border-[#79b5af] bg-[#d9ecee] p-6 min-[761px]:p-8 dark:border-[#4b817b] dark:bg-[#173b43]">
         <h2 id="shelter-details-title" className="text-2xl font-bold">{t("Shelter details")}</h2>
