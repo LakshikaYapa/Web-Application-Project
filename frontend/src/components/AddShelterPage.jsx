@@ -1,5 +1,5 @@
 import { useLanguage } from "../i18n/useLanguage";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const facilities = [
   { value: "water", label: "Drinking water" },
@@ -17,9 +17,72 @@ export default function AddShelterPage() {
   const [capacity, setCapacity] = useState("");
   const [occupied, setOccupied] = useState("");
   const [selectedFacilities, setSelectedFacilities] = useState([]);
+  const [pending, setPending] = useState(false);
+  const [message, setMessage] = useState("");
+  const [saved, setSaved] = useState(null);
+  const requestRef = useRef(null);
+  const pendingRef = useRef(false);
+  const feedbackRef = useRef(null);
   const capacityValid = /^[1-9]\d*$/.test(capacity);
   const occupiedValid = /^\d+$/.test(occupied);
   const overCapacity = capacityValid && occupiedValid && Number(occupied) > Number(capacity);
+
+  useEffect(() => () => requestRef.current?.abort(), []);
+  useEffect(() => { if (message || saved) feedbackRef.current?.focus(); }, [message, saved]);
+
+  async function submit(event) {
+    event.preventDefault();
+    if (pendingRef.current) return;
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    setMessage("");
+    const values = Object.fromEntries(["name", "nearestTown", "address", "phone"].map((field) => [field, String(data.get(field) || "").trim()]));
+    if (values.name.length < 2 || values.nearestTown.length < 2 || values.address.length < 5 || (selectedFacilities.includes("other") && !String(data.get("otherFacilities") || "").trim())) {
+      setMessage("Please check your shelter details and try again.");
+      return;
+    }
+    if (!/^(?:0[1-9]\d{8}|\+94[1-9]\d{8})$/.test(values.phone.replace(/[\s()-]/g, ""))) {
+      setMessage("Enter a valid Sri Lankan phone number.");
+      return;
+    }
+    if (!capacityValid || !occupiedValid || overCapacity || Number(capacity) > 100000) {
+      setMessage("Enter valid whole numbers for capacity and occupancy.");
+      return;
+    }
+    const payload = { ...values, capacity: Number(capacity), occupied: Number(occupied), facilities: [...selectedFacilities], ...(selectedFacilities.includes("other") ? { otherFacilities: String(data.get("otherFacilities")).trim() } : {}) };
+    const controller = new AbortController();
+    requestRef.current = controller;
+    pendingRef.current = true;
+    setPending(true);
+    try {
+      const response = await fetch("/api/shelters", {
+        method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json", "X-CSRF-Protection": "1" },
+        body: JSON.stringify(payload), signal: AbortSignal.any([controller.signal, AbortSignal.timeout(30000)]),
+      });
+      const body = await response.json().catch(() => ({}));
+      if (controller.signal.aborted) return;
+      if (response.status === 201 && body.success && body.shelter?.id) {
+        setSaved({ ...body.shelter, details: payload });
+        form.reset();
+        setCapacity("");
+        setOccupied("");
+        setSelectedFacilities([]);
+      } else {
+        const messages = {
+          400: "Please check your shelter details and try again.",
+          401: "Please sign in using the page header, then submit your shelter again.",
+          403: "Unable to submit. Reload this page and try again.",
+          429: "Too many attempts. Please try again later.",
+        };
+        setMessage(messages[response.status] || "Unable to save your shelter. Please try again.");
+      }
+    } catch {
+      if (!controller.signal.aborted) setMessage("Connection interrupted. Your shelter may have been saved. Please check before submitting again.");
+    } finally {
+      pendingRef.current = false;
+      if (!controller.signal.aborted) setPending(false);
+    }
+  }
 
   return (
     <main id="main" tabIndex={-1} className="mx-auto max-w-[1180px] px-4 py-6 min-[761px]:px-6 min-[761px]:py-10">
@@ -34,9 +97,24 @@ export default function AddShelterPage() {
           width="440" height="478" className="mx-auto w-full max-w-[440px] rounded-2xl border border-[#438c8b] shadow-lg" />
       </section>
       <section aria-labelledby="shelter-details-title" className="mt-8 rounded-[20px] border border-[#79b5af] bg-[#d9ecee] p-6 min-[761px]:p-8 dark:border-[#4b817b] dark:bg-[#173b43]">
-        <h2 id="shelter-details-title" className="text-2xl font-bold">{t("Shelter details")}</h2>
+        <h2 id="shelter-details-title" className="text-2xl font-bold">{t(saved ? "Add another shelter" : "Shelter details")}</h2>
         <p className="mt-2 leading-7">{t("Start with the shelter name, location and a contact number.")}</p>
-        <form className="mt-6" onSubmit={(event) => event.preventDefault()}>
+        <p className="mt-2 text-sm leading-6">{t("Sign in to submit shelter details for review.")}</p>
+        {saved && <div className="mt-5 rounded-xl border border-[#73aaa3] bg-white/70 p-5 dark:bg-[#12343d]">
+          <p role="status" ref={message ? undefined : feedbackRef} tabIndex={-1} className="font-semibold">{t("Shelter submitted. You can add another shelter below.")}</p>
+          <details key={saved.id} className="mt-3">
+            <summary className="cursor-pointer rounded-md py-2 font-bold text-[#007e8d] dark:text-[#99e4c9]">{t("View last submitted shelter")}</summary>
+            <p className="mt-3 break-all text-sm">{t("Shelter reference")}: {saved.id}</p>
+            <p className="mt-2 text-sm">{t("Your shelter details are pending review.")}</p>
+            <dl className="mt-4 grid gap-4 min-[600px]:grid-cols-2">
+              {[["Shelter name", saved.details.name], ["Nearest town", saved.details.nearestTown], ["Shelter address", saved.details.address], ["Phone number", saved.details.phone], ["Total capacity", saved.details.capacity], ["Current occupancy", saved.details.occupied], ["Available spaces", saved.details.capacity - saved.details.occupied], ["Available facilities", saved.details.facilities.map((value) => t(facilities.find((facility) => facility.value === value).label)).join(", ") || "—"], ...(saved.details.otherFacilities ? [["Describe other facilities", saved.details.otherFacilities]] : [])].map(([label, value]) => <div key={label} className="min-w-0"><dt className="text-sm font-bold">{t(label)}</dt><dd className="mt-1 whitespace-pre-wrap wrap-break-word leading-7">{value}</dd></div>)}
+            </dl>
+          </details>
+        </div>}
+        <form className="mt-6" onSubmit={submit} aria-busy={pending}>
+          {message && <p role="alert" ref={feedbackRef} tabIndex={-1} className="mb-5 rounded-lg border border-red-400 bg-red-50 p-4 text-red-900 dark:bg-red-950 dark:text-red-200">{t(message)}</p>}
+          <fieldset disabled={pending} className="min-w-0 border-0 p-0 disabled:opacity-70">
+          <legend className="sr-only">{t("Shelter details")}</legend>
           <fieldset className="grid min-w-0 gap-5 min-[761px]:grid-cols-2">
             <legend className="sr-only">{t("Shelter details")}</legend>
             <label htmlFor="shelter-name" className="font-semibold">{t("Shelter name")} <span aria-hidden="true">*</span>
@@ -79,6 +157,8 @@ export default function AddShelterPage() {
             {selectedFacilities.includes("other") && <label htmlFor="shelter-other-facilities" className="mt-5 block font-semibold">{t("Describe other facilities")} <span aria-hidden="true">*</span>
               <textarea id="shelter-other-facilities" name="otherFacilities" required maxLength={500} rows={3} className={`${inputClass} resize-y`} />
             </label>}
+          </fieldset>
+          <button type="submit" disabled={pending} className="mt-6 rounded-xl bg-[#007e8d] px-6 py-3 font-bold text-white enabled:hover:bg-[#005e6b] disabled:cursor-not-allowed disabled:opacity-60">{t(pending ? "Submitting shelter…" : "Submit shelter")}</button>
           </fieldset>
         </form>
       </section>
