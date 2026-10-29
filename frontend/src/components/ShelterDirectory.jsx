@@ -16,20 +16,19 @@ export default function ShelterDirectory() {
   return (
     <main id="main" tabIndex={-1} className="mx-auto max-w-[1180px] px-4 py-6 min-[761px]:px-6 min-[761px]:py-10">
       <a href="/" className="mb-5 inline-block font-semibold text-[#007e8d] hover:underline dark:text-[#99e4c9]">← {t("Back to homepage")}</a>
-      <section aria-labelledby="directory-title" className="grid overflow-hidden rounded-[28px] border border-[#79b5af] bg-[#d7ebe6] shadow-[0_16px_45px_rgb(15_64_82/10%)] min-[900px]:grid-cols-[.9fr_1.1fr] dark:border-[#4b817b] dark:bg-[#173b43]">
-        <div className="flex flex-col items-start justify-center p-7 min-[761px]:p-10">
-        <p className="mb-5 text-xs font-bold tracking-[.16em] text-[#00685b] uppercase dark:text-[#99e4c9]">{t("Together, we find shelter")}</p>
+      <section aria-labelledby="directory-title" className="relative isolate overflow-hidden rounded-[28px] border border-[#438c8b] bg-[#123b3d] bg-[url('/shelter-directory-hero.png')] bg-cover bg-position-[62%_center] text-white shadow-[0_16px_45px_rgb(15_64_82/15%)] min-[761px]:bg-center">
+        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(6,30,36,.94)_0%,rgba(6,30,36,.8)_45%,rgba(6,30,36,.25)_100%)]" />
+        <div className="flex min-h-[460px] max-w-[650px] flex-col items-start justify-center px-7 pt-10 pb-16 min-[761px]:min-h-[480px] min-[761px]:px-12">
+        <p className="mb-5 text-xs font-bold tracking-[.16em] text-[#b5ead9] uppercase">{t("Together, we find shelter")}</p>
         <div className="flex flex-wrap items-center gap-3">
           <h1 id="directory-title" className="text-[clamp(32px,4vw,48px)] leading-tight font-bold">{t("Shelters")}</h1>
           <span className="rounded-full bg-[#a8d5c5] px-3 py-1 text-sm font-semibold text-[#005849] dark:bg-[#31685c] dark:text-[#e1fff1]">{t("Demo data")}</span>
         </div>
-        <p className="mt-4 leading-8">{t("Browse shelter locations and available spaces by town.")}</p>
+        <p className="mt-5 max-w-lg text-[clamp(22px,3vw,30px)] leading-snug font-semibold text-white">{t("A place to rest. A community to lean on.")}</p>
+        <p className="mt-4 max-w-md leading-8 text-[#e1f1ed]">{t("Browse shelter locations and available spaces by town.")}</p>
         <a href="/add-shelter" className="mt-5 inline-block rounded-xl bg-[#007e8d] px-5 py-3 font-bold text-white hover:bg-[#005e6b]">+ {t("Add a shelter")}</a>
         </div>
-        <figure className="relative m-0 min-h-[280px] min-[900px]:min-h-[420px]">
-          <img src="/shelter-directory-hero.png" width="1536" height="1024" alt={t("Illustration of volunteers welcoming a family to a community shelter")} className="h-full w-full object-cover min-[900px]:absolute min-[900px]:inset-0" />
-          <figcaption className="absolute right-4 bottom-4 rounded-full bg-[#123b3d]/85 px-3 py-1.5 text-xs text-white">{t("AI illustration")}</figcaption>
-        </figure>
+        <span className="absolute right-4 bottom-4 rounded-full bg-[#123b3d]/85 px-3 py-1.5 text-xs text-white">{t("AI illustration")}</span>
       </section>
       <section aria-labelledby="directory-results-title" className="mt-8">
         <div className="rounded-2xl border border-[#79b5af] bg-[#e5f0ef] p-5 shadow-sm min-[761px]:p-6 dark:border-[#4b817b] dark:bg-[#173b43]">
