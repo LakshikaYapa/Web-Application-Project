@@ -1,4 +1,5 @@
 import { useLanguage } from "../i18n/useLanguage";
+import FloodReportForm from "./FloodReportForm";
 
 const reportSteps = [
   { number: "01", title: "Where is the flooding?", description: "Share the nearest town and landmarks so the location is easy to identify." },
@@ -38,6 +39,7 @@ export default function FloodReportPage() {
           ))}
         </ol>
       </section>
+      <FloodReportForm />
     </main>
   );
 }
