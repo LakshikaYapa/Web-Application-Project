@@ -22,13 +22,11 @@ export default function ShelterDirectory() {
         <p className="mb-5 text-xs font-bold tracking-[.16em] text-[#b5ead9] uppercase">{t("Together, we find shelter")}</p>
         <div className="flex flex-wrap items-center gap-3">
           <h1 id="directory-title" className="text-[clamp(32px,4vw,48px)] leading-tight font-bold">{t("Shelters")}</h1>
-          <span className="rounded-full bg-[#a8d5c5] px-3 py-1 text-sm font-semibold text-[#005849] dark:bg-[#31685c] dark:text-[#e1fff1]">{t("Demo data")}</span>
         </div>
         <p className="mt-5 max-w-lg text-[clamp(22px,3vw,30px)] leading-snug font-semibold text-white">{t("A place to rest. A community to lean on.")}</p>
         <p className="mt-4 max-w-md leading-8 text-[#e1f1ed]">{t("Browse shelter locations and available spaces by town.")}</p>
         <a href="/add-shelter" className="mt-5 inline-block rounded-xl bg-[#007e8d] px-5 py-3 font-bold text-white hover:bg-[#005e6b]">+ {t("Add a shelter")}</a>
         </div>
-        <span className="absolute right-4 bottom-4 rounded-full bg-[#123b3d]/85 px-3 py-1.5 text-xs text-white">{t("AI illustration")}</span>
       </section>
       <section aria-labelledby="directory-results-title" className="mt-8">
         <div className="rounded-2xl border border-[#79b5af] bg-[#e5f0ef] p-5 shadow-sm min-[761px]:p-6 dark:border-[#4b817b] dark:bg-[#173b43]">
