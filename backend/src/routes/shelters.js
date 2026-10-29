@@ -5,6 +5,22 @@ const { Shelter, SHELTER_FACILITIES } = require("../models/Shelter");
 
 module.exports = function createShelterRoutes() {
   const router = express.Router();
+  router.get("/", async (req, res, next) => {
+    if (Object.keys(req.query).some((key) => !["page", "town"].includes(key))) return res.status(400).json({ success: false, code: "INVALID_QUERY" });
+    const page = req.query.page === undefined ? 1 : Number(req.query.page);
+    const town = req.query.town === undefined ? "" : req.query.town;
+    if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || (req.query.page !== undefined && typeof req.query.page !== "string") || typeof town !== "string" || town.length > 100) return res.status(400).json({ success: false, code: "INVALID_QUERY" });
+    const filter = { status: "pending" };
+    if (town.trim()) filter.nearestTown = { $regex: town.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), $options: "i" };
+    try {
+      const records = await Shelter.find(filter).select("name nearestTown address capacity occupied status createdAt")
+        .sort({ createdAt: -1, _id: -1 }).skip((page - 1) * 20).limit(21).lean();
+      return res.json({ success: true, page, hasMore: records.length > 20, shelters: records.slice(0, 20).map((record) => ({
+        id: String(record._id), name: record.name, nearestTown: record.nearestTown, address: record.address,
+        capacity: record.capacity, occupied: record.occupied, status: record.status, createdAt: record.createdAt,
+      })) });
+    } catch (error) { return next(error); }
+  });
   router.post("/", (req, res, next) => {
     if (req.get("X-CSRF-Protection") !== "1") return res.status(403).json({ success: false, code: "CSRF_REJECTED" });
     return next();
