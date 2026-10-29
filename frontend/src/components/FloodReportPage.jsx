@@ -19,7 +19,7 @@ export default function FloodReportPage() {
           <h1 id="report-title" className="my-4 text-[clamp(32px,4vw,48px)] leading-tight font-bold">{t("Report a flood")}</h1>
           <p className="max-w-xl leading-8">{t("Help your community understand local flooding by sharing what is happening in your area.")}</p>
         </div>
-        <aside className="rounded-2xl border border-[#438c8b] bg-[#104657] p-6 text-white">
+        <aside className="flex min-h-[400px] flex-col justify-end rounded-2xl border border-[#438c8b] bg-[#104657] bg-[linear-gradient(180deg,rgba(5,27,35,.05)_15%,rgba(5,27,35,.65)_50%,rgba(5,27,35,.97)_100%),url('/report-background.jpg')] bg-cover bg-center bg-no-repeat p-6 text-white min-[761px]:min-h-[440px]">
           <svg className="mb-4 h-10 w-10 text-[#9de5dc]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="m12 3 10 18H2L12 3Z" /><path d="M12 9v5M12 17h.01" />
           </svg>
