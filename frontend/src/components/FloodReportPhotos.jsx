@@ -22,9 +22,8 @@ function PhotoPreview({ file, onRemove }) {
   );
 }
 
-export default function FloodReportPhotos() {
+export default function FloodReportPhotos({ photos, setPhotos }) {
   const { t } = useLanguage();
-  const [photos, setPhotos] = useState([]);
   const [error, setError] = useState("");
 
   function addPhotos(event) {
