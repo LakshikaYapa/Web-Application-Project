@@ -1,4 +1,13 @@
 {
+  "What is happening?": "සිදුවෙමින් පවතින්නේ කුමක්ද?",
+  "Select all situations you observed.": "ඔබ නිරීක්ෂණය කළ සියලු තත්ත්වයන් තෝරන්න.",
+  "Flooded road": "මාර්ග ජලයෙන් යටවීම",
+  "Flooded homes": "නිවාස ජලයෙන් යටවීම",
+  "Rising water": "ජල මට්ටම ඉහළ යාම",
+  "Other situation": "වෙනත් තත්ත්වයක්",
+  "Describe the other situation": "වෙනත් තත්ත්වය සඳහන් කරන්න",
+  "Describe the situation": "තත්ත්වය විස්තර කරන්න",
+  "Mention affected roads or homes and whether the water is rising or receding.": "බලපෑමට ලක් වූ මාර්ග හෝ නිවාස සහ ජල මට්ටම ඉහළ යනවාද පහළ යනවාද යන්න සඳහන් කරන්න.",
   "Flood report details": "ගංවතුර වාර්තාවේ තොරතුරු",
   "Start with the location where you observed flooding.": "ඔබ ගංවතුර නිරීක්ෂණය කළ ස්ථානය මුලින් සඳහන් කරන්න.",
   "Report location": "වාර්තාවට අදාළ ස්ථානය",
