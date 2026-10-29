@@ -1,5 +1,6 @@
 import { useLanguage } from "../i18n/useLanguage";
 import { useState } from "react";
+import FloodReportPhotos from "./FloodReportPhotos";
 
 const situations = [
   { value: "road", label: "Flooded road" },
@@ -60,6 +61,15 @@ export default function FloodReportForm() {
             <p id="report-description-count" className="tabular-nums">{description.length} / 2000</p>
           </div>
         </fieldset>
+        <fieldset className="mt-8 border-t border-[#79b5af] pt-6 dark:border-[#4b817b]">
+          <legend className="text-lg font-bold">{t("Contact details")}</legend>
+          <label htmlFor="report-phone" className="mt-4 block max-w-lg font-semibold">
+            {t("Phone number")} <span aria-hidden="true">*</span>
+            <input id="report-phone" name="phone" type="tel" required autoComplete="tel" inputMode="tel" maxLength={20} pattern="(?:0|\+94)[0-9 ]{9,16}" aria-describedby="report-phone-hint" className={fieldClass} />
+          </label>
+          <p id="report-phone-hint" className="mt-2 text-sm leading-6">{t("Use 077 123 4567 or +94 77 123 4567.")}</p>
+        </fieldset>
+        <FloodReportPhotos />
       </form>
     </section>
   );
