@@ -22,6 +22,7 @@ export default function NearbyShelters() {
         <span className="demo-badge">{t("Demo data")}</span>
       </div>
       <p className="shelters-intro">{t("Sample shelter locations and available spaces.")}</p>
+      <a href="/add-shelter" className="mb-3 inline-block rounded-lg border border-[#73aaa3] px-4 py-2 font-semibold text-[#007e8d] hover:bg-[#d4eae3] dark:text-[#99e4c9] dark:hover:bg-[#285c58]">+ {t("Add a shelter")}</a>
       <ul className="shelter-list">
         {shelters.map(({ name, district, occupied, capacity }) => {
           const full = occupied >= capacity;
