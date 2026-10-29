@@ -5,6 +5,7 @@ const helpRequestRoutes = require("./routes/help-requests");
 const volunteerRoutes = require("./routes/volunteers");
 const contributionRoutes = require("./routes/contributions");
 const floodReportRoutes = require("./routes/flood-reports");
+const shelterRoutes = require("./routes/shelters");
 const session = require("express-session");
 const { SESSION_COOKIE_NAME, SESSION_DURATION_MS, cookieOptions } = require("./config/session");
 
@@ -16,7 +17,7 @@ function createApp({ sessionStore, sessionSecret, secureCookies = true }) {
   app.disable("x-powered-by");
   app.use(express.json({ limit: "16kb" }));
   app.locals.sessionCookieOptions = cookieOptions(secureCookies);
-  const sessionPaths = ["/api/auth", "/api/help-requests", "/api/volunteers", "/api/contributions", "/api/flood-reports"];
+  const sessionPaths = ["/api/auth", "/api/help-requests", "/api/volunteers", "/api/contributions", "/api/flood-reports", "/api/shelters"];
   app.use(sessionPaths, (_req, res, next) => { res.set("Cache-Control", "no-store"); next(); });
   app.use(sessionPaths, session({
     name: SESSION_COOKIE_NAME,
@@ -31,6 +32,7 @@ function createApp({ sessionStore, sessionSecret, secureCookies = true }) {
   app.use("/api/volunteers", volunteerRoutes());
   app.use("/api/contributions", contributionRoutes());
   app.use("/api/flood-reports", floodReportRoutes());
+  app.use("/api/shelters", shelterRoutes());
 
   app.get("/api/health", (_req, res) => {
     res.status(200).json({ success: true, message: "FloodGuard API is running" });
