@@ -5,7 +5,7 @@ import SignInDialog from "./SignInDialog";
 
 const navigation = [
   { label: "Flood map", target: "flood-map-title" },
-  { label: "Shelters", target: "shelters-title" },
+  { label: "Shelters", target: "shelters-title", page: "/shelters" },
   { label: "Volunteer", target: "volunteers-title", page: "/volunteer" },
   { label: "Donate", target: "relief-action-title", page: "/funder" },
 ];

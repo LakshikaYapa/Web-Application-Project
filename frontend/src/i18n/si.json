@@ -1,4 +1,10 @@
 {
+  "Browse shelter locations and available spaces by town.": "නගරය අනුව නවාතැන් මධ්‍යස්ථාන සහ ඉතිරි ඉඩ සොයන්න.",
+  "Search by town": "නගරය අනුව සොයන්න",
+  "Shelter directory": "නවාතැන් මධ්‍යස්ථාන ලැයිස්තුව",
+  "Shelters found": "හමු වූ නවාතැන් මධ්‍යස්ථාන",
+  "No sample shelters match this town. Try another town.": "මෙම නගරයට ගැළපෙන ආදර්ශ නවාතැන් මධ්‍යස්ථාන නැහැ. වෙනත් නගරයක් සොයන්න.",
+  "Clear search": "සෙවීම ඉවත් කරන්න",
   "Please check your shelter details and try again.": "නවාතැන් මධ්‍යස්ථානයේ තොරතුරු පරීක්ෂා කර නැවත උත්සාහ කරන්න.",
   "Enter valid whole numbers for capacity and occupancy.": "ධාරිතාව සහ දැනට සිටින ගණන සඳහා වලංගු පූර්ණ සංඛ්‍යා ඇතුළත් කරන්න.",
   "Please sign in using the page header, then submit your shelter again.": "පිටුවේ ඉහළ ඇති පිවිසීමේ බොත්තමෙන් පිවිසී නවාතැන් තොරතුරු නැවත යවන්න.",

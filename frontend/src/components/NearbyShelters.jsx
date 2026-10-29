@@ -42,8 +42,7 @@ export default function NearbyShelters() {
         })}
       </ul>
       <p className="shelters-note" id="shelters-note">{t("Demo only. These are not verified shelters or current occupancy figures. Your location has not been used.")}</p>
-      <button className="map-preview-button" type="button" disabled aria-describedby="shelters-note shelters-coming-soon">{t("View all shelters")}<span aria-hidden="true">→</span></button>
-      <span className="map-coming-soon" id="shelters-coming-soon">{t("Shelter directory coming soon")}</span>
+      <a className="map-preview-button" href="/shelters">{t("View all shelters")}<span aria-hidden="true">→</span></a>
     </section>
   );
 }
