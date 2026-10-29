@@ -15,8 +15,10 @@ import MyHelpRequests from "./components/MyHelpRequests";
 import VolunteerPage from "./components/VolunteerPage";
 import FunderPage from "./components/FunderPage";
 import MyContributions from "./components/MyContributions";
+import FloodReportPage from "./components/FloodReportPage";
 
 const pages = {
+  "/report-flood": FloodReportPage,
   "/volunteer": VolunteerPage,
   "/funder": FunderPage,
   "/my-contributions": MyContributions,
