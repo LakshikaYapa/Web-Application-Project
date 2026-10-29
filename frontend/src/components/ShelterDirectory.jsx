@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
 import { useShelters } from "./useShelters";
+import { sampleShelters } from "./sampleShelters";
 
 export default function ShelterDirectory() {
   const { t } = useLanguage();
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const { shelters: results, loading, error, hasMore, refresh } = useShelters(query.trim(), page);
+  const { shelters, loading, error, hasMore, refresh } = useShelters(query.trim(), page);
+  const search = query.trim().toLocaleLowerCase();
+  const samples = sampleShelters.filter((shelter) => [shelter.nearestTown, t(shelter.nearestTown)].some((town) => town.toLocaleLowerCase().includes(search)));
+  const results = [...(!loading && !error ? shelters : []), ...(!hasMore || error ? samples : [])];
 
   return (
     <main id="main" tabIndex={-1} className="mx-auto max-w-[1180px] px-4 py-6 min-[761px]:px-6 min-[761px]:py-10">
@@ -40,8 +44,8 @@ export default function ShelterDirectory() {
               <svg viewBox="0 0 24 24" className="h-8 w-8 text-[#007e8d] dark:text-[#99e4c9]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7M5 9v12h14V9M9 21v-7h6v7" /></svg>
               <span className="rounded-full bg-[#f4d5bd] px-3 py-1 text-sm font-semibold text-[#773f14] dark:bg-[#633c25] dark:text-[#ffe1c9]">{t("Pending review")}</span>
             </div>
-            <h3 className="text-xl font-bold">{shelter.name}</h3>
-            <p className="mt-2">{shelter.nearestTown}</p>
+            <h3 className="text-xl font-bold">{shelter.id.startsWith("sample-") ? t(shelter.name) : shelter.name}</h3>
+            <p className="mt-2">{shelter.id.startsWith("sample-") ? t(shelter.nearestTown) : shelter.nearestTown}</p>
             <p className="mt-2 whitespace-pre-wrap wrap-break-word text-sm leading-6">{shelter.address}</p>
             <dl className="mt-5 grid grid-cols-2 gap-4 border-t border-[#73aaa3] pt-4 dark:border-[#578e83]">
               <div><dt className="text-sm">{t("Spaces occupied")}</dt><dd className="mt-1 font-bold tabular-nums">{shelter.occupied} / {shelter.capacity}</dd></div>

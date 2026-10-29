@@ -1,5 +1,6 @@
 import { useLanguage } from "../i18n/useLanguage";
 import { useShelters } from "./useShelters";
+import { sampleShelters } from "./sampleShelters";
 
 function ShelterIcon() {
   return (
@@ -19,15 +20,15 @@ export default function NearbyShelters() {
       </div>
       <p className="shelters-intro">{t("Recently added community shelters.")}</p>
       <a href="/add-shelter" className="mb-3 inline-block rounded-lg border border-[#73aaa3] px-4 py-2 font-semibold text-[#007e8d] hover:bg-[#d4eae3] dark:text-[#99e4c9] dark:hover:bg-[#285c58]">+ {t("Add a shelter")}</a>
-      {loading ? <p role="status">{t("Loading shelters…")}</p> : error ? <div role="alert"><p>{t("Unable to load shelters. Please refresh the list.")}</p><button type="button" onClick={refresh} className="my-2 rounded border border-[#73aaa3] px-3 py-2">{t("Refresh list")}</button></div> : !shelters.length ? <p>{t("No shelters have been added yet.")}</p> : null}
+      {loading ? <p role="status">{t("Loading shelters…")}</p> : error ? <div role="alert"><p>{t("Unable to load shelters. Please refresh the list.")}</p><button type="button" onClick={refresh} className="my-2 rounded border border-[#73aaa3] px-3 py-2">{t("Refresh list")}</button></div> : null}
       <ul className="shelter-list">
-        {(!loading && !error ? shelters.slice(0, 3) : []).map(({ id, name, nearestTown, occupied, capacity }) => {
+        {[...(!loading && !error ? shelters.slice(0, 3) : []), ...sampleShelters].map(({ id, name, nearestTown, occupied, capacity }) => {
           return (
             <li className="shelter-row" key={id}>
               <span className="shelter-icon"><ShelterIcon /></span>
               <div className="shelter-info">
-                <h3>{name}</h3>
-                <p>{nearestTown}</p>
+                <h3>{id.startsWith("sample-") ? t(name) : name}</h3>
+                <p>{id.startsWith("sample-") ? t(nearestTown) : nearestTown}</p>
               </div>
               <div className="shelter-capacity">
                 <span aria-label={`${t("Spaces occupied")}: ${occupied} / ${capacity}`}>{occupied} / {capacity}</span>
