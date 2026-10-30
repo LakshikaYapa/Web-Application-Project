@@ -11,6 +11,7 @@ const supportSchema = new mongoose.Schema({
 const schema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, unique: true },
   nearestTown: { type: String, required: true, trim: true, maxlength: 100 },
+  status: { type: String, enum: ["pending", "joined", "ignored"], default: "pending" },
   supportAreas: { type: [supportSchema], required: true, validate: (areas) => areas.length > 0 && areas.length <= 4 },
 }, { timestamps: true, strict: "throw" });
 

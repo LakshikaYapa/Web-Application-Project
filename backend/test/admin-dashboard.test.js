@@ -7,6 +7,7 @@ const { HelpRequest } = require("../src/models/HelpRequest");
 const { FloodReport } = require("../src/models/FloodReport");
 const { Shelter } = require("../src/models/Shelter");
 const Contribution = require("../src/models/Contribution");
+const VolunteerProfile = require("../src/models/VolunteerProfile");
 const { hashPassword } = require("../src/utils/password");
 
 test("admin dashboard counts pending records and rejects anonymous, ordinary and suspended users", async (t) => {
@@ -18,6 +19,7 @@ test("admin dashboard counts pending records and rejects anonymous, ordinary and
   t.mock.method(User, "findOne", () => ({ select: async () => account }));
   t.mock.method(User, "findById", async () => account);
   const mocks = [[HelpRequest, "pending", 2], [FloodReport, "pending", 3], [Shelter, "pending", 4], [Contribution, "pending_review", 5]].map(([model, status, count]) => t.mock.method(model, "countDocuments", async (filter) => { assert.deepEqual(filter, { status }); return count; }));
+  mocks.push(t.mock.method(VolunteerProfile, "countDocuments", async (filter) => { assert.deepEqual(filter, {}); return 6; }));
   const find = t.mock.method(Shelter, "find", (filter) => {
     assert.deepEqual(filter, { status: "pending" });
     const query = {
@@ -38,7 +40,7 @@ test("admin dashboard counts pending records and rejects anonymous, ordinary and
     const response = await get();
     assert.equal(response.status, 200);
     assert.equal(response.headers.get("cache-control"), "no-store");
-    assert.deepEqual(await response.json(), { success: true, counts: { "help-requests": 2, "flood-reports": 3, shelters: 4, contributions: 5 } });
+    assert.deepEqual(await response.json(), { success: true, counts: { "help-requests": 2, "flood-reports": 3, shelters: 4, contributions: 5, volunteers: 6 } });
     const getShelters = (query = "") => fetch(base + "/api/admin/shelters" + query, { headers: { Cookie: cookie } });
     const listResponse = await getShelters("?page=2");
     assert.equal(listResponse.status, 200);

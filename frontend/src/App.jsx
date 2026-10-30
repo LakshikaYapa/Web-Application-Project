@@ -23,8 +23,10 @@ import AdminShelters from "./components/AdminShelters";
 import AdminHelpRequests from "./components/AdminHelpRequests";
 import AdminFloodReports from "./components/AdminFloodReports";
 import AdminContributions from "./components/AdminContributions";
+import AdminVolunteers from "./components/AdminVolunteers";
 
 const pages = {
+  "/admin/volunteers": AdminVolunteers,
   "/admin/contributions": AdminContributions,
   "/admin/flood-reports": AdminFloodReports,
   "/admin/help-requests": AdminHelpRequests,

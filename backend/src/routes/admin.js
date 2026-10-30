@@ -4,6 +4,7 @@ const { HelpRequest } = require("../models/HelpRequest");
 const { FloodReport } = require("../models/FloodReport");
 const { Shelter } = require("../models/Shelter");
 const Contribution = require("../models/Contribution");
+const VolunteerProfile = require("../models/VolunteerProfile");
 const adminHelpActions = require("./admin-help-actions");
 const adminFloodActions = require("./admin-flood-actions");
 const adminContributionActions = require("./admin-contribution-actions");
@@ -21,6 +22,7 @@ module.exports = function createAdminRoutes() {
     try {
       const sections = [["help-requests", HelpRequest, "pending"], ["flood-reports", FloodReport, "pending"], ["shelters", Shelter, "pending"], ["contributions", Contribution, "pending_review"]];
       const counts = Object.fromEntries(await Promise.all(sections.map(async ([key, model, status]) => [key, await model.countDocuments({ status })])));
+      counts.volunteers = await VolunteerProfile.countDocuments({});
       return res.json({ success: true, counts });
     } catch (error) { return next(error); }
   });
@@ -135,5 +137,31 @@ module.exports = function createAdminRoutes() {
       return res.type(receipt.contentType).send(receipt.data);
     } catch (error) { return next(error); }
   });
+  router.get("/volunteers", async (req, res, next) => {
+    const page = req.query.page === undefined ? 1 : Number(req.query.page);
+    if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || (req.query.page !== undefined && typeof req.query.page !== "string")) return res.status(400).json({ success: false, code: "INVALID_PAGE" });
+    try {
+      const records = await VolunteerProfile.find({}).select("user nearestTown supportAreas status createdAt updatedAt")
+        .populate({ path: "user", select: "name email +phone" })
+        .sort({ createdAt: -1, _id: -1 }).skip((page - 1) * 20).limit(21).lean();
+      return res.json({ success: true, page, hasMore: records.length > 20, volunteers: records.slice(0, 20).map((record) => ({
+        id: String(record._id), name: record.user?.name, email: record.user?.email, phone: record.user?.phone,
+        nearestTown: record.nearestTown, status: record.status || "pending", createdAt: record.createdAt, updatedAt: record.updatedAt,
+        supportAreas: (record.supportAreas || []).map((area) => ({ area: area.area, skills: area.skills, otherSkills: area.otherSkills, otherSupport: area.otherSupport })),
+      })) });
+    } catch (error) { return next(error); }
+  });
+  for (const [action, status] of [["join", "joined"], ["ignore", "ignored"]]) {
+    router.post(`/volunteers/:id/${action}`, async (req, res, next) => {
+      if (req.get("X-CSRF-Protection") !== "1") return res.status(403).json({ success: false, code: "CSRF_REJECTED" });
+      if (!/^[a-f\d]{24}$/i.test(req.params.id)) return res.status(404).json({ success: false, code: "VOLUNTEER_NOT_FOUND" });
+      if (req.body !== undefined && (req.body === null || typeof req.body !== "object" || Array.isArray(req.body) || Object.keys(req.body).length)) return res.status(400).json({ success: false, code: "INVALID_BODY" });
+      try {
+        const profile = await VolunteerProfile.findOneAndUpdate({ _id: req.params.id, $or: [{ status: "pending" }, { status: { $exists: false } }] }, { $set: { status } }, { new: true, runValidators: true }).select("_id");
+        if (!profile) return res.status(409).json({ success: false, code: "VOLUNTEER_ALREADY_REVIEWED" });
+        return res.json({ success: true });
+      } catch (error) { return next(error); }
+    });
+  }
   return router;
 };
