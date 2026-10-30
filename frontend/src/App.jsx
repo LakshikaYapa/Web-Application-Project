@@ -52,10 +52,10 @@ function App() {
           <NearbyShelters />
           <CommunityActions />
         </div>
-        <Volunteers />
-        <CommunityGallery />
         <ShelterNeeds />
         <SafetyGuidance />
+        <Volunteers />
+        <CommunityGallery />
         <p role="status" className="connection-status">{t(message)}</p>
       </main>
       <Footer />
