@@ -18,8 +18,10 @@ import MyContributions from "./components/MyContributions";
 import FloodReportPage from "./components/FloodReportPage";
 import AddShelterPage from "./components/AddShelterPage";
 import ShelterDirectory from "./components/ShelterDirectory";
+import AdminPage from "./components/AdminPage";
 
 const pages = {
+  "/admin": AdminPage,
   "/shelters": ShelterDirectory,
   "/add-shelter": AddShelterPage,
   "/report-flood": FloodReportPage,

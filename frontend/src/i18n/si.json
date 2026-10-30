@@ -1,4 +1,13 @@
 {
+  "Admin dashboard": "පරිපාලක ප්‍රධාන පිටුව",
+  "Help requests": "උදව් ඉල්ලීම්",
+  "Flood reports": "ගංවතුර වාර්තා",
+  "Contributions": "දායකත්ව",
+  "Pending requests": "සමාලෝචනයට ඇති ඉල්ලීම්",
+  "Loading requests…": "ඉල්ලීම් ලබාගනිමින්…",
+  "Unable to load requests. Please try again.": "ඉල්ලීම් ලබාගත නොහැකි විය. නැවත උත්සාහ කරන්න.",
+  "Please sign in with your administrator account.": "ඔබේ පරිපාලක ගිණුමෙන් පිවිසෙන්න.",
+  "This page is available to administrators only.": "මෙම පිටුව පරිපාලකයන් සඳහා පමණයි.",
   "Community Hall": "ප්‍රජා ශාලාව",
   "School Shelter": "පාසල් නවාතැන",
   "Sports Centre": "ක්‍රීඩා මධ්‍යස්ථානය",
