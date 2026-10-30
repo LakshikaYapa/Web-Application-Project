@@ -1,50 +1,17 @@
-import { useEffect, useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
 
-const areaLabels = { relief: "Relief distribution", transport: "Transport support", community: "Community support", other: "Other help" };
-const colors = ["teal", "blue", "green", "purple"];
+const waysToHelp = [
+  { title: "Volunteers", image: "/community/food-packing.png", alt: "People packing colorful bags of food supplies around long tables indoors", description: "Give your time and skills to help communities recover.", action: "Become a volunteer", href: "/volunteer" },
+  { title: "Donators", image: "/community/supplies-distribution.png", alt: "Bags of groceries arranged on tables beneath outdoor canopies", description: "Give funds or essential supplies to support families in need.", action: "Make a contribution", href: "/funder" },
+];
 
 export default function Volunteers() {
   const { t } = useLanguage();
-  const [volunteers, setVolunteers] = useState(null);
-  const [error, setError] = useState(false);
-  const [retry, setRetry] = useState(0);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    async function load() {
-      try {
-        const response = await fetch("/api/volunteers", { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]) });
-        const body = await response.json();
-        if (!response.ok || !body.success || !Array.isArray(body.volunteers)) throw new Error("Unable to load volunteers");
-        if (!controller.signal.aborted) setVolunteers(body.volunteers);
-      } catch {
-        if (!controller.signal.aborted) setError(true);
-      }
-    }
-    load();
-    return () => controller.abort();
-  }, [retry]);
-
-  return (
-    <section className="volunteers-section" aria-labelledby="volunteers-title">
-      <div className="volunteers-heading">
-        <div>
-          <h2 id="volunteers-title">{t("Our Volunteers")}</h2>
-          <p>{t("Local people making a difference in their communities.")}</p>
-        </div>
-        <a href="/volunteer#volunteer-form" className="inline-flex items-center gap-3 rounded-lg bg-[#007e8d] px-5 py-3 font-bold text-white hover:bg-[#005e6b]">{t("Join the team")} <span aria-hidden="true">+</span></a>
-      </div>
-      {error ? <div role="alert"><p>{t("Unable to load volunteers. Please try again.")}</p><button type="button" onClick={() => { setError(false); setVolunteers(null); setRetry((value) => value + 1); }} className="mt-3 rounded-lg border border-[#73aaa3] px-4 py-2 font-semibold">{t("Refresh list")}</button></div> : !volunteers ? <p role="status">{t("Loading volunteers…")}</p> : <>
-        {!volunteers.length && <p>{t("Our volunteer team is growing. Join us to support your community.")}</p>}
-        <ul className="volunteer-grid">{volunteers.map((volunteer, index) => {
-          const initials = volunteer.name.trim().split(/\s+/).slice(0, 2).map((part) => Array.from(part)[0]).join("").toLocaleUpperCase();
-          return <li className="volunteer-card" key={volunteer.id}>
-            <div className={`volunteer-portrait portrait-${colors[index % colors.length]}`} aria-hidden="true"><span className="volunteer-initials">{initials}</span></div>
-            <div className="volunteer-details"><h3>{volunteer.name}</h3><p>{volunteer.nearestTown}</p><span className="volunteer-role">{volunteer.supportAreas.map((area) => t(areaLabels[area] || area)).join(", ")}</span></div>
-          </li>;
-        })}</ul>
-      </>}
-    </section>
-  );
+  return <section className="volunteers-section" aria-labelledby="volunteers-title">
+    <div className="volunteers-heading"><div><h2 id="volunteers-title">{t("Volunteers and donators")}</h2><p>{t("Different ways to help. One caring community.")}</p></div></div>
+    <ul className="mt-6 grid list-none gap-6 p-0 min-[761px]:grid-cols-2">{waysToHelp.map((way) => <li key={way.title} className="overflow-hidden rounded-2xl border border-[#79b5af] bg-[#edf6f2] shadow-[0_8px_24px_rgb(15_64_82/10%)] dark:border-[#416f68] dark:bg-[#173b43]">
+      <img src={way.image} alt={t(way.alt)} width="640" height="480" loading="lazy" decoding="async" className="h-60 w-full object-cover min-[761px]:h-72" />
+      <div className="p-6 min-[761px]:p-8"><h3 className="text-2xl font-bold">{t(way.title)}</h3><p className="mt-3 leading-7">{t(way.description)}</p><a href={way.href} className="mt-5 inline-flex items-center gap-5 rounded-xl bg-[#007e8d] px-5 py-3 font-bold text-white hover:bg-[#005e6b]">{t(way.action)} <span aria-hidden="true">→</span></a></div>
+    </li>)}</ul>
+  </section>;
 }
