@@ -88,7 +88,7 @@ function App() {
         </div>
         <Volunteers />
         <CommunityGallery />
-        <ShelterNeeds />
+        <ShelterNeeds compact />
         <SafetyGuidance />
         <p role="status" className="connection-status">{t(message)}</p>
       </main>
