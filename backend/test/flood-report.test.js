@@ -22,7 +22,7 @@ test("flood reports require an active owner, validate fields and protect uploade
   const png = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=", "base64");
   function form(changes = {}, bytes) {
     const data = new FormData();
-    const fields = { nearestTown: " Colombo ", location: " Main road ", description: "Water covers the road.", phone: "077 123 4567", situations: ["road", "rising_water"], ...changes };
+    const fields = { nearestTown: " Colombo ", location: " Main road ", description: "Water covers the road.", phone: "077 123 4567", situations: ["road", "rising_water"], latitude: "6.9271", longitude: "79.8612", ...changes };
     for (const [key, value] of Object.entries(fields)) for (const item of Array.isArray(value) ? value : [value]) data.append(key, item);
     if (bytes) data.append("photos", new Blob([bytes], { type: "image/png" }), "photo.png");
     return data;
@@ -47,9 +47,11 @@ test("flood reports require an active owner, validate fields and protect uploade
     assert.equal(saved.reporter, account.id);
     assert.equal(saved.phone, "+94771234567");
     assert.equal(saved.nearestTown, "Colombo");
+    assert.equal(saved.latitude, 6.9271);
+    assert.equal(saved.longitude, 79.8612);
     assert.deepEqual(saved.photos[0].data, png);
     assert.equal((await send(form({ situations: "other", otherSituation: "Damaged bridge" }), cookie)).status, 201);
-    for (const changes of [{ situations: ["road", "road"] }, { situations: "unknown" }, { situations: "other" }, { phone: "123" }, { status: "approved" }]) assert.equal((await send(form(changes), cookie)).status, 400);
+    for (const changes of [{ situations: ["road", "road"] }, { situations: "unknown" }, { situations: "other" }, { phone: "123" }, { status: "approved" }, { latitude: "0" }]) assert.equal((await send(form(changes), cookie)).status, 400);
     assert.equal((await send(form({}, Buffer.from("fake PNG")), cookie)).status, 400);
     assert.equal((await send(form({}, Buffer.alloc(5 * 1024 * 1024 + 1)), cookie)).status, 413);
     assert.equal(create.mock.callCount(), 2);

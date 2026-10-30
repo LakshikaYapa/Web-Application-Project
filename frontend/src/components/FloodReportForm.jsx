@@ -1,6 +1,7 @@
 import { useLanguage } from "../i18n/useLanguage";
 import { useEffect, useRef, useState } from "react";
 import FloodReportPhotos from "./FloodReportPhotos";
+import ReportLocationPicker from "./ReportLocationPicker";
 
 const situations = [
   { value: "road", label: "Flooded road" },
@@ -15,6 +16,7 @@ export default function FloodReportForm() {
   const { t } = useLanguage();
   const [selectedSituations, setSelectedSituations] = useState([]);
   const [description, setDescription] = useState("");
+  const [coordinates, setCoordinates] = useState({ latitude: "", longitude: "" });
   const [photos, setPhotos] = useState([]);
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState("");
@@ -64,6 +66,7 @@ export default function FloodReportForm() {
         form.reset();
         setSelectedSituations([]);
         setDescription("");
+        setCoordinates({ latitude: "", longitude: "" });
         setPhotos([]);
       } else {
         const messages = {
@@ -119,6 +122,7 @@ export default function FloodReportForm() {
             </label>
           </div>
         </fieldset>
+        <ReportLocationPicker coordinates={coordinates} onChange={setCoordinates} />
         <fieldset className="mt-8 border-t border-[#79b5af] pt-6 dark:border-[#4b817b]">
           <legend className="text-lg font-bold">{t("What is happening?")}</legend>
           <p id="report-situations-hint" className="mb-4 text-sm leading-6">{t("Select all situations you observed.")}</p>

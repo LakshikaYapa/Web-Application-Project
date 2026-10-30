@@ -4,6 +4,7 @@ const { rateLimit } = require("express-rate-limit");
 const { requireUser } = require("../controllers/session");
 const { FloodReport, REPORT_SITUATIONS } = require("../models/FloodReport");
 const { matchesImageType } = require("../validation/help-photos");
+const { validCoordinates } = require("../validation/report-coordinates");
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -16,6 +17,16 @@ const upload = multer({
 
 module.exports = function createFloodReportRoutes() {
   const router = express.Router();
+  router.get("/map", async (_req, res, next) => {
+    try {
+      const records = await FloodReport.find({ status: "approved", latitude: { $gte: 5.85, $lte: 9.95 }, longitude: { $gte: 79.5, $lte: 82.05 } })
+        .select("nearestTown location situations description latitude longitude createdAt").sort({ createdAt: -1, _id: -1 }).limit(501).lean();
+      return res.json({ success: true, hasMore: records.length > 500, reports: records.slice(0, 500).filter((record) => validCoordinates(record.latitude, record.longitude)).map((record) => ({
+        id: String(record._id), nearestTown: record.nearestTown, location: record.location, situations: record.situations,
+        description: record.description, latitude: record.latitude, longitude: record.longitude, createdAt: record.createdAt,
+      })) });
+    } catch (error) { return next(error); }
+  });
   router.get("/", async (req, res, next) => {
     const page = req.query.page === undefined ? 1 : Number(req.query.page);
     if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || (req.query.page !== undefined && typeof req.query.page !== "string")) return res.status(400).json({ success: false, code: "INVALID_PAGE" });
@@ -55,9 +66,12 @@ module.exports = function createFloodReportRoutes() {
     });
   }, async (req, res, next) => {
     const body = req.body;
-    const allowed = ["nearestTown", "location", "description", "phone", "situations", "otherSituation"];
+    const allowed = ["nearestTown", "location", "description", "phone", "situations", "otherSituation", "latitude", "longitude"];
     if (!body || typeof body !== "object" || Array.isArray(body) || Object.keys(body).some((key) => !allowed.includes(key))) return res.status(400).json({ success: false, code: "VALIDATION_ERROR" });
     const errors = {};
+    const latitude = typeof body.latitude === "string" && body.latitude.trim() ? Number(body.latitude) : NaN;
+    const longitude = typeof body.longitude === "string" && body.longitude.trim() ? Number(body.longitude) : NaN;
+    if ((body.latitude !== undefined || body.longitude !== undefined) && !validCoordinates(latitude, longitude)) errors.coordinates = "Choose a valid map location in Sri Lanka.";
     const situations = typeof body.situations === "string" ? [body.situations] : body.situations;
     if (!Array.isArray(situations) || !situations.length || situations.length > 4 || new Set(situations).size !== situations.length || situations.some((value) => !REPORT_SITUATIONS.includes(value))) errors.situations = "Choose valid situations.";
     for (const [field, min, max] of [["nearestTown", 2, 100], ["location", 2, 300], ["description", 10, 2000]]) {
@@ -75,6 +89,7 @@ module.exports = function createFloodReportRoutes() {
         phone: phone.startsWith("0") ? `+94${phone.slice(1)}` : phone,
         nearestTown: body.nearestTown.trim(), location: body.location.trim(), description: body.description.trim(),
         situations,
+        ...(validCoordinates(latitude, longitude) ? { latitude, longitude } : {}),
         ...(situations.includes("other") ? { otherSituation: body.otherSituation.trim() } : {}),
         photos: (req.files || []).map((file) => ({ contentType: file.mimetype, data: file.buffer })),
       });
