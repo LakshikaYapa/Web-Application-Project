@@ -37,12 +37,11 @@ export default function ShelterDirectory() {
           <h2 id="directory-results-title" className="text-2xl font-bold">{t("Shelter directory")}</h2>
           <button type="button" onClick={refresh} disabled={loading} className="rounded-lg border border-[#73aaa3] px-4 py-2 disabled:opacity-50">{t("Refresh list")}</button>
         </div>
-        <p className="mt-3 text-sm leading-7">{t("Community-submitted shelters are pending review. Occupancy is supplied by the submitter.")}</p>
         {loading ? <p role="status" className="mt-5">{t("Loading shelters…")}</p> : error ? <p role="alert" className="mt-5">{t("Unable to load shelters. Please refresh the list.")}</p> : results.length ? <ul className="mt-5 grid list-none gap-5 p-0 min-[761px]:grid-cols-2 min-[1000px]:grid-cols-3">
           {results.map((shelter) => <li key={shelter.id} className="overflow-hidden rounded-2xl border border-[#73aaa3] border-t-4 border-t-[#238c87] bg-[#e1efea] p-6 shadow-[0_6px_20px_rgb(15_64_82/8%)] transition-shadow hover:shadow-[0_12px_28px_rgb(15_64_82/15%)] dark:border-[#578e83] dark:border-t-[#80c7b3] dark:bg-[#1c443e]">
             <div className="mb-4 flex items-center justify-between gap-3">
               <svg viewBox="0 0 24 24" className="h-8 w-8 text-[#007e8d] dark:text-[#99e4c9]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7M5 9v12h14V9M9 21v-7h6v7" /></svg>
-              <span className="rounded-full bg-[#f4d5bd] px-3 py-1 text-sm font-semibold text-[#773f14] dark:bg-[#633c25] dark:text-[#ffe1c9]">{t("Pending review")}</span>
+              <span className={`rounded-full px-3 py-1 text-sm font-semibold ${shelter.occupied >= shelter.capacity ? "bg-[#f4d5bd] text-[#773f14] dark:bg-[#633c25] dark:text-[#ffe1c9]" : "bg-[#a8d5c5] text-[#005849] dark:bg-[#31685c] dark:text-[#e1fff1]"}`}>{t(shelter.occupied >= shelter.capacity ? "Full" : "Open")}</span>
             </div>
             <h3 className="text-xl font-bold">{shelter.id.startsWith("sample-") ? t(shelter.name) : shelter.name}</h3>
             <p className="mt-2">{shelter.id.startsWith("sample-") ? t(shelter.nearestTown) : shelter.nearestTown}</p>

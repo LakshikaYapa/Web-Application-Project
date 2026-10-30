@@ -42,7 +42,7 @@ test("shelter submission validates occupancy and facilities and uses the active 
     assert.equal(saved.otherFacilities, "Accessible entrance");
     const simple = { ...valid, facilities: [], otherFacilities: undefined, occupied: 100 };
     assert.equal((await send(simple, cookie)).status, 201);
-    for (const changes of [{occupied: 101}, {capacity: 0}, {occupied: 1.5}, {capacity: "100"}, {phone: "bad"}, {facilities: ["unknown"]}, {facilities: ["water", "water"]}, {otherFacilities: " "}]) assert.equal((await send({...valid, ...changes}, cookie)).status, 400);
+    for (const changes of [{occupied: 101}, {capacity: 0}, {occupied: 1.5}, {status: "approved"}, {phone: "bad"}, {facilities: ["unknown"]}, {facilities: ["water", "water"]}, {otherFacilities: " "}]) assert.equal((await send({...valid, ...changes}, cookie)).status, 400);
     assert.equal(create.mock.callCount(), 2);
     account.status = "suspended";
     assert.equal((await send(valid, cookie)).status, 401);

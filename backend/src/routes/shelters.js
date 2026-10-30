@@ -10,7 +10,7 @@ module.exports = function createShelterRoutes() {
     const page = req.query.page === undefined ? 1 : Number(req.query.page);
     const town = req.query.town === undefined ? "" : req.query.town;
     if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || (req.query.page !== undefined && typeof req.query.page !== "string") || typeof town !== "string" || town.length > 100) return res.status(400).json({ success: false, code: "INVALID_QUERY" });
-    const filter = { status: "pending" };
+    const filter = { status: "approved" };
     if (town.trim()) filter.nearestTown = { $regex: town.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), $options: "i" };
     try {
       const records = await Shelter.find(filter).select("name nearestTown address capacity occupied status createdAt")

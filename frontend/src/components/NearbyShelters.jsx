@@ -32,13 +32,12 @@ export default function NearbyShelters() {
               </div>
               <div className="shelter-capacity">
                 <span aria-label={`${t("Spaces occupied")}: ${occupied} / ${capacity}`}>{occupied} / {capacity}</span>
-                <span className="rounded-full bg-[#f4d5bd] px-2 py-1 text-xs text-[#773f14] dark:bg-[#633c25] dark:text-[#ffe1c9]">{t("Pending review")}</span>
+                <span className={`shelter-status ${occupied >= capacity ? "is-full" : "is-open"}`}>{t(occupied >= capacity ? "Full" : "Open")}</span>
               </div>
             </li>
           );
         })}
       </ul>
-      <p className="shelters-note" id="shelters-note">{t("Community-submitted shelters are pending review. Occupancy is supplied by the submitter.")}</p>
       <a className="map-preview-button" href="/shelters">{t("View all shelters")}<span aria-hidden="true">→</span></a>
     </section>
   );

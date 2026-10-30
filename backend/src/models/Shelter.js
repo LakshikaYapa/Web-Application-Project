@@ -29,7 +29,7 @@ const schema = new mongoose.Schema({
       message: "Choose Other facilities to add custom details.",
     },
   },
-  status: { type: String, enum: ["pending"], default: "pending" },
+  status: { type: String, enum: ["pending", "approved"], default: "pending" },
 }, { timestamps: true, strict: "throw" });
 
 schema.index({ submittedBy: 1, createdAt: -1, _id: -1 });
