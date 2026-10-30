@@ -18,5 +18,17 @@ module.exports = function createAdminRoutes() {
       return res.json({ success: true, counts });
     } catch (error) { return next(error); }
   });
+  router.get("/shelters", async (req, res, next) => {
+    const page = req.query.page === undefined ? 1 : Number(req.query.page);
+    if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || (req.query.page !== undefined && typeof req.query.page !== "string")) return res.status(400).json({ success: false, code: "INVALID_PAGE" });
+    try {
+      const records = await Shelter.find({ status: "pending" }).select("name nearestTown address +phone capacity occupied facilities otherFacilities createdAt")
+        .sort({ createdAt: -1, _id: -1 }).skip((page - 1) * 20).limit(21).lean();
+      const fields = ["name", "nearestTown", "address", "phone", "capacity", "occupied", "facilities", "otherFacilities", "createdAt"];
+      return res.json({ success: true, page, hasMore: records.length > 20, shelters: records.slice(0, 20).map((record) => ({
+        id: String(record._id), ...Object.fromEntries(fields.filter((key) => record[key] !== undefined).map((key) => [key, record[key]])),
+      })) });
+    } catch (error) { return next(error); }
+  });
   return router;
 };

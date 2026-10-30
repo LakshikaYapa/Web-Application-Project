@@ -18,6 +18,17 @@ test("admin dashboard counts pending records and rejects anonymous, ordinary and
   t.mock.method(User, "findOne", () => ({ select: async () => account }));
   t.mock.method(User, "findById", async () => account);
   const mocks = [[HelpRequest, "pending", 2], [FloodReport, "pending", 3], [Shelter, "pending", 4], [Contribution, "pending_review", 5]].map(([model, status, count]) => t.mock.method(model, "countDocuments", async (filter) => { assert.deepEqual(filter, { status }); return count; }));
+  const find = t.mock.method(Shelter, "find", (filter) => {
+    assert.deepEqual(filter, { status: "pending" });
+    const query = {
+      select(fields) { assert.ok(fields.includes("+phone")); return query; },
+      sort(order) { assert.deepEqual(order, { createdAt: -1, _id: -1 }); return query; },
+      skip(value) { assert.equal(value, 20); return query; },
+      limit(value) { assert.equal(value, 21); return query; },
+      async lean() { return Array.from({ length: 21 }, (_, index) => ({ _id: String(index), name: "Hall", phone: "+94771234567", submittedBy: "private-owner", internal: "private" })); },
+    };
+    return query;
+  });
   try {
     assert.equal((await fetch(base + "/api/admin/dashboard")).status, 401);
     const login = await fetch(base + "/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json", "X-CSRF-Protection": "1" }, body: JSON.stringify({ email: account.email, password: "test" }) });
@@ -28,11 +39,26 @@ test("admin dashboard counts pending records and rejects anonymous, ordinary and
     assert.equal(response.status, 200);
     assert.equal(response.headers.get("cache-control"), "no-store");
     assert.deepEqual(await response.json(), { success: true, counts: { "help-requests": 2, "flood-reports": 3, shelters: 4, contributions: 5 } });
+    const getShelters = (query = "") => fetch(base + "/api/admin/shelters" + query, { headers: { Cookie: cookie } });
+    const listResponse = await getShelters("?page=2");
+    assert.equal(listResponse.status, 200);
+    assert.equal(listResponse.headers.get("cache-control"), "no-store");
+    const list = await listResponse.json();
+    assert.equal(list.shelters.length, 20);
+    assert.equal(list.hasMore, true);
+    assert.equal(list.shelters[0].phone, "+94771234567");
+    assert.equal(list.shelters[0].submittedBy, undefined);
+    assert.equal(list.shelters[0].internal, undefined);
+    assert.equal((await getShelters("?page=0")).status, 400);
+    assert.equal((await fetch(base + "/api/admin/shelters")).status, 401);
     account.roles = ["volunteer"];
     assert.equal((await get()).status, 403);
+    assert.equal((await getShelters()).status, 403);
     account.roles = ["admin"];
     account.status = "suspended";
     assert.equal((await get()).status, 401);
+    assert.equal((await getShelters()).status, 401);
+    assert.equal(find.mock.callCount(), 1);
     for (const mock of mocks) assert.equal(mock.mock.callCount(), 1);
   } finally {
     await new Promise((resolve) => server.close(resolve));

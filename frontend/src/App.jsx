@@ -19,8 +19,10 @@ import FloodReportPage from "./components/FloodReportPage";
 import AddShelterPage from "./components/AddShelterPage";
 import ShelterDirectory from "./components/ShelterDirectory";
 import AdminPage from "./components/AdminPage";
+import AdminShelters from "./components/AdminShelters";
 
 const pages = {
+  "/admin/shelters": AdminShelters,
   "/admin": AdminPage,
   "/shelters": ShelterDirectory,
   "/add-shelter": AddShelterPage,
