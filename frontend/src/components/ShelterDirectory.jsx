@@ -10,7 +10,7 @@ export default function ShelterDirectory() {
   const { shelters, loading, error, hasMore, refresh } = useShelters(query.trim(), page);
   const search = query.trim().toLocaleLowerCase();
   const samples = sampleShelters.filter((shelter) => [shelter.nearestTown, t(shelter.nearestTown)].some((town) => town.toLocaleLowerCase().includes(search)));
-  const results = [...(!loading && !error ? shelters : []), ...(!hasMore || error ? samples : [])];
+  const results = [...(!loading && !error ? shelters : []), ...(!hasMore || loading || error ? samples : [])];
 
   return (
     <main id="main" tabIndex={-1} className="mx-auto max-w-[1180px] px-4 py-6 min-[761px]:px-6 min-[761px]:py-10">
@@ -37,7 +37,9 @@ export default function ShelterDirectory() {
           <h2 id="directory-results-title" className="text-2xl font-bold">{t("Shelter directory")}</h2>
           <button type="button" onClick={refresh} disabled={loading} className="rounded-lg border border-[#73aaa3] px-4 py-2 disabled:opacity-50">{t("Refresh list")}</button>
         </div>
-        {loading ? <p role="status" className="mt-5">{t("Loading shelters…")}</p> : error ? <p role="alert" className="mt-5">{t("Unable to load shelters. Please refresh the list.")}</p> : results.length ? <ul className="mt-5 grid list-none gap-5 p-0 min-[761px]:grid-cols-2 min-[1000px]:grid-cols-3">
+        {loading && <p role="status" className="mt-5">{t("Loading shelters…")}</p>}
+        {!loading && error && <p role="alert" className="mt-5">{t("Unable to load shelters. Please refresh the list.")}</p>}
+        {results.length ? <ul className="mt-5 grid list-none gap-5 p-0 min-[761px]:grid-cols-2 min-[1000px]:grid-cols-3">
           {results.map((shelter) => <li key={shelter.id} className="overflow-hidden rounded-2xl border border-[#73aaa3] border-t-4 border-t-[#238c87] bg-[#e1efea] p-6 shadow-[0_6px_20px_rgb(15_64_82/8%)] transition-shadow hover:shadow-[0_12px_28px_rgb(15_64_82/15%)] dark:border-[#578e83] dark:border-t-[#80c7b3] dark:bg-[#1c443e]">
             <div className="mb-4 flex items-center justify-between gap-3">
               <svg viewBox="0 0 24 24" className="h-8 w-8 text-[#007e8d] dark:text-[#99e4c9]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7M5 9v12h14V9M9 21v-7h6v7" /></svg>
@@ -52,7 +54,7 @@ export default function ShelterDirectory() {
             </dl>
             <div aria-hidden="true" className="mt-4 h-2 overflow-hidden rounded-full bg-[#bad7cd] dark:bg-[#12343d]"><div style={{ width: `${shelter.occupied / shelter.capacity * 100}%` }} className={`h-full rounded-full ${shelter.occupied >= shelter.capacity ? "bg-[#bb7953]" : "bg-[#238c87]"}`} /></div>
           </li>)}
-        </ul> : <div className="mt-5 rounded-2xl border border-[#73aaa3] bg-[#d4eae3] p-6 dark:bg-[#1c443e]">
+        </ul> : !loading && !error && <div className="mt-5 rounded-2xl border border-[#73aaa3] bg-[#d4eae3] p-6 dark:bg-[#1c443e]">
           <p>{t("No shelters found. Try another town or add a shelter.")}</p>
           <button type="button" onClick={() => { setQuery(""); setPage(1); }} className="mt-3 rounded-lg border border-[#73aaa3] px-4 py-2 font-semibold hover:bg-[#b7ded9] dark:hover:bg-[#285c58]">{t("Clear search")}</button>
         </div>}
