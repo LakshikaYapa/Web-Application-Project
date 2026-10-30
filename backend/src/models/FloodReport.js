@@ -7,6 +7,8 @@ const schema = new mongoose.Schema({
   phone: { type: String, required: true, match: /^\+94[1-9]\d{8}$/, select: false },
   nearestTown: { type: String, required: true, trim: true, minlength: 2, maxlength: 100 },
   location: { type: String, required: true, trim: true, minlength: 2, maxlength: 300 },
+  latitude: { type: Number, min: 5.85, max: 9.95 },
+  longitude: { type: Number, min: 79.5, max: 82.05 },
   situations: {
     type: [{ type: String, enum: REPORT_SITUATIONS }],
     required: true,

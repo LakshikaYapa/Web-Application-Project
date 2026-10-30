@@ -89,9 +89,9 @@ module.exports = function createAdminRoutes() {
     const page = req.query.page === undefined ? 1 : Number(req.query.page);
     if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || (req.query.page !== undefined && typeof req.query.page !== "string")) return res.status(400).json({ success: false, code: "INVALID_PAGE" });
     try {
-      const records = await FloodReport.find({ status: "pending" }).select("situations otherSituation nearestTown location description +phone status createdAt photos.contentType")
+      const records = await FloodReport.find({ status: "pending" }).select("situations otherSituation nearestTown location description latitude longitude +phone status createdAt photos.contentType")
         .sort({ createdAt: -1, _id: -1 }).skip((page - 1) * 20).limit(21).lean();
-      const fields = ["situations", "otherSituation", "nearestTown", "location", "description", "phone", "status", "createdAt"];
+      const fields = ["situations", "otherSituation", "nearestTown", "location", "description", "latitude", "longitude", "phone", "status", "createdAt"];
       return res.json({ success: true, page, hasMore: records.length > 20, reports: records.slice(0, 20).map((record) => ({
         id: String(record._id), photoCount: record.photos?.length ?? 0,
         ...Object.fromEntries(fields.filter((key) => record[key] !== undefined).map((key) => [key, record[key]])),
