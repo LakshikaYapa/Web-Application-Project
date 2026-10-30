@@ -6,6 +6,17 @@ const VolunteerProfile = require("../models/VolunteerProfile");
 
 module.exports = function createVolunteerRoutes() {
   const router = express.Router();
+  router.get("/", async (_req, res, next) => {
+    try {
+      const records = await VolunteerProfile.find({ status: "joined" }).select("user nearestTown supportAreas.area")
+        .populate({ path: "user", select: "name", match: { status: "active" } })
+        .sort({ createdAt: -1, _id: -1 }).limit(4).lean();
+      return res.json({ success: true, volunteers: records.filter((record) => record.user).map((record) => ({
+        id: String(record._id), name: record.user.name, nearestTown: record.nearestTown,
+        supportAreas: (record.supportAreas || []).map((item) => item.area),
+      })) });
+    } catch (error) { return next(error); }
+  });
   router.get("/me", requireUser, async (req, res, next) => {
     try {
       const profile = await VolunteerProfile.findOne({ user: req.user.id }).select("nearestTown supportAreas updatedAt");
