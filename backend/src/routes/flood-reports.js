@@ -16,6 +16,31 @@ const upload = multer({
 
 module.exports = function createFloodReportRoutes() {
   const router = express.Router();
+  router.get("/", async (req, res, next) => {
+    const page = req.query.page === undefined ? 1 : Number(req.query.page);
+    if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || (req.query.page !== undefined && typeof req.query.page !== "string")) return res.status(400).json({ success: false, code: "INVALID_PAGE" });
+    try {
+      const records = await FloodReport.find({ status: "approved" }).select("nearestTown location situations otherSituation description createdAt photos.contentType")
+        .sort({ createdAt: -1, _id: -1 }).skip((page - 1) * 12).limit(13).lean();
+      const fields = ["nearestTown", "location", "situations", "otherSituation", "description", "createdAt"];
+      return res.json({ success: true, page, hasMore: records.length > 12, reports: records.slice(0, 12).map((record) => ({
+        id: String(record._id), photoCount: record.photos?.length ?? 0,
+        ...Object.fromEntries(fields.filter((key) => record[key] !== undefined).map((key) => [key, record[key]])),
+      })) });
+    } catch (error) { return next(error); }
+  });
+  router.get("/:id/photos/:index", async (req, res, next) => {
+    const { id, index } = req.params;
+    if (!/^[a-f\d]{24}$/i.test(id) || !/^[0-2]$/.test(index)) return res.status(404).json({ success: false, code: "PHOTO_NOT_FOUND" });
+    try {
+      const report = await FloodReport.findOne({ _id: id, status: "approved" }).select("+photos");
+      const photo = report?.photos?.[Number(index)];
+      if (!photo?.data?.length || !["image/jpeg", "image/png", "image/webp"].includes(photo.contentType)) return res.status(404).json({ success: false, code: "PHOTO_NOT_FOUND" });
+      res.set("X-Content-Type-Options", "nosniff");
+      res.set("Content-Disposition", "inline");
+      return res.type(photo.contentType).send(photo.data);
+    } catch (error) { return next(error); }
+  });
   router.post("/", (req, res, next) => {
     if (req.get("X-CSRF-Protection") !== "1") return res.status(403).json({ success: false, code: "CSRF_REJECTED" });
     return next();

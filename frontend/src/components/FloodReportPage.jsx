@@ -1,5 +1,6 @@
 import { useLanguage } from "../i18n/useLanguage";
 import FloodReportForm from "./FloodReportForm";
+import ApprovedFloodReports from "./ApprovedFloodReports";
 
 const reportSteps = [
   { number: "01", title: "Where is the flooding?", description: "Share the nearest town and landmarks so the location is easy to identify." },
@@ -27,7 +28,12 @@ export default function FloodReportPage() {
           <p className="leading-7 text-[#e0f4f5]">{t("Stay away from floodwater. Share only what you can observe safely, without putting yourself or others at risk.")}</p>
         </aside>
       </section>
-      <section aria-labelledby="report-details-title" className="mt-9">
+      <nav aria-label={t("Flood report sections")} className="mt-6 flex flex-wrap gap-3 rounded-2xl border border-[#79b5af] p-3 font-semibold">
+        <a href="#approved-flood-reports" className="rounded-lg px-4 py-3 hover:bg-[#cce6db] dark:hover:bg-[#224d43]">{t("Approved flood reports")}</a>
+        <a href="#submit-flood-report" className="rounded-lg px-4 py-3 hover:bg-[#cce6db] dark:hover:bg-[#224d43]">{t("Report a flood")}</a>
+      </nav>
+      <ApprovedFloodReports />
+      <section aria-labelledby="report-details-title" className="mt-12">
         <h2 id="report-details-title" className="text-2xl font-bold">{t("Details that help others")}</h2>
         <ol className="mt-5 grid list-none gap-5 p-0 min-[761px]:grid-cols-3">
           {reportSteps.map((step) => (

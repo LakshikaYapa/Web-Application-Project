@@ -1,4 +1,13 @@
 {
+  "Community updates": "ප්‍රජා තොරතුරු",
+  "Approved flood reports": "අනුමත ගංවතුර වාර්තා",
+  "Reports reviewed by our team. Check the reported date, as local conditions may have changed.": "අපේ කණ්ඩායම සමාලෝචනය කළ වාර්තා. ප්‍රදේශයේ තත්ත්වය වෙනස් වී තිබිය හැකි නිසා වාර්තා කළ දිනය බලන්න.",
+  "Unable to load flood reports. Please refresh the list.": "ගංවතුර වාර්තා ලබාගත නොහැකි විය. ලැයිස්තුව නැවත ලබාගන්න.",
+  "Loading flood reports…": "ගංවතුර වාර්තා ලබාගනිමින්…",
+  "No approved flood reports yet.": "තවම අනුමත ගංවතුර වාර්තා නැහැ.",
+  "You can share what you see using the report form below.": "ඔබ නිරීක්ෂණය කරන තත්ත්වය පහත පෝරමයෙන් වාර්තා කළ හැක.",
+  "Reported on": "වාර්තා කළ දිනය",
+  "Flood report sections": "ගංවතුර වාර්තා පිටුවේ කොටස්",
   "Donation page sections": "දායකත්ව පිටුවේ කොටස්",
   "Our community of givers": "අපේ දායක ප්‍රජාව",
   "Ways to help": "සහාය දිය හැකි ආකාර",

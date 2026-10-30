@@ -84,7 +84,7 @@ export default function FloodReportForm() {
   }
 
   return (
-    <section aria-labelledby="report-form-title" className="mt-9 rounded-[20px] border border-[#79b5af] bg-[#d9ecee] p-6 min-[761px]:p-8 dark:border-[#4b817b] dark:bg-[#173b43]">
+    <section id="submit-flood-report" aria-labelledby="report-form-title" className="mt-9 scroll-mt-6 rounded-[20px] border border-[#79b5af] bg-[#d9ecee] p-6 min-[761px]:p-8 dark:border-[#4b817b] dark:bg-[#173b43]">
       <h2 id="report-form-title" className="text-2xl font-bold">{t(saved ? "Submit a new flood report" : "Flood report details")}</h2>
       <p className="mt-2 leading-7">{t("Start with the location where you observed flooding.")}</p>
       <p className="mt-2 text-sm leading-6">{t("Sign in to submit a flood report for review.")}</p>
