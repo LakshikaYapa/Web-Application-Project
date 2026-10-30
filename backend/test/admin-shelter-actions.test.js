@@ -26,7 +26,7 @@ test("admin shelter approval and deletion enforce authorization and change publi
       return { _id: id };
     } };
   });
-  const remove = t.mock.method(Shelter, "findOneAndDelete", async (filter) => { assert.deepEqual(filter, { _id: id }); const result = record; record = null; return result; });
+  const remove = t.mock.method(Shelter, "findOneAndDelete", async (filter) => { assert.deepEqual(filter, { _id: id, status: "pending" }); if (!record || record.status !== "pending") return null; const result = record; record = null; return result; });
   t.mock.method(Shelter, "find", (filter) => {
     const query = { select() { return query; }, sort() { return query; }, skip() { return query; }, limit() { return query; }, async lean() { return record && record.status === filter.status ? [record] : []; } };
     return query;
@@ -54,8 +54,10 @@ test("admin shelter approval and deletion enforce authorization and change publi
     assert.equal((await action(approvePath, "POST")).status, 200);
     assert.equal((await publicList()).length, 1);
     const approved = await fetch(base + "/api/admin/shelters?status=approved", { headers: { Cookie: cookie } });
-    assert.equal((await approved.json()).shelters.length, 1);
+    assert.equal(approved.status, 400);
     assert.equal((await action(approvePath, "POST")).status, 409);
+    assert.equal((await action(deletePath, "DELETE")).status, 404);
+    record = { _id: id, status: "pending" };
     assert.equal((await action(deletePath, "DELETE")).status, 200);
     assert.equal((await publicList()).length, 0);
     assert.equal((await action(deletePath, "DELETE")).status, 404);

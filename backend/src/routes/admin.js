@@ -19,12 +19,11 @@ module.exports = function createAdminRoutes() {
     } catch (error) { return next(error); }
   });
   router.get("/shelters", async (req, res, next) => {
-    const status = req.query.status === undefined ? "pending" : req.query.status;
-    if (!["pending", "approved"].includes(status)) return res.status(400).json({ success: false, code: "INVALID_STATUS" });
+    if (req.query.status !== undefined && req.query.status !== "pending") return res.status(400).json({ success: false, code: "INVALID_STATUS" });
     const page = req.query.page === undefined ? 1 : Number(req.query.page);
     if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || (req.query.page !== undefined && typeof req.query.page !== "string")) return res.status(400).json({ success: false, code: "INVALID_PAGE" });
     try {
-      const records = await Shelter.find({ status }).select("name nearestTown address +phone capacity occupied facilities otherFacilities createdAt")
+      const records = await Shelter.find({ status: "pending" }).select("name nearestTown address +phone capacity occupied facilities otherFacilities createdAt")
         .sort({ createdAt: -1, _id: -1 }).skip((page - 1) * 20).limit(21).lean();
       const fields = ["name", "nearestTown", "address", "phone", "capacity", "occupied", "facilities", "otherFacilities", "createdAt"];
       return res.json({ success: true, page, hasMore: records.length > 20, shelters: records.slice(0, 20).map((record) => ({
@@ -47,7 +46,7 @@ module.exports = function createAdminRoutes() {
   });
   router.delete("/shelters/:id", protectShelterAction, async (req, res, next) => {
     try {
-      const shelter = await Shelter.findOneAndDelete({ _id: req.params.id });
+      const shelter = await Shelter.findOneAndDelete({ _id: req.params.id, status: "pending" });
       if (!shelter) return res.status(404).json({ success: false, code: "SHELTER_NOT_FOUND" });
       return res.json({ success: true });
     } catch (error) { return next(error); }
