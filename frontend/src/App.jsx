@@ -1,3 +1,4 @@
+import ApprovedHelpRequests from "./components/ApprovedHelpRequests";
 import { useLanguage } from "./i18n/useLanguage";
 import { useEffect, useState } from "react";
 import Header from "./components/Header";
@@ -86,6 +87,7 @@ function App() {
           <NearbyShelters />
           <CommunityActions />
         </div>
+        <ApprovedHelpRequests compact />
         <ShelterNeeds compact />
         <SafetyGuidance />
         <Volunteers />
