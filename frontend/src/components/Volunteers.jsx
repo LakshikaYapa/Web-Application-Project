@@ -1,17 +1,53 @@
+import { useEffect, useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
 
-const waysToHelp = [
-  { title: "Volunteers", image: "/community/food-packing.png", alt: "People packing colorful bags of food supplies around long tables indoors", description: "Give your time and skills to help communities recover.", action: "Become a volunteer", href: "/volunteer" },
-  { title: "Donators", image: "/community/supplies-distribution.png", alt: "Bags of groceries arranged on tables beneath outdoor canopies", description: "Give funds or essential supplies to support families in need.", action: "Make a contribution", href: "/funder" },
-];
+const colors = ["teal", "blue", "green", "purple"];
 
 export default function Volunteers() {
   const { t } = useLanguage();
+  const [people, setPeople] = useState(null);
+  const [error, setError] = useState(false);
+  const [retry, setRetry] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    async function load() {
+      async function getPeople(path, key, role) {
+        const response = await fetch(path, { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]) });
+        const body = await response.json();
+        if (!response.ok || !body.success || !Array.isArray(body[key])) throw new Error("Unable to load profiles");
+        const unique = new Map();
+        for (const person of body[key]) {
+          const identity = `${person.name}\u0000${person.nearestTown}`;
+          if (!unique.has(identity)) unique.set(identity, { ...person, role });
+        }
+        return [...unique.values()].slice(0, 4);
+      }
+      const results = await Promise.allSettled([
+        getPeople("/api/volunteers", "volunteers", "Volunteer"),
+        getPeople("/api/contributions", "contributions", "Donator"),
+      ]);
+      if (!controller.signal.aborted) {
+        setPeople(results.flatMap((result) => result.status === "fulfilled" ? result.value : []));
+        setError(results.some((result) => result.status === "rejected"));
+      }
+    }
+    load();
+    return () => controller.abort();
+  }, [retry]);
+
   return <section className="volunteers-section" aria-labelledby="volunteers-title">
-    <div className="volunteers-heading"><div><h2 id="volunteers-title">{t("Volunteers and donators")}</h2><p>{t("Different ways to help. One caring community.")}</p></div></div>
-    <ul className="mt-6 grid list-none gap-6 p-0 min-[761px]:grid-cols-2">{waysToHelp.map((way) => <li key={way.title} className="overflow-hidden rounded-2xl border border-[#79b5af] bg-[#edf6f2] shadow-[0_8px_24px_rgb(15_64_82/10%)] dark:border-[#416f68] dark:bg-[#173b43]">
-      <img src={way.image} alt={t(way.alt)} width="640" height="480" loading="lazy" decoding="async" className="h-60 w-full object-cover min-[761px]:h-72" />
-      <div className="p-6 min-[761px]:p-8"><h3 className="text-2xl font-bold">{t(way.title)}</h3><p className="mt-3 leading-7">{t(way.description)}</p><a href={way.href} className="mt-5 inline-flex items-center gap-5 rounded-xl bg-[#007e8d] px-5 py-3 font-bold text-white hover:bg-[#005e6b]">{t(way.action)} <span aria-hidden="true">→</span></a></div>
-    </li>)}</ul>
+    <div className="volunteers-heading"><div><h2 id="volunteers-title">{t("Volunteers and donators")}</h2><p>{t("The people supporting our communities.")}</p></div><div className="flex flex-wrap gap-3"><a href="/volunteer" className="rounded-lg border border-[#73aaa3] px-4 py-3 font-semibold">{t("Join the team")}</a><a href="/funder" className="rounded-lg bg-[#007e8d] px-4 py-3 font-bold text-white hover:bg-[#005e6b]">{t("Donate")}</a></div></div>
+    {error && <p role="alert" className="mb-4">{t("Some profiles could not be loaded.")} <button type="button" onClick={() => { setPeople(null); setError(false); setRetry((value) => value + 1); }} className="rounded border border-[#73aaa3] px-3 py-1 font-semibold">{t("Refresh list")}</button></p>}
+    {!people ? <p role="status">{t("Loading community profiles…")}</p> : <>
+      {!people.length && !error && <p>{t("Community profiles will appear here as volunteers join and contributions are approved.")}</p>}
+      <ul className="volunteer-grid">{people.map((person, index) => {
+        const initials = person.name.trim().split(/\s+/).slice(0, 2).map((part) => Array.from(part)[0]).join("").toLocaleUpperCase();
+        return <li className="volunteer-card" key={`${person.role}-${person.id}`}>
+          <div className={`volunteer-portrait portrait-${colors[index % colors.length]}`} aria-hidden="true"><span className="volunteer-initials">{initials}</span></div>
+          <div className="volunteer-details"><h3>{person.name}</h3><p>{person.nearestTown}</p><span className="volunteer-role">{t(person.role)}</span></div>
+        </li>;
+      })}</ul>
+    </>}
   </section>;
 }
