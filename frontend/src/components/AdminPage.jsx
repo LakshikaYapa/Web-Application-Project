@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
-import { adminHelpExamples } from "./adminHelpExamples";
+import { pendingHelpExamples } from "./adminHelpExamples";
 import { pendingFloodExamples } from "./adminFloodExamples";
 
 const sections = [
@@ -45,7 +45,7 @@ export default function AdminPage() {
     {loading && <p role="status">{t("Loading requests…")}</p>}
     {message && <p role="alert" className="rounded-xl border border-red-400 bg-red-50 p-5 text-red-900">{t(message)}</p>}
     {counts && <section aria-label={t("Pending requests")} className="grid gap-5 min-[600px]:grid-cols-2 min-[1000px]:grid-cols-4">{sections.map((section) => <article key={section.id} className="rounded-2xl border border-[#73aaa3] bg-[#e5f2ec]/95 p-6 text-[#153e50] shadow-lg backdrop-blur-sm dark:border-[#578e83] dark:bg-[#1c443e]/95 dark:text-[#e6f1f7]">
-      <h2 className="text-xl font-bold">{t(section.title)}</h2><p className="my-4 text-4xl font-bold tabular-nums">{counts[section.id] + (section.id === "help-requests" ? adminHelpExamples.length : section.id === "flood-reports" ? pendingFloodExamples().length : 0)}</p><p className="text-sm">{t("Pending review")}</p>
+      <h2 className="text-xl font-bold">{t(section.title)}</h2><p className="my-4 text-4xl font-bold tabular-nums">{counts[section.id] + (section.id === "help-requests" ? pendingHelpExamples().length : section.id === "flood-reports" ? pendingFloodExamples().length : 0)}</p><p className="text-sm">{t("Pending review")}</p>
       {section.id === "shelters" && <a href="/admin/shelters" className="mt-4 inline-block rounded-lg bg-[#007e8d] px-4 py-2 font-bold text-white hover:bg-[#005e6b]">{t("View shelters")} →</a>}
       {section.id === "help-requests" && <a href="/admin/help-requests" className="mt-4 inline-block rounded-lg bg-[#007e8d] px-4 py-2 font-bold text-white hover:bg-[#005e6b]">{t("View help requests")} →</a>}
       {section.id === "flood-reports" && <a href="/admin/flood-reports" className="mt-4 inline-block rounded-lg bg-[#007e8d] px-4 py-2 font-bold text-white hover:bg-[#005e6b]">{t("View flood reports")} →</a>}

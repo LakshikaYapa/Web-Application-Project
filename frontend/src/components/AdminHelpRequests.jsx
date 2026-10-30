@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
-import { adminHelpExamples } from "./adminHelpExamples";
+import { pendingHelpExamples, reviewHelpExample } from "./adminHelpExamples";
 
 
 export default function AdminHelpRequests() {
@@ -15,7 +15,8 @@ export default function AdminHelpRequests() {
   const [notice, setNotice] = useState("");
   const actionRef = useRef(null);
   const busyRef = useRef(false);
-  const requests = [...(data?.requests || []), ...(!data?.hasMore ? adminHelpExamples : [])];
+  const [examples, setExamples] = useState(pendingHelpExamples);
+  const requests = [...(data?.requests || []), ...(!data?.hasMore ? examples : [])];
   useEffect(() => () => actionRef.current?.abort(), []);
 
   useEffect(() => {
@@ -37,6 +38,13 @@ export default function AdminHelpRequests() {
   async function act(request, action) {
     if (busyRef.current) return;
     if (action === "delete" && !window.confirm(`${t("Delete this help request permanently?")}\n${request.nearestTown}`)) return;
+    if (request.id.startsWith("preview-")) {
+      reviewHelpExample(request.id);
+      setExamples((current) => current.filter((item) => item.id !== request.id));
+      setMessage("");
+      setNotice(action === "approve" ? "Help request approved." : "Help request deleted.");
+      return;
+    }
     busyRef.current = true; setActionPending(true); setMessage(""); setNotice("");
     const controller = new AbortController();
     actionRef.current = controller;
@@ -79,10 +87,10 @@ export default function AdminHelpRequests() {
           <dl className="mt-3 grid gap-4 min-[761px]:grid-cols-2">{[["Nearest town", request.nearestTown], ["Location or nearby landmark", request.location], ["Phone number", request.phone], ...(request.otherHelp ? [["Other help", request.otherHelp]] : []), ["Description", request.description]].map(([label, value]) => <div key={label} className="min-w-0"><dt className="text-sm font-bold">{t(label)}</dt><dd className="mt-1 whitespace-pre-wrap wrap-break-word leading-7">{request.id.startsWith("preview-") ? t(value) : value}</dd></div>)}</dl>
           {request.photoCount > 0 && <div className="mt-5 flex flex-wrap gap-3">{Array.from({ length: request.photoCount }, (_, index) => <a key={index} href={`/api/admin/help-requests/${request.id}/photos/${index}`} target="_blank" rel="noopener noreferrer" className="block rounded-lg focus-visible:outline-2"><img src={`/api/admin/help-requests/${request.id}/photos/${index}`} loading="lazy" alt={`${t("Request photo")} ${index + 1}`} className="h-32 w-40 rounded-lg border border-[#73aaa3] object-cover" /></a>)}</div>}
           <p className="mt-4 break-all text-xs">{t("Request reference")}: {request.id}</p>
-          {!request.id.startsWith("preview-") && <div className="mt-5 flex flex-wrap gap-3">
+          <div className="mt-5 flex flex-wrap gap-3">
             <button type="button" disabled={actionPending} onClick={() => act(request, "approve")} className="rounded-lg bg-[#007e8d] px-4 py-2 font-bold text-white disabled:opacity-50">{t("Approve request")}</button>
             <button type="button" disabled={actionPending} onClick={() => act(request, "delete")} className="rounded-lg border border-red-400 bg-red-50 px-4 py-2 font-bold text-red-800 disabled:opacity-50">{t("Delete request")}</button>
-          </div>}
+          </div>
         </details>
       </li>)}</ul>
       <nav aria-label={t("Help request pages")} className="mt-6 flex gap-5">{page > 1 && <a href={`/admin/help-requests?page=${page - 1}`}>{t("Previous")}</a>}{data.hasMore && <a href={`/admin/help-requests?page=${page + 1}`}>{t("Next")}</a>}</nav>
