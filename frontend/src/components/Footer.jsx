@@ -1,8 +1,8 @@
 import { useLanguage } from "../i18n/useLanguage";
-export default function Footer() {
+export default function Footer({ flush = false }) {
   const { t } = useLanguage();
   return (
-    <footer className="site-footer">
+    <footer className="site-footer" style={flush ? { marginTop: 0 } : undefined}>
       <div className="footer-inner">
         <a className="footer-brand" href="#page-top" aria-label={t("FloodGuard, back to top")}>
           <img src="/floodguard-logo.png" alt="" width="42" height="48" loading="lazy" />
