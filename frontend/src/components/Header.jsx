@@ -35,6 +35,12 @@ export default function Header() {
     return () => { controller.abort(); logoutRef.current?.abort(); };
   }, []);
 
+  useEffect(() => {
+    function signedIn(event) { setUser(event.detail); setCheckingSession(false); setLogoutError(false); }
+    window.addEventListener("floodguard:signed-in", signedIn);
+    return () => window.removeEventListener("floodguard:signed-in", signedIn);
+  }, []);
+
   async function logout() {
     if (logoutBusy.current) return;
     logoutBusy.current = true;

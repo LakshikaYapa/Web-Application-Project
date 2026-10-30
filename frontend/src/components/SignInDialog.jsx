@@ -53,6 +53,7 @@ export default function SignInDialog({ onClose, onRegister, onSignedIn }) {
       const body = await response.json().catch(() => ({}));
       if (response.ok && body.success) {
         setPassword("");
+        window.dispatchEvent(new CustomEvent("floodguard:signed-in", { detail: body.user }));
         onSignedIn?.(body.user);
         if (body.user?.roles?.includes("admin")) {
           window.location.assign("/admin");

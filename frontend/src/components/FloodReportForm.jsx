@@ -1,3 +1,5 @@
+import RegisterDialog from "./RegisterDialog";
+import SignInDialog from "./SignInDialog";
 import { useLanguage } from "../i18n/useLanguage";
 import { useEffect, useRef, useState } from "react";
 import FloodReportPhotos from "./FloodReportPhotos";
@@ -21,12 +23,21 @@ export default function FloodReportForm() {
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState("");
   const [saved, setSaved] = useState(null);
+  const [needsSignIn, setNeedsSignIn] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
   const pendingRef = useRef(false);
   const requestRef = useRef(null);
   const feedbackRef = useRef(null);
 
   useEffect(() => () => requestRef.current?.abort(), []);
   useEffect(() => { if (message || saved) feedbackRef.current?.focus(); }, [message, saved]);
+
+  useEffect(() => {
+    function signedIn() { setNeedsSignIn(false); setMessage(""); }
+    window.addEventListener("floodguard:signed-in", signedIn);
+    return () => window.removeEventListener("floodguard:signed-in", signedIn);
+  }, []);
 
   async function submit(event) {
     event.preventDefault();
@@ -69,9 +80,10 @@ export default function FloodReportForm() {
         setCoordinates({ latitude: "", longitude: "" });
         setPhotos([]);
       } else {
+        setNeedsSignIn(response.status === 401);
         const messages = {
           400: "Please check your report details and try again.",
-          401: "Please sign in using the page header, then submit your report again.",
+          401: "Please sign in to submit your report. Your entered details will stay here.",
           403: "Unable to submit. Reload this page and try again.",
           413: "Photos are too large. Use up to 3 images, maximum 5 MB each.",
           429: "Too many attempts. Please try again later.",
@@ -90,7 +102,6 @@ export default function FloodReportForm() {
     <section id="submit-flood-report" aria-labelledby="report-form-title" className="mt-9 scroll-mt-6 rounded-[20px] border border-[#79b5af] bg-[#d9ecee] p-6 min-[761px]:p-8 dark:border-[#4b817b] dark:bg-[#173b43]">
       <h2 id="report-form-title" className="text-2xl font-bold">{t(saved ? "Submit a new flood report" : "Flood report details")}</h2>
       <p className="mt-2 leading-7">{t("Start with the location where you observed flooding.")}</p>
-      <p className="mt-2 text-sm leading-6">{t("Sign in to submit a flood report for review.")}</p>
       {saved && <div className="mt-6 rounded-xl border border-[#73aaa3] bg-white/70 p-5 dark:bg-[#12343d]">
         <p role="status" ref={message ? undefined : feedbackRef} tabIndex={-1} className="font-semibold">{t("Flood report submitted")}. {t("You can submit a new report below.")}</p>
         <details key={saved.id} className="mt-3">
@@ -104,6 +115,9 @@ export default function FloodReportForm() {
           <ul className="mt-2 list-inside list-disc text-sm">{saved.photoNames.map((name, index) => <li key={index} className="wrap-break-word">{name}</li>)}</ul>
         </details>
       </div>}
+      {showSignIn && <SignInDialog onClose={() => setShowSignIn(false)} onRegister={() => { setShowSignIn(false); setShowRegister(true); }} onSignedIn={() => { setShowSignIn(false); setNeedsSignIn(false); setMessage(""); }} />}
+      {showRegister && <RegisterDialog onClose={() => setShowRegister(false)} onSignIn={() => { setShowRegister(false); setShowSignIn(true); }} />}
+      {needsSignIn && <button type="button" onClick={() => setShowSignIn(true)} className="mt-5 rounded-xl bg-[#007e8d] px-5 py-3 font-bold text-white">{t("Sign in")}</button>}
       <form className="mt-6" onSubmit={submit} aria-busy={pending}>
         {message && <p role="alert" ref={feedbackRef} tabIndex={-1} className="mb-5 rounded-lg border border-red-400 bg-red-50 p-4 text-red-900 dark:bg-red-950 dark:text-red-200">{t(message)}</p>}
         <fieldset disabled={pending} className="min-w-0 border-0 p-0 disabled:opacity-70">
