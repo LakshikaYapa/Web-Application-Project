@@ -40,7 +40,7 @@ export default function MyContributions() {
       <ul className="mt-6 grid list-none gap-5 p-0">{result.contributions.map((contribution) => <li key={contribution.id} className="min-w-0 rounded-2xl border border-[#73aaa3] bg-[#e1f0e9] p-5 sm:p-6 dark:border-[#578e83] dark:bg-[#1c443e]">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <h2 className="text-lg font-bold">{t("Contribution reference")}: <span className="break-all font-mono text-sm font-normal">{contribution.id}</span></h2>
-          <span className="rounded-full bg-amber-100 px-3 py-1.5 text-xs font-bold text-amber-900">{t(contribution.status === "pending_review" ? "Pending review" : contribution.status)}</span>
+          <span className="rounded-full bg-amber-100 px-3 py-1.5 text-xs font-bold text-amber-900">{t(contribution.status === "pending_review" ? "Pending review" : contribution.status === "approved" ? "Approved" : contribution.status)}</span>
         </div>
         <ul className="mt-4 flex list-none flex-wrap gap-2 p-0">{contribution.supportTypes.map((type) => <li key={type} className="rounded-lg bg-[#c1dfd1] px-3 py-1.5 text-sm dark:bg-[#315f4e]">{t(supportLabels[type] || type)}</li>)}</ul>
         {Number.isSafeInteger(contribution.amountMinor) && <p className="mt-4 text-2xl font-bold text-[#005849] dark:text-[#b4f3d5]">{new Intl.NumberFormat(locale, { style: "currency", currency: "LKR" }).format(contribution.amountMinor / 100)}</p>}

@@ -17,7 +17,7 @@ const schema = new mongoose.Schema({
     }, { _id: false }),
     select: false, required: financial,
   },
-  status: { type: String, enum: ["pending_review"], default: "pending_review" },
+  status: { type: String, enum: ["pending_review", "approved"], default: "pending_review" },
 }, { timestamps: true, strict: "throw" });
 schema.index({ contributor: 1, createdAt: -1, _id: -1 });
 module.exports = mongoose.model("Contribution", schema);

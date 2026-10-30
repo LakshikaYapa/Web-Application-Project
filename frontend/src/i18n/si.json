@@ -1,4 +1,9 @@
 {
+  "Approve contribution": "දායකත්වය අනුමත කරන්න",
+  "Delete contribution": "දායකත්වය මකන්න",
+  "Delete this contribution permanently?": "මෙම දායකත්වය ස්ථිරවම මකන්නද?",
+  "Contribution approved.": "දායකත්වය අනුමත කළා.",
+  "Contribution deleted.": "දායකත්වය මකා දැමුවා.",
   "Approve report": "වාර්තාව අනුමත කරන්න",
   "Delete report": "වාර්තාව මකන්න",
   "Delete this flood report permanently?": "මෙම ගංවතුර වාර්තාව ස්ථිරවම මකන්නද?",

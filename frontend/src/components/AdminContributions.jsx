@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
 
 const supportLabels = { financial: "Financial support", food_water: "Food and drinking water", shelter: "Shelter essentials", relief: "Relief operations", other: "Other support" };
@@ -11,6 +11,11 @@ export default function AdminContributions() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [retry, setRetry] = useState(0);
+  const [actionPending, setActionPending] = useState(false);
+  const [notice, setNotice] = useState("");
+  const actionRef = useRef(null);
+  const busyRef = useRef(false);
+  useEffect(() => () => actionRef.current?.abort(), []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -28,12 +33,39 @@ export default function AdminContributions() {
     return () => controller.abort();
   }, [page, retry]);
 
+  async function act(contribution, action) {
+    if (busyRef.current) return;
+    if (action === "delete" && !window.confirm(`${t("Delete this contribution permanently?")}\n${contribution.nearestTown}`)) return;
+    busyRef.current = true; setActionPending(true); setMessage(""); setNotice("");
+    const controller = new AbortController();
+    actionRef.current = controller;
+    try {
+      const response = await fetch(`/api/admin/contributions/${contribution.id}${action === "approve" ? "/approve" : ""}`, {
+        method: action === "approve" ? "POST" : "DELETE", headers: { "X-CSRF-Protection": "1" },
+        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]),
+      });
+      if (controller.signal.aborted) return;
+      if (!response.ok) {
+        setMessage(response.status === 401 ? "Please sign in with your administrator account." : response.status === 403 ? "This page is available to administrators only." : "The request may have changed. Refresh the list and try again.");
+        return;
+      }
+      setNotice(action === "approve" ? "Contribution approved." : "Contribution deleted.");
+      setData(null); setLoading(true); setRetry((value) => value + 1);
+    } catch {
+      if (!controller.signal.aborted) setMessage("Connection interrupted. Refresh the list to check the request status.");
+    } finally {
+      busyRef.current = false;
+      if (!controller.signal.aborted) setActionPending(false);
+    }
+  }
+
   return <main id="main" tabIndex={-1} className="mx-auto max-w-[1180px] px-4 py-8 min-[761px]:px-6">
     <a href="/admin" className="font-semibold text-[#007e8d] hover:underline dark:text-[#99e4c9]">← {t("Admin dashboard")}</a>
     <div className="my-6 flex flex-wrap items-center justify-between gap-4">
       <h1 className="text-3xl font-bold">{t("Contributions")}</h1>
-      <button type="button" disabled={loading} onClick={() => { setLoading(true); setData(null); setMessage(""); setRetry((value) => value + 1); }} className="rounded-xl bg-[#007e8d] px-5 py-3 font-bold text-white disabled:opacity-50">{t("Refresh list")}</button>
+      <button type="button" disabled={loading || actionPending} onClick={() => { setLoading(true); setData(null); setMessage(""); setRetry((value) => value + 1); }} className="rounded-xl bg-[#007e8d] px-5 py-3 font-bold text-white disabled:opacity-50">{t("Refresh list")}</button>
     </div>
+    {notice && <p role="status" className="mb-4 rounded-xl border border-[#73aaa3] p-4">{t(notice)}</p>}
     {loading && <p role="status">{t("Loading contributions…")}</p>}
     {message && <p role="alert" className="rounded-xl border border-red-400 bg-red-50 p-4 text-red-900">{t(message)}</p>}
     {data && <>
@@ -49,6 +81,10 @@ export default function AdminContributions() {
             <a href={`/api/admin/contributions/${contribution.id}/receipt?download=1`} className="rounded-lg border border-[#73aaa3] px-4 py-2 font-semibold">{t("Download receipt")}</a>
           </div>}
           <p className="mt-4 break-all text-xs">{t("Contribution reference")}: {contribution.id}</p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <button type="button" disabled={actionPending} onClick={() => act(contribution, "approve")} className="rounded-lg bg-[#007e8d] px-4 py-2 font-bold text-white disabled:opacity-50">{t("Approve contribution")}</button>
+            <button type="button" disabled={actionPending} onClick={() => act(contribution, "delete")} className="rounded-lg border border-red-400 bg-red-50 px-4 py-2 font-bold text-red-800 disabled:opacity-50">{t("Delete contribution")}</button>
+          </div>
         </details>
       </li>)}</ul>
       <nav aria-label={t("Contribution pages")} className="mt-6 flex gap-5">{page > 1 && <a href={`/admin/contributions?page=${page - 1}`}>{t("Previous")}</a>}{data.hasMore && <a href={`/admin/contributions?page=${page + 1}`}>{t("Next")}</a>}</nav>
