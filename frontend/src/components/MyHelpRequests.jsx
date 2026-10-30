@@ -43,7 +43,7 @@ export default function MyHelpRequests() {
     {error ? <p className="help-preview-note" role="alert">{t(error)}</p> : !result ? <p role="status">{t("Loading your requests…")}</p> : <>
       {!result.requests.length && <p className="help-preview-note" role="status">{t(page === 1 ? "You have not sent any help requests yet." : "No requests on this page.")}</p>}
       <ul className="my-requests-list">{result.requests.map((request) => <li className="my-request-card" key={request.id}>
-        <div className="my-requests-heading"><h2>{t(request.helpType)}</h2><span className="my-request-status">{t(({ pending: "Pending", accepted: "Accepted", completed: "Completed" })[request.status] || request.status)}</span></div>
+        <div className="my-requests-heading"><h2>{t(request.helpType)}</h2><span className="my-request-status">{t(({ pending: "Pending", approved: "Approved", accepted: "Accepted", completed: "Completed" })[request.status] || request.status)}</span></div>
         <p><strong>{t("Nearest town")}:</strong> {request.nearestTown}</p>
         {request.phone && <p><strong>{t("Phone number")}:</strong> {request.phone}</p>}
         {request.otherHelp && <p><strong>{t("What other help do you need?")}:</strong> {request.otherHelp}</p>}

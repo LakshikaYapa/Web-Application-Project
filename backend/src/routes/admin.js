@@ -55,12 +55,11 @@ module.exports = function createAdminRoutes() {
     } catch (error) { return next(error); }
   });
   router.get("/help-requests", async (req, res, next) => {
-    const status = req.query.status === undefined ? "pending" : req.query.status;
-    if (!["pending", "accepted", "completed"].includes(status)) return res.status(400).json({ success: false, code: "INVALID_STATUS" });
+    if (req.query.status !== undefined && req.query.status !== "pending") return res.status(400).json({ success: false, code: "INVALID_STATUS" });
     const page = req.query.page === undefined ? 1 : Number(req.query.page);
     if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || (req.query.page !== undefined && typeof req.query.page !== "string")) return res.status(400).json({ success: false, code: "INVALID_PAGE" });
     try {
-      const records = await HelpRequest.find({ status }).select("helpType otherHelp nearestTown location description +phone status createdAt photos.contentType")
+      const records = await HelpRequest.find({ status: "pending" }).select("helpType otherHelp nearestTown location description +phone status createdAt photos.contentType")
         .sort({ createdAt: -1, _id: -1 }).skip((page - 1) * 20).limit(21).lean();
       const fields = ["helpType", "otherHelp", "nearestTown", "location", "description", "phone", "status", "createdAt"];
       return res.json({ success: true, page, hasMore: records.length > 20, requests: records.slice(0, 20).map((record) => ({
