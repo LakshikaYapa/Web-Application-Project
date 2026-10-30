@@ -28,7 +28,7 @@ test("only active admins can list pending help requests and view their photos", 
   });
   const bytes = Buffer.from("photo bytes");
   const photoFind = t.mock.method(HelpRequest, "findOne", (filter) => {
-    assert.deepEqual(filter, { _id: id, status: "pending" });
+    assert.deepEqual(filter, { _id: id });
     return { select: async () => ({ photos: [{ contentType: "image/png", data: bytes }] }) };
   });
   try {

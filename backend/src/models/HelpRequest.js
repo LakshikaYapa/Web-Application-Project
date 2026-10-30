@@ -9,7 +9,7 @@ const schema = new mongoose.Schema({
   nearestTown: { type: String, required: true, trim: true, maxlength: 100 },
   location: { type: String, required: true, trim: true, maxlength: 300 },
   description: { type: String, required: true, trim: true, maxlength: 2000 },
-  status: { type: String, enum: ["pending"], default: "pending" },
+  status: { type: String, enum: ["pending", "accepted", "completed"], default: "pending" },
   photos: {
     type: [new mongoose.Schema({
       contentType: { type: String, enum: ["image/jpeg", "image/png", "image/webp"], required: true },
