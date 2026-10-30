@@ -68,10 +68,10 @@ function App() {
   }, []);
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className={`flex min-h-dvh flex-col ${Page === AdminPage ? "[&>.site-footer]:mt-0" : ""}`}>
       <a id="page-top" className="skip-link" href="#main">{t("Skip to content")}</a>
       <Header />
-      <div className="flex-1">
+      <div className={`flex-1 ${Page === AdminPage ? "flex flex-col [&>main]:flex-1" : ""}`}>
       {Page ? <Page /> : (
       <main id="main" className="homepage" tabIndex={-1}>
         <Hero />
