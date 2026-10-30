@@ -80,5 +80,32 @@ module.exports = function createAdminRoutes() {
       return res.type(photo.contentType).send(photo.data);
     } catch (error) { return next(error); }
   });
+  router.get("/contributions", async (req, res, next) => {
+    const page = req.query.page === undefined ? 1 : Number(req.query.page);
+    if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || (req.query.page !== undefined && typeof req.query.page !== "string")) return res.status(400).json({ success: false, code: "INVALID_PAGE" });
+    try {
+      const records = await Contribution.find({ status: "pending_review" }).select("supportTypes nearestTown +phone otherSupport notes amountMinor currency status createdAt receipt.contentType")
+        .sort({ createdAt: -1, _id: -1 }).skip((page - 1) * 20).limit(21).lean();
+      const fields = ["supportTypes", "nearestTown", "phone", "otherSupport", "notes", "amountMinor", "currency", "status", "createdAt"];
+      return res.json({ success: true, page, hasMore: records.length > 20, contributions: records.slice(0, 20).map((record) => ({
+        id: String(record._id), hasReceipt: Boolean(record.receipt?.contentType),
+        ...Object.fromEntries(fields.filter((key) => record[key] !== undefined).map((key) => [key, record[key]])),
+      })) });
+    } catch (error) { return next(error); }
+  });
+  router.get("/contributions/:id/receipt", async (req, res, next) => {
+    const { id } = req.params;
+    if (!/^[a-f\d]{24}$/i.test(id)) return res.status(404).json({ success: false, code: "RECEIPT_NOT_FOUND" });
+    try {
+      const contribution = await Contribution.findOne({ _id: id, status: "pending_review" }).select("+receipt");
+      const receipt = contribution?.receipt;
+      const extensions = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "application/pdf": "pdf" };
+      if (!receipt?.data?.length || !Object.hasOwn(extensions, receipt.contentType)) return res.status(404).json({ success: false, code: "RECEIPT_NOT_FOUND" });
+      res.set("X-Content-Type-Options", "nosniff");
+      res.set("Content-Security-Policy", "sandbox; default-src 'none'");
+      res.set("Content-Disposition", `${req.query.download === "1" ? "attachment" : "inline"}; filename="receipt-${id}.${extensions[receipt.contentType]}"`);
+      return res.type(receipt.contentType).send(receipt.data);
+    } catch (error) { return next(error); }
+  });
   return router;
 };

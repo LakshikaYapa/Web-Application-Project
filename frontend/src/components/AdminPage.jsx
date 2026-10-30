@@ -49,6 +49,7 @@ export default function AdminPage() {
       {section.id === "shelters" && <a href="/admin/shelters" className="mt-4 inline-block rounded-lg bg-[#007e8d] px-4 py-2 font-bold text-white hover:bg-[#005e6b]">{t("View shelters")} →</a>}
       {section.id === "help-requests" && <a href="/admin/help-requests" className="mt-4 inline-block rounded-lg bg-[#007e8d] px-4 py-2 font-bold text-white hover:bg-[#005e6b]">{t("View help requests")} →</a>}
       {section.id === "flood-reports" && <a href="/admin/flood-reports" className="mt-4 inline-block rounded-lg bg-[#007e8d] px-4 py-2 font-bold text-white hover:bg-[#005e6b]">{t("View flood reports")} →</a>}
+      {section.id === "contributions" && <a href="/admin/contributions" className="mt-4 inline-block rounded-lg bg-[#007e8d] px-4 py-2 font-bold text-white hover:bg-[#005e6b]">{t("View contributions")} →</a>}
     </article>)}</section>}
     </div>
   </main>;
