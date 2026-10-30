@@ -18,3 +18,19 @@ export const adminHelpExamples = [
     status: "pending", createdAt: "2026-10-30T02:00:00.000Z", photoCount: 0,
   },
 ];
+
+function reviewedExamples() {
+  try {
+    const ids = JSON.parse(sessionStorage.getItem("floodguard-reviewed-help-examples") || "[]");
+    return Array.isArray(ids) ? ids : [];
+  } catch { return []; }
+}
+
+export function pendingHelpExamples() {
+  const reviewed = reviewedExamples();
+  return adminHelpExamples.filter((request) => !reviewed.includes(request.id));
+}
+
+export function reviewHelpExample(id) {
+  try { sessionStorage.setItem("floodguard-reviewed-help-examples", JSON.stringify([...new Set([...reviewedExamples(), id])])); } catch { /* The current page still updates if storage is unavailable. */ }
+}
