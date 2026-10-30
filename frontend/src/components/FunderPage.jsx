@@ -26,7 +26,14 @@ export default function FunderPage() {
         <p>{t("Food, shelter essentials and relief supplies can help families take their next step.")}</p>
       </aside>
     </section>
-    <section id="funder-support" className="mt-10 scroll-mt-6 [&>h2]:mb-2 [&>h2]:text-[28px]" aria-labelledby="funder-support-title">
+    <nav aria-label={t("Donation page sections")} className="mt-6 flex flex-wrap gap-3 rounded-2xl border border-[#83b9b2] bg-[#edf6f2] p-3 text-sm font-semibold dark:border-[#416f68] dark:bg-[#102f34]">
+      <a href="#recent-contributions" className="rounded-xl px-4 py-3 hover:bg-[#cce6db] dark:hover:bg-[#224d43]">01 · {t("Our community of givers")}</a>
+      <a href="#funder-support" className="rounded-xl px-4 py-3 hover:bg-[#cce6db] dark:hover:bg-[#224d43]">02 · {t("Ways to help")}</a>
+      <a href="#funder-form" className="rounded-xl bg-[#007667] px-4 py-3 text-white hover:bg-[#005e53]">03 · {t("Make a contribution")}</a>
+    </nav>
+    <RecentContributions />
+    <section id="funder-support" className="mt-14 scroll-mt-6 rounded-[28px] border border-[#83b9b2] bg-[#d6e9e6] p-6 min-[761px]:p-9 dark:border-[#416f68] dark:bg-[#16383e] [&>h2]:mb-3 [&>h2]:text-[28px]" aria-labelledby="funder-support-title">
+      <p className="mb-3 text-xs font-bold tracking-[.14em] text-[#007667] uppercase dark:text-[#99e4c9]">02 · {t("Ways to help")}</p>
       <h2 id="funder-support-title">{t("Ways your support can help")}</h2>
       <p>{t("Discover the areas you could support.")}</p>
       <ul className="my-6 grid list-none gap-5 p-0 min-[761px]:grid-cols-3 [&>li]:rounded-[14px] [&>li]:border [&>li]:border-[#73aaa3] [&>li]:bg-[#d4eae3] [&>li]:p-6 [&>li]:shadow-[0_4px_12px_rgb(15_64_82/8%)] [&_h3]:mb-2.5 [&_h3]:text-lg [&_p]:m-0 [&_p]:leading-[1.7] dark:[&>li]:border-[#578e83] dark:[&>li]:bg-[#1c443e]">{supportWays.map((way) => <li key={way.number}>
@@ -34,8 +41,6 @@ export default function FunderPage() {
         <h3>{t(way.title)}</h3><p>{t(way.description)}</p>
       </li>)}</ul>
     </section>
-    <RecentContributions />
-    <p className="mt-7 text-sm leading-[1.7]">{t("Use the form below to submit your contribution details.")}</p>
     <FunderForm />
   </main>;
 }

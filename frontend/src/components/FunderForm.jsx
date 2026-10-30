@@ -90,7 +90,8 @@ export default function FunderForm() {
     if (id === "other") setOtherSupport("");
   }
 
-  return <section id="funder-form" className="mt-9 rounded-2xl border border-[#73aaa3] bg-[#d4eae3] p-5 min-[761px]:p-7 dark:border-[#578e83] dark:bg-[#1c443e]" aria-labelledby="funder-form-title">
+  return <section id="funder-form" className="mt-14 scroll-mt-6 rounded-[28px] border border-[#73aaa3] bg-[#edf6f2] p-6 shadow-[0_12px_32px_rgb(15_64_82/6%)] min-[761px]:p-9 dark:border-[#578e83] dark:bg-[#102f34]" aria-labelledby="funder-form-title">
+    <p className="mb-3 text-xs font-bold tracking-[.14em] text-[#007667] uppercase dark:text-[#99e4c9]">03 · {t("Make a contribution")}</p>
     <h2 id="funder-form-title" className="mb-3 text-[28px]">{t("Tell us how you can support")}</h2>
     <p id="funder-form-note" className="text-sm leading-[1.7]">{t("Sign in to submit your contribution details for review.")}</p>
     {saved ? <div className="mt-5 rounded-xl border border-[#73aaa3] bg-white/70 p-5 dark:bg-[#12382f]" role="status" ref={feedbackRef} tabIndex={-1}>
