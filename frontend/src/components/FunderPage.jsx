@@ -1,5 +1,6 @@
 import { useLanguage } from "../i18n/useLanguage";
 import FunderForm from "./FunderForm";
+import RecentContributions from "./RecentContributions";
 
 const supportWays = [
   { number: "01", title: "Food and drinking water", description: "Help provide meals, dry food and clean drinking water for affected families." },
@@ -33,6 +34,7 @@ export default function FunderPage() {
         <h3>{t(way.title)}</h3><p>{t(way.description)}</p>
       </li>)}</ul>
     </section>
+    <RecentContributions />
     <p className="mt-7 text-sm leading-[1.7]">{t("Use the form below to submit your contribution details.")}</p>
     <FunderForm />
   </main>;

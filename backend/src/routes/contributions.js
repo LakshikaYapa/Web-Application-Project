@@ -7,6 +7,17 @@ const Contribution = require("../models/Contribution");
 
 module.exports = function createContributionRoutes() {
   const router = express.Router();
+  router.get("/", async (_req, res, next) => {
+    try {
+      const records = await Contribution.find({ status: "approved" }).select("contributor supportTypes nearestTown amountMinor currency createdAt")
+        .populate({ path: "contributor", select: "name", match: { status: "active" } })
+        .sort({ createdAt: -1, _id: -1 }).limit(6).lean();
+      return res.json({ success: true, contributions: records.filter((record) => record.contributor).map((record) => ({
+        id: String(record._id), name: record.contributor.name, supportTypes: record.supportTypes,
+        nearestTown: record.nearestTown, amountMinor: record.amountMinor, currency: record.currency, createdAt: record.createdAt,
+      })) });
+    } catch (error) { return next(error); }
+  });
   router.get("/mine", requireUser, async (req, res, next) => {
     const page = req.query.page === undefined ? 1 : Number(req.query.page);
     if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || (req.query.page !== undefined && typeof req.query.page !== "string")) {
