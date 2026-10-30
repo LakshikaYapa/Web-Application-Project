@@ -1,5 +1,5 @@
 import { useLanguage } from "../i18n/useLanguage";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import RegisterDialog from "./RegisterDialog";
 import SignInDialog from "./SignInDialog";
 
@@ -14,6 +14,48 @@ export default function Header() {
   const { t, language, setLanguage } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
   const [authMode, setAuthMode] = useState(null);
+  const [user, setUser] = useState(null);
+  const [checkingSession, setCheckingSession] = useState(true);
+  const [signingOut, setSigningOut] = useState(false);
+  const [logoutError, setLogoutError] = useState(false);
+  const logoutRef = useRef(null);
+  const logoutBusy = useRef(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    async function checkSession() {
+      try {
+        const response = await fetch("/api/auth/me", { credentials: "same-origin", signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]) });
+        const body = await response.json();
+        if (!controller.signal.aborted && response.ok && body.success) setUser(body.user);
+      } catch { /* Sign-in remains available if the session check fails. */ }
+      finally { if (!controller.signal.aborted) setCheckingSession(false); }
+    }
+    checkSession();
+    return () => { controller.abort(); logoutRef.current?.abort(); };
+  }, []);
+
+  async function logout() {
+    if (logoutBusy.current) return;
+    logoutBusy.current = true;
+    setSigningOut(true);
+    setLogoutError(false);
+    const controller = new AbortController();
+    logoutRef.current = controller;
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST", credentials: "same-origin", headers: { "X-CSRF-Protection": "1" },
+        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]),
+      });
+      if (!response.ok) throw new Error("Logout failed");
+      window.location.assign("/");
+    } catch {
+      if (!controller.signal.aborted) setLogoutError(true);
+    } finally {
+      logoutBusy.current = false;
+      if (!controller.signal.aborted) setSigningOut(false);
+    }
+  }
   const [theme, setTheme] = useState(() => {
     try {
       const saved = localStorage.getItem("floodguard-theme");
@@ -74,9 +116,13 @@ export default function Header() {
         >
           <span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
         </button>
-        <button className="sign-in-button" type="button" onClick={() => { setMenuOpen(false); setAuthMode("signin"); }}>{t("Sign in")}</button>
+        {user ? <div className="flex flex-wrap items-center gap-3">
+          {user.roles.includes("admin") && <a href="/admin" className="text-sm font-semibold text-[#007e8d] hover:underline dark:text-[#99e4c9]">{t("Admin dashboard")}</a>}
+          <button className="sign-in-button" type="button" disabled={signingOut} onClick={logout}>{t(signingOut ? "Signing out…" : "Logout")}</button>
+        </div> : <button className="sign-in-button" type="button" disabled={checkingSession} onClick={() => { setMenuOpen(false); setAuthMode("signin"); }}>{t(checkingSession ? "Checking session…" : "Sign in")}</button>}
       </div>
-      {authMode === "signin" && <SignInDialog onClose={() => setAuthMode(null)} onRegister={() => setAuthMode("register")} />}
+      {logoutError && <p role="alert" className="mx-auto max-w-[1180px] px-4 pb-3 text-sm text-red-800 dark:text-red-200">{t("Unable to sign out. Please try again.")}</p>}
+      {authMode === "signin" && <SignInDialog onClose={() => setAuthMode(null)} onRegister={() => setAuthMode("register")} onSignedIn={(account) => { setUser(account); setCheckingSession(false); setLogoutError(false); }} />}
       {authMode === "register" && <RegisterDialog onClose={() => setAuthMode(null)} onSignIn={() => setAuthMode("signin")} />}
     </header>
   );

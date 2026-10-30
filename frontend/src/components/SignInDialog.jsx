@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
 import AuthIntro from "./AuthIntro";
 
-export default function SignInDialog({ onClose, onRegister }) {
+export default function SignInDialog({ onClose, onRegister, onSignedIn }) {
   const { t } = useLanguage();
   const dialogRef = useRef(null);
   const requestRef = useRef(null);
@@ -53,6 +53,7 @@ export default function SignInDialog({ onClose, onRegister }) {
       const body = await response.json().catch(() => ({}));
       if (response.ok && body.success) {
         setPassword("");
+        onSignedIn?.(body.user);
         if (body.user?.roles?.includes("admin")) {
           window.location.assign("/admin");
           return;

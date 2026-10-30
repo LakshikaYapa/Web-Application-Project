@@ -1,4 +1,8 @@
 {
+  "Logout": "ඉවත් වන්න",
+  "Signing out…": "ඉවත් වෙමින්…",
+  "Checking session…": "පිවිසුම පරීක්ෂා කරමින්…",
+  "Unable to sign out. Please try again.": "ගිණුමෙන් ඉවත් විය නොහැකි විය. නැවත උත්සාහ කරන්න.",
   "Support your community": "ඔබේ ප්‍රජාවට සහාය වන්න",
   "Approved help requests": "අනුමත උදව් ඉල්ලීම්",
   "Volunteers and donors can take a request. Everyone can see whether someone has already taken it.": "ස්වේච්ඡා සේවකයන්ට සහ දායකයන්ට ඉල්ලීමක් භාරගත හැක. එය දැනටමත් භාරගෙන තිබේද යන්න සැමට පෙන්වනවා.",
