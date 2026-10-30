@@ -20,8 +20,10 @@ import AddShelterPage from "./components/AddShelterPage";
 import ShelterDirectory from "./components/ShelterDirectory";
 import AdminPage from "./components/AdminPage";
 import AdminShelters from "./components/AdminShelters";
+import AdminHelpRequests from "./components/AdminHelpRequests";
 
 const pages = {
+  "/admin/help-requests": AdminHelpRequests,
   "/admin/shelters": AdminShelters,
   "/admin": AdminPage,
   "/shelters": ShelterDirectory,

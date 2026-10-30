@@ -44,6 +44,7 @@ export default function AdminPage() {
     {counts && <section aria-label={t("Pending requests")} className="grid gap-5 min-[600px]:grid-cols-2 min-[1000px]:grid-cols-4">{sections.map((section) => <article key={section.id} className="rounded-2xl border border-[#73aaa3] bg-[#d4eae3] p-6 shadow-sm dark:border-[#578e83] dark:bg-[#1c443e]">
       <h2 className="text-xl font-bold">{t(section.title)}</h2><p className="my-4 text-4xl font-bold tabular-nums">{counts[section.id]}</p><p className="text-sm">{t("Pending review")}</p>
       {section.id === "shelters" && <a href="/admin/shelters" className="mt-4 inline-block rounded-lg bg-[#007e8d] px-4 py-2 font-bold text-white hover:bg-[#005e6b]">{t("View shelters")} →</a>}
+      {section.id === "help-requests" && <a href="/admin/help-requests" className="mt-4 inline-block rounded-lg bg-[#007e8d] px-4 py-2 font-bold text-white hover:bg-[#005e6b]">{t("View help requests")} →</a>}
     </article>)}</section>}
   </main>;
 }
