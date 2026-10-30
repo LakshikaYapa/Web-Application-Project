@@ -1,6 +1,13 @@
 import { useLanguage } from "../i18n/useLanguage";
 import FunderForm from "./FunderForm";
 import RecentContributions from "./RecentContributions";
+import { useEffect, useState } from "react";
+
+const pageSections = [
+  { id: "recent-contributions", label: "Our community of givers", number: "01" },
+  { id: "funder-support", label: "Ways to help", number: "02" },
+  { id: "funder-form", label: "Make a contribution", number: "03" },
+];
 
 const supportWays = [
   { number: "01", title: "Food and drinking water", description: "Help provide meals, dry food and clean drinking water for affected families." },
@@ -10,6 +17,30 @@ const supportWays = [
 
 export default function FunderPage() {
   const { t } = useLanguage();
+  const [activeSection, setActiveSection] = useState(pageSections[0].id);
+
+  useEffect(() => {
+    let frame;
+    function updateSection() {
+      let current = pageSections[0].id;
+      for (const section of pageSections) {
+        if (document.getElementById(section.id)?.getBoundingClientRect().top <= window.innerHeight * 0.35) current = section.id;
+      }
+      setActiveSection(current);
+    }
+    function scheduleUpdate() {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(updateSection);
+    }
+    scheduleUpdate();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
+  }, []);
   return <main id="main" className="mx-auto max-w-[1180px] px-4 pt-6 pb-10 min-[761px]:px-6 min-[761px]:pt-[30px] min-[761px]:pb-14" tabIndex={-1}>
     <a className="mb-4 inline-block text-[#007e8d] dark:text-[#99e4c9]" href="/">← {t("Back to homepage")}</a>
     <a className="mb-4 ml-6 inline-block font-semibold text-[#007667] hover:underline dark:text-[#99e4c9]" href="/my-contributions">{t("My contributions")}</a>
@@ -27,9 +58,7 @@ export default function FunderPage() {
       </aside>
     </section>
     <nav aria-label={t("Donation page sections")} className="mt-6 flex flex-wrap gap-3 rounded-2xl border border-[#83b9b2] bg-[#edf6f2] p-3 text-sm font-semibold dark:border-[#416f68] dark:bg-[#102f34]">
-      <a href="#recent-contributions" className="rounded-xl px-4 py-3 hover:bg-[#cce6db] dark:hover:bg-[#224d43]">01 · {t("Our community of givers")}</a>
-      <a href="#funder-support" className="rounded-xl px-4 py-3 hover:bg-[#cce6db] dark:hover:bg-[#224d43]">02 · {t("Ways to help")}</a>
-      <a href="#funder-form" className="rounded-xl bg-[#007667] px-4 py-3 text-white hover:bg-[#005e53]">03 · {t("Make a contribution")}</a>
+      {pageSections.map((section) => <a key={section.id} href={`#${section.id}`} aria-current={activeSection === section.id ? "location" : undefined} onClick={() => setActiveSection(section.id)} className={`rounded-xl px-4 py-3 ${activeSection === section.id ? "bg-[#007667] text-white hover:bg-[#005e53]" : "hover:bg-[#cce6db] dark:hover:bg-[#224d43]"}`}>{section.number} · {t(section.label)}</a>)}
     </nav>
     <RecentContributions />
     <section id="funder-support" className="mt-14 scroll-mt-6 rounded-[28px] border border-[#83b9b2] bg-[#d6e9e6] p-6 min-[761px]:p-9 dark:border-[#416f68] dark:bg-[#16383e] [&>h2]:mb-3 [&>h2]:text-[28px]" aria-labelledby="funder-support-title">
