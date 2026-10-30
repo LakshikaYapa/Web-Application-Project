@@ -19,7 +19,7 @@ const schema = new mongoose.Schema({
     required() { return this.situations.includes("other"); },
   },
   description: { type: String, required: true, trim: true, minlength: 10, maxlength: 2000 },
-  status: { type: String, enum: ["pending"], default: "pending" },
+  status: { type: String, enum: ["pending", "approved"], default: "pending" },
   photos: {
     type: [new mongoose.Schema({
       contentType: { type: String, enum: ["image/jpeg", "image/png", "image/webp"], required: true },

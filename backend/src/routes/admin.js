@@ -5,6 +5,7 @@ const { FloodReport } = require("../models/FloodReport");
 const { Shelter } = require("../models/Shelter");
 const Contribution = require("../models/Contribution");
 const adminHelpActions = require("./admin-help-actions");
+const adminFloodActions = require("./admin-flood-actions");
 
 module.exports = function createAdminRoutes() {
   const router = express.Router();
@@ -13,6 +14,7 @@ module.exports = function createAdminRoutes() {
     return next();
   });
   router.use(adminHelpActions());
+  router.use(adminFloodActions());
   router.get("/dashboard", async (req, res, next) => {
     try {
       const sections = [["help-requests", HelpRequest, "pending"], ["flood-reports", FloodReport, "pending"], ["shelters", Shelter, "pending"], ["contributions", Contribution, "pending_review"]];

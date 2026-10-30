@@ -1,4 +1,10 @@
 {
+  "Approve report": "වාර්තාව අනුමත කරන්න",
+  "Delete report": "වාර්තාව මකන්න",
+  "Delete this flood report permanently?": "මෙම ගංවතුර වාර්තාව ස්ථිරවම මකන්නද?",
+  "Flood report approved.": "ගංවතුර වාර්තාව අනුමත කළා.",
+  "Flood report deleted.": "ගංවතුර වාර්තාව මකා දැමුවා.",
+  "No pending flood reports.": "සමාලෝචනයට ගංවතුර වාර්තා නැහැ.",
   "Approve request": "ඉල්ලීම අනුමත කරන්න",
   "Help request approved.": "උදව් ඉල්ලීම අනුමත කළා.",
   "Accepted": "භාරගත්තා",
