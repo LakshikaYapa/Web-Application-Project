@@ -32,7 +32,8 @@ export default function ShelterNeeds() {
           <p>{t("Help us provide essential items to support affected communities.")}</p>
         </div>
         <div className="volunteers-actions">
-          <button type="button" disabled aria-describedby="shelter-needs-note">{t("View all needs")}<span aria-hidden="true">→</span></button>
+          <a href="/shelters#shelter-needs-title" className="rounded-lg border border-[#73aaa3] px-4 py-2 font-semibold text-[#007e8d] dark:text-[#99e4c9]">{t("View all needs")} →</a>
+          <a href="/shelters#shelter-supply-request" className="rounded-lg bg-[#007e8d] px-4 py-2 font-bold text-white hover:bg-[#005e6b]">{t("Request supplies")}</a>
         </div>
       </div>
       <ul className="shelter-needs-grid">
@@ -46,11 +47,11 @@ export default function ShelterNeeds() {
                 <span className={`need-priority ${high ? "priority-high" : "priority-medium"}`}>{t(priority)} <span className="sr-only">{t("(demo)")}</span></span>
               </div>
             </div>
-            <button type="button" disabled aria-describedby="shelter-needs-note">{t("Donate supplies")}<span aria-hidden="true">→</span></button>
+            <a href="/funder#funder-form" className="mt-4 flex items-center justify-between rounded-lg bg-[#007e8d] px-4 py-3 font-bold text-white hover:bg-[#005e6b]">{t("Donate supplies")}<span aria-hidden="true">→</span></a>
           </li>
         ))}
       </ul>
-      <p className="volunteers-note" id="shelter-needs-note">{t("Sample items and priorities, not verified shelter requests. Supply donations coming soon.")}</p>
+      <p className="volunteers-note" id="shelter-needs-note">{t("Sample shelter supply needs. Contact the shelter to confirm current requirements.")}</p>
     </section>
   );
 }

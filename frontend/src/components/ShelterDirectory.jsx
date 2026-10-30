@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
+import ShelterNeeds from "./ShelterNeeds";
+import ShelterSupplyRequestForm from "./ShelterSupplyRequestForm";
 import { useShelters } from "./useShelters";
 import { sampleShelters } from "./sampleShelters";
 
@@ -64,6 +66,8 @@ export default function ShelterDirectory() {
           <button type="button" disabled={!hasMore} onClick={() => setPage((value) => value + 1)} className="rounded-lg border border-[#73aaa3] px-4 py-2 disabled:opacity-40">{t("Next")}</button>
         </nav>}
       </section>
+      <ShelterNeeds />
+      <ShelterSupplyRequestForm />
     </main>
   );
 }
