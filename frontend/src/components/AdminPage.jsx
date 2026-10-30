@@ -34,7 +34,7 @@ export default function AdminPage() {
 
   function refresh() { setLoading(true); setMessage(""); setCounts(null); setRetry((value) => value + 1); }
 
-  return <main id="main" tabIndex={-1} className="min-h-[80vh] bg-[#12343d] bg-[linear-gradient(rgba(4,20,24,.35),rgba(4,20,24,.35)),url('/admin-background.jpg')] bg-cover bg-position-[center_65%] bg-no-repeat text-white">
+  return <main id="main" tabIndex={-1} className="min-h-[80vh] bg-[#12343d] bg-[linear-gradient(rgba(4,20,24,.18),rgba(4,20,24,.18)),url('/admin-dashboard-background.png')] bg-cover bg-center bg-no-repeat text-white">
     <div className="mx-auto max-w-[1180px] px-4 py-8 min-[761px]:px-6 min-[761px]:py-12">
     <a href="/" className="font-semibold text-[#b5ead9] hover:underline">← {t("Back to homepage")}</a>
     <div className="my-6 flex flex-wrap items-center justify-between gap-4">
