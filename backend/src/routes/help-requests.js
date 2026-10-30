@@ -3,9 +3,11 @@ const { rateLimit } = require("express-rate-limit");
 const { requireUser } = require("../controllers/session");
 const { HelpRequest, HELP_TYPES } = require("../models/HelpRequest");
 const { helpPhotos } = require("../validation/help-photos");
+const publicHelpRoutes = require("./public-help-requests");
 
 module.exports = function createHelpRequestRoutes() {
   const router = express.Router();
+  router.use(publicHelpRoutes());
   router.get("/mine", requireUser, async (req, res, next) => {
     const page = req.query.page === undefined ? 1 : Number(req.query.page);
     if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || (req.query.page !== undefined && typeof req.query.page !== "string")) {

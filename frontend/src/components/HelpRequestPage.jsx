@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
+import ApprovedHelpRequests from "./ApprovedHelpRequests";
 
 const helpTypes = ["Food and drinking water", "Shelter", "Rescue or transport", "Medical assistance", "Other help"];
 
@@ -101,6 +102,10 @@ export default function HelpRequestPage() {
       <h1>{t("Request help")}</h1>
       <a className="help-back" href="/my-requests">{t("My help requests")}</a>
       <p>{t("Tell us what support you need and where you are.")}</p>
+      <nav aria-label={t("Help page sections")} className="mt-6 flex flex-wrap gap-3 rounded-2xl border border-[#79b5af] p-3 font-semibold"><a href="#approved-help-requests" className="rounded-lg px-4 py-3 hover:bg-[#cce6db] dark:hover:bg-[#224d43]">{t("Approved help requests")}</a><a href="#submit-help-request" className="rounded-lg px-4 py-3 hover:bg-[#cce6db] dark:hover:bg-[#224d43]">{t("Request help")}</a></nav>
+      <ApprovedHelpRequests />
+      <section id="submit-help-request" className="scroll-mt-6" aria-labelledby="new-help-title">
+      <h2 id="new-help-title" className="mb-4 text-2xl font-bold">{t("Send a new help request")}</h2>
       {saved ? <section className="help-preview-note" role="status" ref={feedbackRef} tabIndex={-1}>
         <h2>{t("Help request saved")}</h2>
         <p>{t("Your request is pending. This does not confirm that help has been dispatched.")}</p>
@@ -142,6 +147,7 @@ export default function HelpRequestPage() {
         <button className="register-submit" type="submit" disabled={pending}>{t(pending ? "Sending request…" : "Send request")}</button>
       </fieldset>
       </form>}
+      </section>
     </main>
   );
 }

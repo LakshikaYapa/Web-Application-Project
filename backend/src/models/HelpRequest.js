@@ -10,6 +10,8 @@ const schema = new mongoose.Schema({
   location: { type: String, required: true, trim: true, maxlength: 300 },
   description: { type: String, required: true, trim: true, maxlength: 2000 },
   status: { type: String, enum: ["pending", "approved"], default: "pending" },
+  claimedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null, select: false },
+  claimedAt: { type: Date },
   photos: {
     type: [new mongoose.Schema({
       contentType: { type: String, enum: ["image/jpeg", "image/png", "image/webp"], required: true },
