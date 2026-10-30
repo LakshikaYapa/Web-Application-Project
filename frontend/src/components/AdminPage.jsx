@@ -34,7 +34,7 @@ export default function AdminPage() {
 
   function refresh() { setLoading(true); setMessage(""); setCounts(null); setRetry((value) => value + 1); }
 
-  return <main id="main" tabIndex={-1} className="min-h-[80vh] bg-[#e5efed] bg-[linear-gradient(180deg,rgba(237,246,244,.94),rgba(237,246,244,.7)),url('/admin-background.jpg')] bg-cover bg-top bg-no-repeat dark:bg-[#12343d] dark:bg-[linear-gradient(180deg,rgba(8,29,38,.93),rgba(8,29,38,.72)),url('/admin-background.jpg')]">
+  return <main id="main" tabIndex={-1} className="min-h-[80vh] bg-[#e5efed] dark:bg-[#12343d]">
     <div className="mx-auto max-w-[1180px] px-4 py-8 min-[761px]:px-6 min-[761px]:py-12">
     <a href="/" className="font-semibold text-[#007e8d] hover:underline dark:text-[#99e4c9]">← {t("Back to homepage")}</a>
     <div className="my-6 flex flex-wrap items-center justify-between gap-4">
