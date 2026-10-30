@@ -97,14 +97,14 @@ export default function HelpRequestPage() {
   }
 
   return (
-    <main id="main" className="help-request-page" tabIndex={-1}>
+    <main id="main" className="mx-auto w-full max-w-6xl px-5 py-10" tabIndex={-1}>
       <a className="help-back" href="/">← {t("Back to homepage")}</a>
-      <h1>{t("Request help")}</h1>
+      <h1 className="mb-4 text-4xl font-bold">{t("Request help")}</h1>
       <a className="help-back" href="/my-requests">{t("My help requests")}</a>
       <p>{t("Tell us what support you need and where you are.")}</p>
-      <nav aria-label={t("Help page sections")} className="mt-6 flex flex-wrap gap-3 rounded-2xl border border-[#79b5af] p-3 font-semibold"><a href="#approved-help-requests" className="rounded-lg px-4 py-3 hover:bg-[#cce6db] dark:hover:bg-[#224d43]">{t("Approved help requests")}</a><a href="#submit-help-request" className="rounded-lg px-4 py-3 hover:bg-[#cce6db] dark:hover:bg-[#224d43]">{t("Request help")}</a></nav>
       <ApprovedHelpRequests />
-      <section id="submit-help-request" className="scroll-mt-6" aria-labelledby="new-help-title">
+      <section id="submit-help-request" className="mt-10 scroll-mt-6 rounded-[28px] border border-[#79b5af] bg-white p-6 min-[761px]:p-9 dark:bg-[#102f34]" aria-labelledby="new-help-title">
+      <p className="mb-3 text-xs font-bold tracking-widest text-[#007e8d] dark:text-[#99e4c9]">02 &#183; {t("Request help")}</p>
       <h2 id="new-help-title" className="mb-4 text-2xl font-bold">{t("Send a new help request")}</h2>
       {saved ? <section className="help-preview-note" role="status" ref={feedbackRef} tabIndex={-1}>
         <h2>{t("Help request saved")}</h2>
