@@ -28,7 +28,16 @@ export default function Volunteers() {
         getPeople("/api/contributions", "contributions", "Donator"),
       ]);
       if (!controller.signal.aborted) {
-        setPeople(results.flatMap((result) => result.status === "fulfilled" ? result.value : []));
+        const combined = new Map();
+        const normalize = (value) => String(value || "").normalize("NFKC").trim().replace(/\s+/g, " ").toLocaleLowerCase();
+        for (const person of results.flatMap((result) => result.status === "fulfilled" ? result.value : [])) {
+          const identity = JSON.stringify([normalize(person.name), normalize(person.nearestTown)]);
+          const existing = combined.get(identity);
+          if (existing) {
+            if (!existing.roles.includes(person.role)) existing.roles.push(person.role);
+          } else combined.set(identity, { ...person, identity, roles: [person.role] });
+        }
+        setPeople([...combined.values()]);
         setError(results.some((result) => result.status === "rejected"));
       }
     }
@@ -43,9 +52,9 @@ export default function Volunteers() {
       {!people.length && !error && <p>{t("Community profiles will appear here as volunteers join and contributions are approved.")}</p>}
       <ul className="volunteer-grid">{people.map((person, index) => {
         const initials = person.name.trim().split(/\s+/).slice(0, 2).map((part) => Array.from(part)[0]).join("").toLocaleUpperCase();
-        return <li className="volunteer-card" key={`${person.role}-${person.id}`}>
+        return <li className="volunteer-card" key={person.identity}>
           <div className={`volunteer-portrait portrait-${colors[index % colors.length]}`} aria-hidden="true"><span className="volunteer-initials">{initials}</span></div>
-          <div className="volunteer-details"><h3>{person.name}</h3><p>{person.nearestTown}</p><span className="volunteer-role">{t(person.role)}</span></div>
+          <div className="volunteer-details"><h3>{person.name}</h3><p>{person.nearestTown}</p><span className="volunteer-role">{person.roles.map((role) => t(role)).join(" & ")}</span></div>
         </li>;
       })}</ul>
     </>}
