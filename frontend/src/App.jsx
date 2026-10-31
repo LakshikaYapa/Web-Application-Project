@@ -1,3 +1,4 @@
+import ApprovedFloodReports from "./components/ApprovedFloodReports";
 import { useLanguage } from "./i18n/useLanguage";
 import { useEffect, useState } from "react";
 import Header from "./components/Header";
@@ -88,6 +89,7 @@ function App() {
         </div>
         <Volunteers />
         <CommunityGallery />
+        <ApprovedFloodReports compact />
         <ShelterNeeds />
         <SafetyGuidance />
         <p role="status" className="connection-status">{t(message)}</p>
