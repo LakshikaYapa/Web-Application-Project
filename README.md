@@ -6,6 +6,10 @@ FloodGuard connects people affected by floods with volunteers, donors and shelte
 
 This README describes the implementation on the branch containing it. Older branches may not contain every feature below.
 
+**Project status:** Active development / local demonstration. The repository includes working community workflows and retained starter data. It does not claim to be a deployed emergency service or a bank payment processor.
+
+**Quick start:** With Docker Desktop running, use `docker compose up --build --wait` from the repository root and open http://localhost:8080. See [Docker setup](#docker-setup) for database persistence and configuration. For Vite live reload or Atlas, follow [Local setup](#local-setup).
+
 ## Contents
 
 - [Features](#features)
@@ -21,6 +25,9 @@ This README describes the implementation on the branch containing it. Older bran
 - [Troubleshooting](#troubleshooting)
 - [Current scope and limitations](#current-scope-and-limitations)
 - [Repository structure](#repository-structure)
+- [Development and contributions](#development-and-contributions)
+- [Support and security reporting](#support-and-security-reporting)
+- [License and acknowledgements](#license-and-acknowledgements)
 
 ## Features
 
@@ -405,3 +412,62 @@ Backend tests cover registration, sessions, validation, privacy, submissions, re
 ```
 
 Use feature branches and review/test changes before merging into `dev`. Keep credentials, private user information and local report documents out of commits.
+
+## Development and contributions
+
+### Working on a change
+
+1. Fetch the latest remote history and start from the agreed integration base. Work in a dedicated feature or fix branch.
+2. Install dependencies with `npm ci` in both `frontend/` and `backend/`. These are separate applications; there is no root npm workspace or root test script.
+3. Keep a change focused. Update both frontend and backend when changing an API contract, and update this guide if setup or behavior changes.
+4. Add meaningful tests for changed validation, permissions, data access or workflows. Run the checks under [Testing and CI](#testing-and-ci).
+5. Check `git diff` and stage only intended files. Never include `.env`, user uploads, real receipts or local report documents.
+6. Open a pull request into `dev` describing the problem, resulting behavior and validation. Resolve conflicts without reverting newer features; review before merging.
+
+Multiple feature branches in this repository share history, and some changes were cherry-picked. Compare their contents before merging; merging every old branch is not required to obtain the latest implementation.
+
+### Available commands
+
+Run these inside the specified directory:
+
+| Directory | Command | Purpose |
+| --- | --- | --- |
+| `frontend` | `npm run dev` | Vite development server with live reload |
+| `frontend` | `npm run build` | Compile production assets into `dist/` |
+| `frontend` | `npm run preview` | Preview built frontend assets locally; not a production server |
+| `frontend` | `npm run lint` | ESLint checks |
+| `backend` | `npm run dev` | Development backend with nodemon |
+| `backend` | `npm start` | Run the backend without nodemon |
+| `backend` | `npm test` | Automated backend test suite |
+
+Use the documented Vite development proxy or Docker/Nginx setup when testing the full application. Previewing frontend assets alone does not start the backend or MongoDB.
+
+### Review checklist
+
+- Test public access and the appropriate signed-in roles, including rejected actions.
+- Check loading, empty and failure states as well as successful submissions.
+- Verify both language modes and narrow/wide layouts for UI changes.
+- Keep private fields out of public responses and do not trust client-supplied ownership or approval status.
+- Update API examples and configuration instructions when they change.
+
+## Support and security reporting
+
+For reproducible bugs or feature requests, use the repository's [GitHub Issues](https://github.com/LakshikaYapa/Web-Application-Project/issues). Include the branch/commit, local or Docker setup, steps to reproduce, expected behavior and sanitized error output. A screenshot can help explain a UI issue.
+
+Do not put passwords, connection strings, session cookies, personal contact details or private receipts into an issue or screenshot. For a security-sensitive finding, contact the repository owner privately through an established project contact instead of publishing exploit details in a public issue. This repository currently has no separate published security policy or dedicated reporting address.
+
+Useful implementation references:
+
+- [Backend configuration template](backend/.env.example)
+- [Application routes and middleware](backend/src/app.js)
+- [Backend route implementations](backend/src/routes)
+- [Database models](backend/src/models)
+- [Automated tests](backend/test)
+- [CI workflow](.github/workflows/ci.yml)
+- [Local container configuration](compose.yaml)
+
+## License and acknowledgements
+
+There is currently no repository-level `LICENSE` file. The backend package metadata declares `ISC`, but this README does not assign a new license to the whole application or its image assets. The project owner should confirm the intended repository license and add the appropriate license text.
+
+Map data and tiles are provided by [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), with attribution displayed on the map. FloodGuard uses open-source libraries including React, Vite, Tailwind CSS, Leaflet, Express, Mongoose and Multer; their respective licenses apply. The application also contains demonstration/AI-created imagery and externally sourced visual assets; asset origins and reuse permissions should be reviewed before publishing or redistributing them.
