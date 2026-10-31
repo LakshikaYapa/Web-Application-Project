@@ -54,7 +54,7 @@ export default function Volunteers() {
       <ul className="volunteer-grid">{people.map((person, index) => {
         const initials = person.name.trim().split(/\s+/).slice(0, 2).map((part) => Array.from(part)[0]).join("").toLocaleUpperCase();
         return <li className="volunteer-card" key={person.identity}>
-          <div className={`relative volunteer-portrait portrait-${colors[index % colors.length]}`} aria-hidden="true"><span className="volunteer-initials">{initials}</span>{person.photoUrl && <img src={person.photoUrl} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" onError={(event) => { event.currentTarget.hidden = true; }} />}</div>
+          <div className={`relative volunteer-portrait portrait-${colors[index % colors.length]}`} aria-hidden="true"><span className="volunteer-initials">{initials}</span>{person.photoUrl && <img src={person.photoUrl} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover object-top" onError={(event) => { event.currentTarget.hidden = true; }} />}</div>
           <div className="volunteer-details"><h3>{person.name}</h3><p>{person.nearestTown}</p><span className="volunteer-role">{person.roles.map((role) => t(role)).join(" & ")}</span></div>
         </li>;
       })}</ul>
