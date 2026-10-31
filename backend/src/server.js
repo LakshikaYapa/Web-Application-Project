@@ -8,6 +8,7 @@ require("dotenv").config({
 const mongoose = require("mongoose");
 const connectDatabase = require("./config/db");
 const User = require("./models/User");
+const VolunteerProfile = require("./models/VolunteerProfile");
 const { createApp } = require("./app");
 const { MongoStore } = require("connect-mongo");
 const PORT = process.env.PORT || 5000;
@@ -18,6 +19,7 @@ async function startServer() {
     if (!sessionSecret || sessionSecret.length < 32) throw new Error("SESSION_SECRET must contain at least 32 characters.");
     await connectDatabase();
     await User.init();
+    await VolunteerProfile.init();
     const sessionStore = MongoStore.create({ client: mongoose.connection.getClient(), dbName: mongoose.connection.name, collectionName: "sessions" });
     sessionStore.on("error", () => console.error("Session storage error."));
     const app = createApp({

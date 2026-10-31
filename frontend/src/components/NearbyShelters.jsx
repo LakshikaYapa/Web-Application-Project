@@ -1,9 +1,6 @@
 import { useLanguage } from "../i18n/useLanguage";
-const shelters = [
-  { name: "Demo Community Hall", district: "Kandy", occupied: 120, capacity: 200 },
-  { name: "Demo School Shelter", district: "Gampaha", occupied: 80, capacity: 100 },
-  { name: "Demo Sports Centre", district: "Peradeniya", occupied: 300, capacity: 300 },
-];
+import { useShelters } from "./useShelters";
+import { sampleShelters } from "./sampleShelters";
 
 function ShelterIcon() {
   return (
@@ -15,34 +12,33 @@ function ShelterIcon() {
 
 export default function NearbyShelters() {
   const { t } = useLanguage();
+  const { shelters, loading, error, refresh } = useShelters();
   return (
     <section className="shelters-card" aria-labelledby="shelters-title">
       <div className="flood-map-heading">
-        <h2 id="shelters-title"><ShelterIcon />{t("Nearby shelters")}</h2>
-        <span className="demo-badge">{t("Demo data")}</span>
+        <h2 id="shelters-title"><ShelterIcon />{t("Shelters")}</h2>
       </div>
-      <p className="shelters-intro">{t("Sample shelter locations and available spaces.")}</p>
+      <p className="shelters-intro">{t("Recently added community shelters.")}</p>
+      <a href="/add-shelter" className="mb-3 inline-block rounded-lg border border-[#73aaa3] px-4 py-2 font-semibold text-[#007e8d] hover:bg-[#d4eae3] dark:text-[#99e4c9] dark:hover:bg-[#285c58]">+ {t("Add a shelter")}</a>
+      {loading ? <p role="status">{t("Loading shelters…")}</p> : error ? <div role="alert"><p>{t("Unable to load shelters. Please refresh the list.")}</p><button type="button" onClick={refresh} className="my-2 rounded border border-[#73aaa3] px-3 py-2">{t("Refresh list")}</button></div> : null}
       <ul className="shelter-list">
-        {shelters.map(({ name, district, occupied, capacity }) => {
-          const full = occupied >= capacity;
+        {[...(!loading && !error ? shelters.slice(0, 3) : []), ...sampleShelters].map(({ id, name, nearestTown, occupied, capacity }) => {
           return (
-            <li className="shelter-row" key={name}>
+            <li className="shelter-row" key={id}>
               <span className="shelter-icon"><ShelterIcon /></span>
               <div className="shelter-info">
-                <h3>{t(name)}</h3>
-                <p>{t(district)}</p>
+                <h3>{id.startsWith("sample-") ? t(name) : name}</h3>
+                <p>{id.startsWith("sample-") ? t(nearestTown) : nearestTown}</p>
               </div>
               <div className="shelter-capacity">
                 <span aria-label={`${t("Spaces occupied")}: ${occupied} / ${capacity}`}>{occupied} / {capacity}</span>
-                <span className={`shelter-status ${full ? "is-full" : "is-open"}`}>{full ? t("Full") : t("Open")}</span>
+                <span className={`shelter-status ${occupied >= capacity ? "is-full" : "is-open"}`}>{t(occupied >= capacity ? "Full" : "Open")}</span>
               </div>
             </li>
           );
         })}
       </ul>
-      <p className="shelters-note" id="shelters-note">{t("Demo only. These are not verified shelters or current occupancy figures. Your location has not been used.")}</p>
-      <button className="map-preview-button" type="button" disabled aria-describedby="shelters-note shelters-coming-soon">{t("View all shelters")}<span aria-hidden="true">→</span></button>
-      <span className="map-coming-soon" id="shelters-coming-soon">{t("Shelter directory coming soon")}</span>
+      <a className="map-preview-button" href="/shelters">{t("View all shelters")}<span aria-hidden="true">→</span></a>
     </section>
   );
 }

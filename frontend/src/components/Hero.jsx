@@ -26,16 +26,15 @@ export default function Hero() {
         <h1 id="hero-title">{t("Stay informed.")}<br />{t("Find help. Help others.")}</h1>
         <p className="hero-description">{t("Real-time flood reports, shelter information and ways to support affected communities.")}</p>
         <div className="hero-actions">
-          <button className="hero-action hero-action-primary" type="button" disabled aria-describedby="hero-preview-note">
+          <a className="hero-action hero-action-primary" href="/report-flood">
             <ActionIcon />
             <span><strong>{t("Report a flood")}</strong><span>{t("Share what you see")}</span></span>
-          </button>
-          <button className="hero-action hero-action-secondary" type="button" disabled aria-describedby="hero-preview-note">
+          </a>
+          <a className="hero-action hero-action-secondary" href="/request-help">
             <ActionIcon help />
             <span><strong>{t("Request help")}</strong><span>{t("Get support")}</span></span>
-          </button>
+          </a>
         </div>
-        <p id="hero-preview-note" className="hero-preview-note">{t("Reporting and help requests are coming soon.")}</p>
       </div>
       <p className="hero-motto">{t("Stronger communities.")}<br />{t("Safer tomorrows.")}</p>
       

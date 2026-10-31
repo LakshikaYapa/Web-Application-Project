@@ -1,6 +1,24 @@
+import { useEffect, useState } from "react";
 import { useLanguage } from "../i18n/useLanguage";
 export default function CommunityActions() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [summary, setSummary] = useState(null);
+  const [error, setError] = useState(false);
+  useEffect(() => {
+    const controller = new AbortController();
+    let timer;
+    async function load() {
+      try {
+        const response = await fetch("/api/contributions/summary", { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]) });
+        const body = await response.json();
+        if (!response.ok || !body.success || !Number.isSafeInteger(body.totalMinor) || body.totalMinor < 0) throw new Error("Invalid summary");
+        if (!controller.signal.aborted) { setSummary(body); setError(false); }
+      } catch { if (!controller.signal.aborted) setError(true); }
+      finally { if (!controller.signal.aborted) timer = setTimeout(load, 30000); }
+    }
+    load();
+    return () => { controller.abort(); clearTimeout(timer); };
+  }, []);
   return (
     <div className="community-actions" aria-label={t("Ways to support communities")}>
       <section className="community-action-card volunteer-action" aria-labelledby="volunteer-action-title">
@@ -13,8 +31,7 @@ export default function CommunityActions() {
         <div className="community-action-content">
           <h2 id="volunteer-action-title">{t("Volunteer")}</h2>
           <p>{t("Join local relief efforts and make a difference in your community.")}</p>
-          <button type="button" disabled aria-describedby="volunteer-coming-soon">{t("Join the team")}<span aria-hidden="true">→</span></button>
-          <span className="action-coming-soon" id="volunteer-coming-soon">{t("Volunteer registration coming soon")}</span>
+          <a className="community-action-link" href="/volunteer#volunteer-form">{t("Join the team")}<span aria-hidden="true">→</span></a>
         </div>
       </section>
 
@@ -25,15 +42,16 @@ export default function CommunityActions() {
           </svg>
         </span>
         <div className="community-action-content">
-          <div className="relief-title-row"><h2 id="relief-action-title">{t("Fund relief efforts")}</h2><span className="demo-badge">{t("Demo")}</span></div>
+          <div className="relief-title-row"><h2 id="relief-action-title">{t("Fund relief efforts")}</h2></div>
           <p>{t("Support affected families and help communities recover.")}</p>
-          <div className="relief-progress" role="progressbar" aria-label={t("Demo fundraising progress")} aria-valuenow={47} aria-valuemin={0} aria-valuemax={100} aria-valuetext={t("Demo: 47 percent of LKR 5,000,000 goal")}>
-            <span />
+          <div className="my-4 rounded-xl border border-pink-200 bg-white/70 p-4 dark:border-pink-900 dark:bg-black/15" aria-live="polite">
+            <p className="text-sm">{t("Total financial donations")}</p>
+            {error ? <p role="alert">{t("Unable to load donation total. Please try again later.")}</p> : summary ? <>
+              <p className="mt-2 text-2xl font-bold">{new Intl.NumberFormat(language === "si" ? "si-LK" : "en-LK", { style: "currency", currency: "LKR" }).format(summary.totalMinor / 100)}</p>
+              <p className="mt-2 text-sm">{t("Donations")}: {summary.donationCount}</p>
+            </> : <p role="status">{t("Loading donation total...")}</p>}
           </div>
-          <div className="relief-total"><span><strong>{t("LKR 2,350,000")}</strong>{" "}{t("raised (demo)")}</span><strong>47%</strong></div>
-          <p className="relief-demo-note">{t("Sample figures, not actual donations.")}</p>
-          <button type="button" disabled aria-describedby="donations-coming-soon">{t("Support relief efforts")}<span aria-hidden="true">→</span></button>
-          <span className="action-coming-soon" id="donations-coming-soon">{t("Donations coming soon")}</span>
+          <a className="community-action-link" href="/funder">{t("Support relief efforts")}<span aria-hidden="true">→</span></a>
         </div>
       </section>
     </div>

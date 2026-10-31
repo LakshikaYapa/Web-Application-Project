@@ -1,6 +1,14 @@
+const profileRoutes = require("./routes/profile");
 const express = require("express");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
+const helpRequestRoutes = require("./routes/help-requests");
+const volunteerRoutes = require("./routes/volunteers");
+const contributionRoutes = require("./routes/contributions");
+const floodReportRoutes = require("./routes/flood-reports");
+const shelterRoutes = require("./routes/shelters");
+const adminRoutes = require("./routes/admin");
+const shelterSupplyRoutes = require("./routes/shelter-supplies");
 const session = require("express-session");
 const { SESSION_COOKIE_NAME, SESSION_DURATION_MS, cookieOptions } = require("./config/session");
 
@@ -12,8 +20,9 @@ function createApp({ sessionStore, sessionSecret, secureCookies = true }) {
   app.disable("x-powered-by");
   app.use(express.json({ limit: "16kb" }));
   app.locals.sessionCookieOptions = cookieOptions(secureCookies);
-  app.use("/api/auth", (_req, res, next) => { res.set("Cache-Control", "no-store"); next(); });
-  app.use("/api/auth", session({
+  const sessionPaths = ["/api/profile", "/api/auth", "/api/help-requests", "/api/volunteers", "/api/contributions", "/api/flood-reports", "/api/shelters", "/api/admin", "/api/shelter-supplies"];
+  app.use(sessionPaths, (_req, res, next) => { res.set("Cache-Control", "no-store"); next(); });
+  app.use(sessionPaths, session({
     name: SESSION_COOKIE_NAME,
     secret: sessionSecret,
     store: sessionStore,
@@ -22,6 +31,14 @@ function createApp({ sessionStore, sessionSecret, secureCookies = true }) {
     cookie: { ...app.locals.sessionCookieOptions, maxAge: SESSION_DURATION_MS },
   }));
   app.use("/api/auth", authRoutes());
+  app.use("/api/profile", profileRoutes());
+  app.use("/api/help-requests", helpRequestRoutes());
+  app.use("/api/volunteers", volunteerRoutes());
+  app.use("/api/contributions", contributionRoutes());
+  app.use("/api/flood-reports", floodReportRoutes());
+  app.use("/api/shelters", shelterRoutes());
+  app.use("/api/admin", adminRoutes());
+  app.use("/api/shelter-supplies", shelterSupplyRoutes());
 
   app.get("/api/health", (_req, res) => {
     res.status(200).json({ success: true, message: "FloodGuard API is running" });
