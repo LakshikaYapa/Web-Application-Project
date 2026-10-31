@@ -1,3 +1,4 @@
+import ProfilePage from "./components/ProfilePage";
 import ApprovedFloodReports from "./components/ApprovedFloodReports";
 import ApprovedHelpRequests from "./components/ApprovedHelpRequests";
 import { useLanguage } from "./i18n/useLanguage";
@@ -28,6 +29,7 @@ import AdminContributions from "./components/AdminContributions";
 import AdminVolunteers from "./components/AdminVolunteers";
 
 const pages = {
+  "/profile": ProfilePage,
   "/admin/volunteers": AdminVolunteers,
   "/admin/contributions": AdminContributions,
   "/admin/flood-reports": AdminFloodReports,

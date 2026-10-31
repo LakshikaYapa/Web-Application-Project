@@ -677,5 +677,17 @@
   "Total financial donations": "ලැබුණු මුළු මුදල් ආධාර",
   "Donations": "මුදල් දායකත්ව ගණන",
   "Loading donation total...": "මුදල් ආධාර එකතුව ලබාගනිමින්...",
-  "Unable to load donation total. Please try again later.": "මුදල් ආධාර එකතුව ලබාගත නොහැකියි. පසුව නැවත උත්සාහ කරන්න."
+  "Unable to load donation total. Please try again later.": "මුදල් ආධාර එකතුව ලබාගත නොහැකියි. පසුව නැවත උත්සාහ කරන්න.",
+  "My profile": "මගේ පැතිකඩ",
+  "Your FloodGuard account and profile photo.": "ඔබේ FloodGuard ගිණුම සහ පැතිකඩ ඡායාරූපය.",
+  "Loading profile...": "පැතිකඩ ලබාගනිමින්...",
+  "Please sign in to view your profile.": "ඔබේ පැතිකඩ බැලීමට පිවිසෙන්න.",
+  "Unable to load your profile. Please try again.": "පැතිකඩ ලබාගත නොහැකියි. නැවත උත්සාහ කරන්න.",
+  "Profile photo preview": "පැතිකඩ ඡායාරූපයේ පෙරදසුන",
+  "Profile photo (optional)": "පැතිකඩ ඡායාරූපය (අනිවාර්ය නැත)",
+  "Choose a JPG, PNG or WebP photo, up to 5 MB.": "උපරිම 5 MB වන JPG, PNG හෝ WebP ඡායාරූපයක් තෝරන්න.",
+  "Account roles": "ගිණුමේ භූමිකා",
+  "Community member": "ප්‍රජා සාමාජික",
+  "Administrator": "පරිපාලක",
+  "Photo preview only for now. Saving your photo will be available in the next step.": "දැනට ඡායාරූපයේ පෙරදසුන පමණක් පෙන්වයි. ඡායාරූපය සුරැකීම ඊළඟ පියවරේදී එක් කරමු."
 }

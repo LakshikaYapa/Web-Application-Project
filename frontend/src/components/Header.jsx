@@ -117,6 +117,7 @@ export default function Header() {
           <span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
         </button>
         {user ? <div className="flex flex-wrap items-center gap-3">
+          <a href="/profile" className="text-sm font-semibold text-[#007e8d] dark:text-[#99e4c9]">{t("My profile")}</a>
           {user.roles.includes("admin") && <a href="/admin" className="text-sm font-semibold text-[#007e8d] hover:underline dark:text-[#99e4c9]">{t("Admin dashboard")}</a>}
           <button className="sign-in-button" type="button" disabled={signingOut} onClick={logout}>{t(signingOut ? "Signing out…" : "Logout")}</button>
         </div> : <button className="sign-in-button" type="button" disabled={checkingSession} onClick={() => { setMenuOpen(false); setAuthMode("signin"); }}>{t(checkingSession ? "Checking session…" : "Sign in")}</button>}
