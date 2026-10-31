@@ -1,3 +1,4 @@
+const profileRoutes = require("./routes/profile");
 const express = require("express");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/auth");
@@ -19,7 +20,7 @@ function createApp({ sessionStore, sessionSecret, secureCookies = true }) {
   app.disable("x-powered-by");
   app.use(express.json({ limit: "16kb" }));
   app.locals.sessionCookieOptions = cookieOptions(secureCookies);
-  const sessionPaths = ["/api/auth", "/api/help-requests", "/api/volunteers", "/api/contributions", "/api/flood-reports", "/api/shelters", "/api/admin", "/api/shelter-supplies"];
+  const sessionPaths = ["/api/profile", "/api/auth", "/api/help-requests", "/api/volunteers", "/api/contributions", "/api/flood-reports", "/api/shelters", "/api/admin", "/api/shelter-supplies"];
   app.use(sessionPaths, (_req, res, next) => { res.set("Cache-Control", "no-store"); next(); });
   app.use(sessionPaths, session({
     name: SESSION_COOKIE_NAME,
@@ -30,6 +31,7 @@ function createApp({ sessionStore, sessionSecret, secureCookies = true }) {
     cookie: { ...app.locals.sessionCookieOptions, maxAge: SESSION_DURATION_MS },
   }));
   app.use("/api/auth", authRoutes());
+  app.use("/api/profile", profileRoutes());
   app.use("/api/help-requests", helpRequestRoutes());
   app.use("/api/volunteers", volunteerRoutes());
   app.use("/api/contributions", contributionRoutes());

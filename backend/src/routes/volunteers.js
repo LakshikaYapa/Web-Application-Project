@@ -9,10 +9,10 @@ module.exports = function createVolunteerRoutes() {
   router.get("/", async (_req, res, next) => {
     try {
       const records = await VolunteerProfile.find({ status: "joined" }).select("user nearestTown supportAreas.area")
-        .populate({ path: "user", select: "name", match: { status: "active" } })
+        .populate({ path: "user", select: "name photoVersion", match: { status: "active" } })
         .sort({ createdAt: -1, _id: -1 }).limit(4).lean();
       return res.json({ success: true, volunteers: records.filter((record) => record.user).map((record) => ({
-        id: String(record._id), name: record.user.name, nearestTown: record.nearestTown,
+        id: String(record._id), name: record.user.name, ...(record.user.photoVersion ? { photoUrl: `/api/profile/${record.user._id}/photo?v=${record.user.photoVersion}` } : {}), nearestTown: record.nearestTown,
         supportAreas: (record.supportAreas || []).map((item) => item.area),
       })) });
     } catch (error) { return next(error); }

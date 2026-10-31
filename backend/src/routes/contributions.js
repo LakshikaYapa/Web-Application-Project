@@ -19,10 +19,10 @@ module.exports = function createContributionRoutes() {
   router.get("/", async (_req, res, next) => {
     try {
       const records = await Contribution.find({ status: "approved" }).select("contributor supportTypes nearestTown amountMinor currency createdAt")
-        .populate({ path: "contributor", select: "name", match: { status: "active" } })
+        .populate({ path: "contributor", select: "name photoVersion", match: { status: "active" } })
         .sort({ createdAt: -1, _id: -1 }).limit(6).lean();
       return res.json({ success: true, contributions: records.filter((record) => record.contributor).map((record) => ({
-        id: String(record._id), name: record.contributor.name, supportTypes: record.supportTypes,
+        id: String(record._id), name: record.contributor.name, ...(record.contributor.photoVersion ? { photoUrl: `/api/profile/${record.contributor._id}/photo?v=${record.contributor.photoVersion}` } : {}), supportTypes: record.supportTypes,
         nearestTown: record.nearestTown, amountMinor: record.amountMinor, currency: record.currency, createdAt: record.createdAt,
       })) });
     } catch (error) { return next(error); }

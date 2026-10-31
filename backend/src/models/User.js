@@ -28,6 +28,8 @@ const userSchema = new mongoose.Schema(
       },
     },
     status: { type: String, enum: ["active", "suspended"], default: "active" },
+    profilePhoto: { type: new mongoose.Schema({ contentType: { type: String, enum: ["image/jpeg", "image/png", "image/webp"], required: true }, data: { type: Buffer, required: true } }, { _id: false }), select: false },
+    photoVersion: { type: Number },
     preferredLanguage: { type: String, enum: ["en", "si"], default: "en" },
   },
   {
@@ -36,6 +38,7 @@ const userSchema = new mongoose.Schema(
     toJSON: {
       transform(_document, result) {
         // Also protect responses after login explicitly selects passwordHash.
+        delete result.profilePhoto;
         delete result.passwordHash;
         delete result.address;
         delete result.phone;

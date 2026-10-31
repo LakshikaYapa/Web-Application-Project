@@ -8,7 +8,7 @@ const { SESSION_COOKIE_NAME, SESSION_DURATION_MS } = require("../config/session"
 const DUMMY_HASH = `scrypt$32768$8$3$${"0".repeat(32)}$${"0".repeat(128)}`;
 
 function publicUser(user) {
-  return { id: user.id, name: user.name, email: user.email, roles: user.roles, preferredLanguage: user.preferredLanguage };
+  return { id: user.id, name: user.name, email: user.email, roles: user.roles, preferredLanguage: user.preferredLanguage, ...(user.photoVersion ? { photoUrl: `/api/profile/${user.id}/photo?v=${user.photoVersion}` } : {}) };
 }
 
 async function login(req, res, next) {

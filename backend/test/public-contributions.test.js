@@ -16,7 +16,7 @@ test("public donations include approved support and amounts but exclude receipts
     assert.deepEqual(filter, { status: "approved" });
     const query = {
       select(fields) { assert.equal(fields, "contributor supportTypes nearestTown amountMinor currency createdAt"); return query; },
-      populate(config) { assert.deepEqual(config, { path: "contributor", select: "name", match: { status: "active" } }); return query; },
+      populate(config) { assert.deepEqual(config, { path: "contributor", select: "name photoVersion", match: { status: "active" } }); return query; },
       sort(order) { assert.deepEqual(order, { createdAt: -1, _id: -1 }); return query; },
       limit(count) { assert.equal(count, 6); return query; },
       async lean() { return records; },
@@ -29,6 +29,10 @@ test("public donations include approved support and amounts but exclude receipts
     assert.equal(response.status, 200);
     assert.equal(response.headers.get("cache-control"), "no-store");
     assert.deepEqual(await response.json(), { success: true, contributions: [{ id: "contribution-1", name: "Supporter", supportTypes: ["financial", "food_water"], nearestTown: "Kandy", amountMinor: 100000, currency: "LKR", createdAt: "2026-10-31T00:00:00Z" }] });
+    records[0].contributor._id = "507f1f77bcf86cd799439011";
+    records[0].contributor.photoVersion = 123;
+    const withPhoto = await (await fetch(base)).json();
+    assert.equal(withPhoto.contributions[0].photoUrl, "/api/profile/507f1f77bcf86cd799439011/photo?v=123");
     records = [];
     assert.deepEqual((await (await fetch(base)).json()).contributions, []);
   } finally {

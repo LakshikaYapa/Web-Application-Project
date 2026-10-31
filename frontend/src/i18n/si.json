@@ -689,5 +689,12 @@
   "Account roles": "ගිණුමේ භූමිකා",
   "Community member": "ප්‍රජා සාමාජික",
   "Administrator": "පරිපාලක",
-  "Photo preview only for now. Saving your photo will be available in the next step.": "දැනට ඡායාරූපයේ පෙරදසුන පමණක් පෙන්වයි. ඡායාරූපය සුරැකීම ඊළඟ පියවරේදී එක් කරමු."
+  "Photo preview only for now. Saving your photo will be available in the next step.": "දැනට ඡායාරූපයේ පෙරදසුන පමණක් පෙන්වයි. ඡායාරූපය සුරැකීම ඊළඟ පියවරේදී එක් කරමු.",
+  "Save photo": "ඡායාරූපය සුරකින්න",
+  "Saving photo...": "ඡායාරූපය සුරකිමින්...",
+  "Remove saved photo": "සුරැකි ඡායාරූපය ඉවත් කරන්න",
+  "Profile photo saved.": "පැතිකඩ ඡායාරූපය සුරැකුණා.",
+  "Profile photo removed.": "පැතිකඩ ඡායාරූපය ඉවත් කළා.",
+  "Unable to update your photo. Please try again.": "ඡායාරූපය යාවත්කාලීන කළ නොහැකියි. නැවත උත්සාහ කරන්න.",
+  "Your photo will appear on your volunteer or donor card when your participation is approved.": "ඔබේ ස්වේච්ඡා සේවය හෝ දායකත්වය අනුමත වූ පසු, එම card එකේ ඔබේ ඡායාරූපය පෙන්වයි."
 }
