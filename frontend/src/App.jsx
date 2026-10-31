@@ -1,3 +1,4 @@
+import ApprovedFloodReports from "./components/ApprovedFloodReports";
 import ApprovedHelpRequests from "./components/ApprovedHelpRequests";
 import { useLanguage } from "./i18n/useLanguage";
 import { useEffect, useState } from "react";
@@ -87,6 +88,7 @@ function App() {
           <NearbyShelters />
           <CommunityActions />
         </div>
+        <ApprovedFloodReports compact />
         <ApprovedHelpRequests compact />
         <ShelterNeeds compact />
         <SafetyGuidance />
