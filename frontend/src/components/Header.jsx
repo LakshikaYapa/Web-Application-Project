@@ -117,7 +117,7 @@ export default function Header() {
           <span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
         </button>
         {user ? <div className="flex flex-wrap items-center gap-3">
-          <a href="/profile" className="text-sm font-semibold text-[#007e8d] dark:text-[#99e4c9]">{t("My profile")}</a>
+          <a href="/profile" aria-label={t("My profile")} title={t("My profile")} className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#73aaa3] text-[#007e8d] hover:bg-[#dff3ef] dark:text-[#99e4c9] dark:hover:bg-[#173b43]"><svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21v-2a8 8 0 0 1 16 0v2" /></svg></a>
           {user.roles.includes("admin") && <a href="/admin" className="text-sm font-semibold text-[#007e8d] hover:underline dark:text-[#99e4c9]">{t("Admin dashboard")}</a>}
           <button className="sign-in-button" type="button" disabled={signingOut} onClick={logout}>{t(signingOut ? "Signing out…" : "Logout")}</button>
         </div> : <button className="sign-in-button" type="button" disabled={checkingSession} onClick={() => { setMenuOpen(false); setAuthMode("signin"); }}>{t(checkingSession ? "Checking session…" : "Sign in")}</button>}
