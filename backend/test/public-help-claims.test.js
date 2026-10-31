@@ -63,7 +63,11 @@ test("approved help requests expose claim status and allow one volunteer or dono
     assert.equal((await claim()).status, 409);
     assert.equal((await fetch(`${base}/api/help-requests/public/${id}/photos/0`)).status, 404);
     record.status = "approved"; record.requester = account.id;
-    assert.equal((await claim()).status, 409);
+    const ownClaim = await claim();
+    assert.equal(ownClaim.status, 409);
+    assert.equal((await ownClaim.json()).code, "OWN_REQUEST");
+    const ownList = await fetch(base + "/api/help-requests", { headers: { Cookie: cookie } });
+    assert.equal((await ownList.json()).requests[0].isOwn, true);
     record.requester = requester;
     const claims = await Promise.all([claim(), claim()]);
     assert.deepEqual(claims.map((response) => response.status).sort(), [200, 409]);

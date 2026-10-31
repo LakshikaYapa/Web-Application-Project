@@ -43,12 +43,13 @@ export default function ApprovedHelpRequests({ compact = false }) {
     claimRef.current = controller;
     try {
       const response = await fetch(`/api/help-requests/${request.id}/claim`, { method: "POST", headers: { "X-CSRF-Protection": "1" }, signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]) });
+      const body = await response.json().catch(() => ({}));
       if (controller.signal.aborted) return;
       if (response.ok) {
         setData((current) => current ? { ...current, requests: current.requests.map((item) => item.id === request.id ? { ...item, claimed: true } : item) } : current);
         setNotice("You have taken responsibility for this help request.");
       } else {
-        setMessage(response.status === 401 ? "Please sign in as a volunteer or donor to take a request." : response.status === 403 ? "Only volunteer or donor accounts can take help requests." : response.status === 409 ? "This request is already taken or unavailable. Refresh the list." : "Unable to take this request. Please try again.");
+        setMessage(response.status === 401 ? "Please sign in as a volunteer or donor to take a request." : response.status === 403 ? "Only volunteer or donor accounts can take help requests." : body.code === "OWN_REQUEST" ? "This is your own help request. Another volunteer or donor can take it." : body.code === "ALREADY_CLAIMED" ? "Another helper has already taken this request." : response.status === 409 ? "This request is no longer available. Please refresh the list." : "Unable to take this request. Please try again.");
       }
       refresh();
     } catch {
@@ -70,7 +71,7 @@ export default function ApprovedHelpRequests({ compact = false }) {
         <p className="mt-3 font-semibold">{request.nearestTown}</p><p className="mt-2 wrap-break-word text-sm leading-7">{request.location}</p><p className="mt-2 text-sm">{new Intl.DateTimeFormat(language === "si" ? "si-LK" : "en-LK", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Colombo" }).format(new Date(request.createdAt))}</p>
         {request.otherHelp && <p className="mt-4 whitespace-pre-wrap wrap-break-word font-semibold">{request.otherHelp}</p>}<p className="mt-4 whitespace-pre-wrap wrap-break-word leading-7">{request.description}</p>
         {request.photoCount > 0 && <div className="mt-5 flex flex-wrap gap-3">{Array.from({ length: request.photoCount }, (_, index) => <a key={index} href={`/api/help-requests/public/${request.id}/photos/${index}`} target="_blank" rel="noopener noreferrer"><img src={`/api/help-requests/public/${request.id}/photos/${index}`} loading="lazy" alt={`${t("Request photo")} ${index + 1}`} className="h-24 w-28 rounded-lg border border-[#73aaa3] object-cover" /></a>)}</div>}
-        <button type="button" disabled={request.claimed || pendingId !== null} onClick={() => claim(request)} className="mt-5 rounded-xl bg-[#007e8d] px-5 py-3 font-bold text-white enabled:hover:bg-[#005e6b] disabled:cursor-not-allowed disabled:opacity-50">{t(request.claimed ? "Already taken" : pendingId === request.id ? "Taking request…" : "Take this request")}</button>
+        <button type="button" disabled={request.isOwn || request.claimed || pendingId !== null} onClick={() => claim(request)} className="mt-5 rounded-xl bg-[#007e8d] px-5 py-3 font-bold text-white enabled:hover:bg-[#005e6b] disabled:cursor-not-allowed disabled:opacity-50">{t(request.isOwn ? "Your help request" : request.claimed ? "Already taken" : pendingId === request.id ? "Taking request…" : "Take this request")}</button>
       </li>)}</ul>
       {compact && <div className="mt-7 text-center"><a href="/request-help#approved-help-requests" className="inline-block rounded-xl border border-[#73aaa3] px-7 py-3 font-bold hover:bg-[#d8ebe2] dark:hover:bg-[#1b423b]">{t("See more")} &rarr;</a></div>}
       {!compact && !expanded && (data.requests.length > 4 || data.hasMore) && <div className="mt-7 text-center"><button type="button" aria-expanded={expanded} onClick={() => setExpanded(true)} className="rounded-xl border border-[#73aaa3] bg-white px-7 py-3 font-bold text-[#006b79] hover:bg-[#d8ebe2] dark:bg-[#1b423b] dark:text-[#99e4c9]">{t("See more")} &darr;</button></div>}

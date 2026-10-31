@@ -674,5 +674,9 @@
   "Your account has been saved. You can now sign in.": "ඔබේ ගිණුම සුරැකුණා. දැන් ඔබට පිවිසිය හැකියි.",
   "People who need your help": "\u0d94\u0db6\u0dda \u0dc3\u0dc4\u0dcf\u0dba \u0d85\u0dc0\u0dc1\u0dca\u0dba \u0d85\u0dba",
   "See more": "\u0dad\u0dc0\u0dad\u0dca \u0db6\u0dbd\u0db1\u0dca\u0db1",
-  "Please sign in to submit your report. Your entered details will stay here.": "වාර්තාව යැවීමට පිවිසෙන්න. ඔබ ඇතුළත් කළ තොරතුරු මෙහි සුරැකී පවතී."
+  "Please sign in to submit your report. Your entered details will stay here.": "වාර්තාව යැවීමට පිවිසෙන්න. ඔබ ඇතුළත් කළ තොරතුරු මෙහි සුරැකී පවතී.",
+  "Your help request": "ඔබේ උදව් ඉල්ලීම",
+  "This is your own help request. Another volunteer or donor can take it.": "මෙය ඔබ යැවූ උදව් ඉල්ලීමයි. වෙනත් ස්වේච්ඡා සේවකයෙකුට හෝ දායකයෙකුට මෙය භාරගත හැකියි.",
+  "Another helper has already taken this request.": "වෙනත් අයෙකු මෙම ඉල්ලීම දැනටමත් භාරගෙන ඇත.",
+  "This request is no longer available. Please refresh the list.": "මෙම ඉල්ලීම දැන් ලබාගත නොහැකියි. ලැයිස්තුව නැවත ලබාගන්න."
 }
