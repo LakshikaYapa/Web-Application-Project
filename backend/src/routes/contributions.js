@@ -7,6 +7,15 @@ const Contribution = require("../models/Contribution");
 
 module.exports = function createContributionRoutes() {
   const router = express.Router();
+  router.get("/summary", async (_req, res, next) => {
+    try {
+      const [summary] = await Contribution.aggregate([
+        { $match: { status: "approved", supportTypes: "financial", currency: "LKR", amountMinor: { $gt: 0 } } },
+        { $group: { _id: null, totalMinor: { $sum: "$amountMinor" }, donationCount: { $sum: 1 } } },
+      ]);
+      return res.json({ success: true, currency: "LKR", totalMinor: summary?.totalMinor ?? 0, donationCount: summary?.donationCount ?? 0 });
+    } catch (error) { return next(error); }
+  });
   router.get("/", async (_req, res, next) => {
     try {
       const records = await Contribution.find({ status: "approved" }).select("contributor supportTypes nearestTown amountMinor currency createdAt")

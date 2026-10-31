@@ -673,5 +673,9 @@
   "Your sign-in was successful.": "ඔබ සාර්ථකව ගිණුමට පිවිසුණා.",
   "Your account has been saved. You can now sign in.": "ඔබේ ගිණුම සුරැකුණා. දැන් ඔබට පිවිසිය හැකියි.",
   "People who need your help": "ඔබේ සහාය අවශ්‍ය අය",
-  "See more": "තවත් බලන්න"
+  "See more": "තවත් බලන්න",
+  "Total financial donations": "ලැබුණු මුළු මුදල් ආධාර",
+  "Donations": "මුදල් දායකත්ව ගණන",
+  "Loading donation total...": "මුදල් ආධාර එකතුව ලබාගනිමින්...",
+  "Unable to load donation total. Please try again later.": "මුදල් ආධාර එකතුව ලබාගත නොහැකියි. පසුව නැවත උත්සාහ කරන්න."
 }
