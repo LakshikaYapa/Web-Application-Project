@@ -199,7 +199,7 @@ docker compose down
 
 Users can choose multiple public roles during registration. Sign in through the header, open the profile through its icon and sign out using **Logout**. Administrator accounts are directed to the admin dashboard.
 
-A fresh database does not automatically contain an administrator. For initial local setup, register a normal account, then have the database owner assign the `admin` role to that specific account in `floodguard.users`. Preserve its password hash and change only the intended roles. Sign out and sign in again. Do not publish admin credentials or enable public admin registration.
+A fresh database does not automatically contain an administrator. For initial local setup, set `ADMIN_EMAIL` and `ADMIN_PASSWORD` locally in `backend/.env`, then run `npm.cmd run admin:create` from `backend/`. The script creates a separate administrator and refuses to overwrite an existing email. These variables are only used by the setup command. Administrators do not need community address/contact fields. Alternatively, the database owner can assign the `admin` role to a specific existing account while preserving its password hash. Sign out and sign in again. Do not publish admin credentials or enable public admin registration.
 
 The server uses MongoDB-backed sessions with HTTP-only, SameSite cookies and an eight-hour authentication lifetime. Protected actions check the current user's active status and roles. Owners are derived from the session, not submitted IDs.
 

@@ -1,5 +1,15 @@
 # Backend API
 
+## Administrator setup
+
+Set `ADMIN_EMAIL` and `ADMIN_PASSWORD` privately in `backend/.env`, then run
+`npm.cmd run admin:create` from `backend/`. This creates an administrator without
+community address/contact fields and refuses to replace an existing account.
+The setup variables are not used by the running API. Do not commit their values.
+`GET /api/auth/admin` verifies a current active administrator session; it returns
+401 for missing/inactive sessions and 403 for other roles. Public registration
+continues to exclude administrators.
+
 ## Funder contributions — backend step
 
 `GET /api/contributions/mine?page=1` lists only the signed-in user's contributions,

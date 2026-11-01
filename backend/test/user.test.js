@@ -36,3 +36,12 @@ test("account cannot silently accept an unknown role or extra privileges", async
   await assert.rejects(user.validate(), (error) => Object.keys(error.errors).some((key) => key.startsWith("roles")));
   assert.throws(() => new User({ isAdmin: true }), /not in schema/);
 });
+
+test("administrator setup can omit community contacts while public accounts require them", async () => {
+  const base = { name: "Admin", email: "admin@example.com", passwordHash: "test-hash" };
+  await new User({ ...base, roles: ["admin"] }).validate();
+  for (const role of PUBLIC_ROLES) {
+    await assert.rejects(new User({ ...base, roles: [role] }).validate(), (error) =>
+      ["address", "nearestTown", "phone"].every((field) => error.errors[field]?.kind === "required"));
+  }
+});
