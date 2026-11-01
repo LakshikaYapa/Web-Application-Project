@@ -1,0 +1,6 @@
+# Use with compose.yaml and --env-file backend/.env.
+# Credentials remain in the ignored backend/.env file.
+services:
+  backend:
+    environment:
+      MONGODB_URI: ${MONGODB_URI:?Set MONGODB_URI in backend/.env before using the external database override}
