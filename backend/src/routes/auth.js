@@ -1,7 +1,7 @@
 const express = require("express");
 const { rateLimit } = require("express-rate-limit");
 const { register } = require("../controllers/auth");
-const { login, currentUser, logout } = require("../controllers/session");
+const { login, currentUser, logout, adminUser } = require("../controllers/session");
 
 function createAuthRoutes() {
   const router = express.Router();
@@ -32,6 +32,7 @@ function createAuthRoutes() {
     message: { success: false, code: "RATE_LIMITED", message: "Too many sign-in attempts. Try again later." },
   }), login);
   router.get("/me", currentUser);
+  router.get("/admin", adminUser);
   router.post("/logout", protectSessionMutation, logout);
   return router;
 }

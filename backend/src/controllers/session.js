@@ -68,4 +68,12 @@ async function logout(req, res, next) {
   } catch (error) { return next(error); }
 }
 
-module.exports = { login, currentUser, logout, requireUser };
+function adminUser(req, res, next) {
+  return requireUser(req, res, (error) => {
+    if (error) return next(error);
+    if (!req.user.roles.includes("admin")) return res.status(403).json({ success: false, code: "FORBIDDEN" });
+    return res.json({ success: true, user: publicUser(req.user) });
+  });
+}
+
+module.exports = { login, currentUser, logout, requireUser, adminUser };

@@ -4,9 +4,9 @@ const { ACCOUNT_ROLES } = require("../constants/roles");
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true, maxlength: 100 },
-    address: { type: String, required: true, trim: true, minlength: 5, maxlength: 300, select: false },
-    nearestTown: { type: String, required: true, trim: true, minlength: 2, maxlength: 100 },
-    phone: { type: String, required: true, match: /^\+94[1-9]\d{8}$/, select: false },
+    address: { type: String, required() { return !this.roles?.includes("admin"); }, trim: true, minlength: 5, maxlength: 300, select: false },
+    nearestTown: { type: String, required() { return !this.roles?.includes("admin"); }, trim: true, minlength: 2, maxlength: 100 },
+    phone: { type: String, required() { return !this.roles?.includes("admin"); }, match: /^\+94[1-9]\d{8}$/, select: false },
     email: {
       type: String,
       required: true,
