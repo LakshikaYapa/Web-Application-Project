@@ -175,7 +175,7 @@ Invoke-RestMethod http://localhost:8080/api/ready
 Open **http://localhost:8080**. Ports 8080 and 5000 must be available.
 
 - The frontend waits for backend health, and the backend waits for MongoDB health.
-- Compose uses its own MongoDB service, not the connection in `backend/.env`.
+- By default, Compose uses its own MongoDB service, not the connection in `backend/.env`. To use existing Atlas data, follow the external database option below.
 - Data persists in the `mongodb-data` named volume.
 - MongoDB is internal to the Compose network; frontend/API ports bind to localhost.
 - A root `.env` can override Compose's `SESSION_SECRET`; this is separate from `backend/.env`.
@@ -187,6 +187,31 @@ docker compose down
 ```
 
 `docker compose down` preserves database data. Adding `--volumes` deletes it. After source/dependency changes, rerun `docker compose up --build --wait`. Containers serve built files without frontend live reload.
+
+### Use an existing Atlas database with Docker
+
+If your records were saved using the connection in `backend/.env`, the default Docker database will not contain those records. Switching or merging Git branches does not move database data. Use the committed `compose.atlas.yaml` override to connect the Docker backend to the existing database.
+
+Ensure `backend/.env` contains your working `MONGODB_URI` and a random `SESSION_SECRET` of at least 32 characters. Atlas must allow your current network IP. Keep real credentials in the ignored `.env` file; do not put them in Compose YAML or commit them. The backend uses the `floodguard` database.
+
+From the repository root, with Docker Desktop running:
+
+```powershell
+docker compose --env-file backend/.env -f compose.yaml -f compose.atlas.yaml up --build --wait
+Invoke-RestMethod http://localhost:8080/api/ready
+```
+
+Open **http://localhost:8080**, refresh the page and sign in again if needed. Readiness should report `database: connected`. Only approved flood reports appear publicly. This option uses the existing database directly; it does not copy or delete records. The local MongoDB container remains part of the stack, but the backend connects to the supplied URI.
+
+Use the same options on subsequent starts and rebuilds:
+
+```powershell
+docker compose --env-file backend/.env -f compose.yaml -f compose.atlas.yaml up -d --wait
+docker compose --env-file backend/.env -f compose.yaml -f compose.atlas.yaml logs --tail 100 backend
+docker compose --env-file backend/.env -f compose.yaml -f compose.atlas.yaml down
+```
+
+Running plain `docker compose up` switches the backend back to the separate local Docker database. A temporary override created during troubleshooting is no longer needed; use `compose.atlas.yaml` instead.
 
 ## Accounts and administration
 
