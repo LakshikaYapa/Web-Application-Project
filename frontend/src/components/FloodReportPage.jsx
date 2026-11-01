@@ -29,7 +29,7 @@ export default function FloodReportPage() {
         </aside>
       </section>
       <nav aria-label={t("Flood report sections")} className="mt-6 flex flex-wrap gap-3 rounded-2xl border border-[#79b5af] p-3 font-semibold">
-        <a href="#approved-flood-reports" className="rounded-lg px-4 py-3 hover:bg-[#cce6db] dark:hover:bg-[#224d43]">{t("Approved flood reports")}</a>
+        <a href="#approved-flood-reports" className="rounded-lg px-4 py-3 hover:bg-[#cce6db] dark:hover:bg-[#224d43]">{t("Flood reports")}</a>
         <a href="#submit-flood-report" className="rounded-lg px-4 py-3 hover:bg-[#cce6db] dark:hover:bg-[#224d43]">{t("Report a flood")}</a>
       </nav>
       <ApprovedFloodReports />

@@ -8,11 +8,11 @@ module.exports = function createPublicHelpRoutes() {
     const page = req.query.page === undefined ? 1 : Number(req.query.page);
     if (!Number.isSafeInteger(page) || page < 1 || page > 100000 || (req.query.page !== undefined && typeof req.query.page !== "string")) return res.status(400).json({ success: false, code: "INVALID_PAGE" });
     try {
-      const records = await HelpRequest.find({ status: "approved" }).select("helpType otherHelp nearestTown location description createdAt +claimedBy claimedAt photos.contentType")
+      const records = await HelpRequest.find({ status: "approved" }).select("helpType otherHelp nearestTown location description createdAt requester +claimedBy claimedAt photos.contentType")
         .sort({ createdAt: -1, _id: -1 }).skip((page - 1) * 12).limit(13).lean();
       const fields = ["helpType", "otherHelp", "nearestTown", "location", "description", "createdAt", "claimedAt"];
       return res.json({ success: true, page, hasMore: records.length > 12, requests: records.slice(0, 12).map((record) => ({
-        id: String(record._id), claimed: Boolean(record.claimedBy), photoCount: record.photos?.length ?? 0,
+        id: String(record._id), isOwn: Boolean(req.session?.userId && String(record.requester) === String(req.session.userId)), claimed: Boolean(record.claimedBy), photoCount: record.photos?.length ?? 0,
         ...Object.fromEntries(fields.filter((field) => record[field] !== undefined).map((field) => [field, record[field]])),
       })) });
     } catch (error) { return next(error); }
@@ -40,7 +40,11 @@ module.exports = function createPublicHelpRoutes() {
       // A single conditional update prevents two helpers from claiming the same request.
       const request = await HelpRequest.findOneAndUpdate({ _id: req.params.id, status: "approved", claimedBy: null, requester: { $ne: req.user.id } },
         { $set: { claimedBy: req.user.id, claimedAt: new Date() } }, { new: true, runValidators: true }).select("_id");
-      if (!request) return res.status(409).json({ success: false, code: "REQUEST_UNAVAILABLE" });
+      if (!request) {
+        const existing = await HelpRequest.findOne({ _id: req.params.id, status: "approved" }).select("requester +claimedBy");
+        const code = existing && String(existing.requester) === String(req.user.id) ? "OWN_REQUEST" : existing?.claimedBy ? "ALREADY_CLAIMED" : "REQUEST_UNAVAILABLE";
+        return res.status(409).json({ success: false, code });
+      }
       return res.json({ success: true });
     } catch (error) { return next(error); }
   });
